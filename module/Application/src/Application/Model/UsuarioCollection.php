@@ -11,12 +11,12 @@ use Zend\Stdlib\Hydrator\ObjectProperty;
 
 class UsuarioCollection {// extends MongoCollection 
     protected $collection;
-    public function __construct(Mongo $adapter) {
+    public function __construct( MongoCollection $adapter) {//Mongo $adapter
         $this->collection=$adapter;
 //        return parent::__construct($adapter,'usuario');
     }
     public function findAll(){
-        $usarios=$this->collection->db_gps2->usuario->find();
+        $usarios=$this->collection->find();//$this->collection->db_gps2->usuario->find();
         
         $resultset = new HydratingMongoCursor(
         $usarios,
@@ -25,11 +25,11 @@ class UsuarioCollection {// extends MongoCollection
 );
       
        
-        foreach ($usarios as $id => $value) {
-            echo "$id: ";
-            print_r($value);
-        }
-        exit;
+//        foreach ($usarios as $id => $value) {
+//            echo "$id: ";
+//            print_r($value);
+//        }
+//        exit;
         //o esto:
         foreach ($resultset as $status) {
             printf('%s <%s>: %s', $status->id, $status->login, $status->rol);

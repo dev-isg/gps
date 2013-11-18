@@ -35,19 +35,36 @@ class Module
     public function getServiceConfig() {
       
         return array('factories' => array(
-                'Application\Model\UsuarioCollection' => function($services) {
-                    $tableGateway = $services->get('MyMongo');
-                    $table = new UsuarioCollection($tableGateway);
-                    return $table;
+//                'Application\Model\UsuarioCollection' => function($services) {
+//                    $tableGateway = $services->get('MyMongo');
+//                    $table = new UsuarioCollection($tableGateway);
+//                    return $table;
+//                },
+//                'MyMongo' => function ($services) {
+//                    $config = $services->get('config');
+//                    $config = $config['mongo'];
+//                    $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
+//                    return $factory->createService($services);
+//                }
+            'Application\Model\UsuarioCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('usuario','MyMongoDB' );
+                    return new UsuarioCollection($mycollection->createService($services));
+                   
                 },
-                'MyMongo' => function ($services) {
+             'MyMongoDB' => function ($services) {
+                    $config = $services->get('config');
+                    $config = $config['mongo'];
+                    $mongodb = new MongoDbFactory($config['db'], 'MyMongo');
+                    return $mongodb->createService($services);
+                },
+             'MyMongo' =>  function ($services) {
                     $config = $services->get('config');
                     $config = $config['mongo'];
                     $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
                     return $factory->createService($services);
                 }
+                //'PhlyMongo\MongoConnectionFactory'
                 ));
-        
     }
 
     public function getAutoloaderConfig()
