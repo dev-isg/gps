@@ -36,8 +36,8 @@ class IndexController extends AbstractActionController
     }
     public function mongoConect()
     {
-        $imagen=$this->_options->mongodb->server;
-        $imagen2=$this->_options->mongodb->db;
+        $imagen=$this->_options->mongo->server;
+        $imagen2=$this->_options->mongo->db;
 	$m = new Mongo($imagen);
 	$db = $m->$imagen2;
                return $db;
