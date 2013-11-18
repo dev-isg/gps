@@ -1,16 +1,19 @@
 <?php
-/**
- * Global Configuration Override
- *
- * You can use this file for overriding configuration values from modules, etc.
- * You would place values in here that are agnostic to the environment and not
- * sensitive to security.
- *
- * @NOTE: In practice, this file will typically be INCLUDED in your source
- * control, so do not include passwords or other sensitive information in this
- * file.
- */
-
-return array(
-    // ...
+   return array(
+    'mongodb' => array(
+        'server'         => 'mongodb://192.168.1.50',
+        'server_options' => array('connect' => true),
+        'db'             => 'db_gps2',
+//        'collection'     => 'empresa',
+    ),
+    
+    'host' => array(
+            'base' => 'http://192.168.1.34:84',
+            'static' => 'http://192.168.1.34:84',
+            'images' => 'http://192.168.1.34:84/imagenes',
+            'img'=>'http://192.168.1.34:84/img',
+            'ruta' => 'http://192.168.1.34:84',
+            'version'=>1,
+        ),
+    
 );

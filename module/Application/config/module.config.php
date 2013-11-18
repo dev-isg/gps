@@ -50,6 +50,16 @@ return array(
                     ),
                 ),
             ),
+//             'dos' => array(
+//                'type' => 'Literal',
+//                'options' => array(
+//                    'route' => '/dos',
+//                    'defaults' => array(
+//                        'controller' => 'Application\Controller\Index',
+//                        'action' => 'dos'
+//                    )
+//                )
+//            ),
         ),
     ),
     'service_manager' => array(
