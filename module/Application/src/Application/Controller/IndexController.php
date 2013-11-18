@@ -28,12 +28,23 @@ class IndexController extends AbstractActionController
         
       public function indexAction()
     {
-                   // echo "d";exit;
+
        $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
-        var_dump($usuario->findAll());exit;
-        return new ViewModel();   
-   //  return new ViewModel(array('valores'=>$users['nombre']));
-    }
+      return new ViewModel(array('valores'=>$usuario->findAll()));
+     }
+     
+      public function dosAction()
+    {
+      
+     $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
+  //   var_dump($usuario);exit;
+     $usuario->eliminarUsuario(3);
+//      $c_users = $r->vehiculo;
+//     $users = $c_users->findOne();      
+//     return new ViewModel(array('valores'=>$users['nombre_corto']));
+    } 
+    
+    
     public function mongoConect()
     {
         $imagen=$this->_options->mongo->server;
@@ -42,13 +53,7 @@ class IndexController extends AbstractActionController
 	$db = $m->$imagen2;
                return $db;
     }
-    public function dosAction()
-    {
-     $r= $this->mongoConect();
-     $c_users = $r->vehiculo;
-     $users = $c_users->findOne();      
-     return new ViewModel(array('valores'=>$users['nombre_corto']));
-    }
+   
       public function tresAction()
     {
      $r= $this->mongoConect();

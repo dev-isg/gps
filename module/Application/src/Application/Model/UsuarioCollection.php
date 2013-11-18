@@ -16,13 +16,11 @@ class UsuarioCollection {// extends MongoCollection
 //        return parent::__construct($adapter,'usuario');
     }
     public function findAll(){
-        $usarios=$this->collection->db_gps2->usuario->find();
-        
+    $usarios=$this->collection->db_gps2->usuario->find();
         $resultset = new HydratingMongoCursor(
         $usarios,
         new ObjectProperty,
-        new Usuario()
-);
+        new Usuario() );
       
        
         foreach ($usarios as $id => $value) {
@@ -38,18 +36,16 @@ class UsuarioCollection {// extends MongoCollection
         
         return $resultset;
     }
-}
-//class UsuarioCollection {
+
+
 //
-//    protected $collection;
-//
-//    public function __construct(MongoCollectionFactory $coleccion) {
-//        $this->collection = $coleccion;
-//    }
-//
-//    public function findAll() {
-//        $usarios = $this->collection->find();
+//    public function eliminarUsuario($valor)
+//       {
+//                
+//       $eliminar = array ('id'=>$valor);
+//         $usarios=$this->collection->usuario->remove($eliminar);
+//           var_dump($usarios);exit;
 //        return $usarios;
 //    }
 //
-//}
+}
