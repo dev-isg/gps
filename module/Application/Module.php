@@ -12,6 +12,12 @@ namespace Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+use PhlyMongo\MongoCollectionFactory;
+use PhlyMongo\MongoConnectionFactory;
+use PhlyMongo\MongoDbFactory;
+
+use Application\Model\UsuarioCollection;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -26,6 +32,25 @@ class Module
         return include __DIR__ . '/config/module.config.php';
     }
     
+
+    public function getServiceConfig() {
+      
+        return array('factories' => array(
+                'Application\Model\UsuarioCollection' => function($services) {
+                    $tableGateway = $services->get('MyMongo');
+                    $table = new UsuarioCollection($tableGateway);
+                    return $table;
+                },
+                'MyMongo' => function ($services) {
+                    $config = $services->get('config');
+                    $config = $config['mongo'];
+                    $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
+                    return $factory->createService($services);
+                }
+                ));
+        
+    }
+
 
     public function getAutoloaderConfig()
     {

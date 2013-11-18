@@ -11,11 +11,12 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+
 use Mongo;
 use PhlyMongo\Mongodb;
 use PhlyMongo\MongoConnectionFactory;
 use PhlyMongo\MongoCollectionFactory;
-
+use Application\Model\UsuarioCollection;
 
 class IndexController extends AbstractActionController
 {
@@ -23,6 +24,16 @@ class IndexController extends AbstractActionController
 	{
 		$this->_options = new \Zend\Config\Config ( include APPLICATION_PATH . '/config/autoload/global.php' );
 	}
+        
+        
+      public function indexAction()
+    {
+                   // echo "d";exit;
+       $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
+        var_dump($usuario->findAll());exit;
+        return new ViewModel();   
+   //  return new ViewModel(array('valores'=>$users['nombre']));
+    }
     public function mongoConect()
     {
         $imagen=$this->_options->mongodb->server;
@@ -45,11 +56,11 @@ class IndexController extends AbstractActionController
      $users = $c_users->findOne();      
      return new ViewModel(array('valores'=>$users['rol']));
     }
-      public function cuatroAction()
-    {
-     $r= $this->mongoConect();
-     $c_users = $r->empresa;
-     $users = $c_users->findOne();      
-     return new ViewModel(array('valores'=>$users['nombre']));
-    }
+   
 }   
+
+       
+    
+    
+
+

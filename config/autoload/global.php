@@ -1,13 +1,16 @@
 <?php
-   return array(
-    'mongodb' => array(
+
+    
+  
+
+
+return array(
+      'mongo' => array(  
         'server'         => 'mongodb://192.168.1.50',
         'server_options' => array('connect' => true),
         'db'             => 'db_gps2',
-//        'collection'     => 'empresa',
     ),
-    
-    'host' => array(
+   'host' => array(
             'base' => 'http://192.168.1.34:84',
             'static' => 'http://192.168.1.34:84',
             'images' => 'http://192.168.1.34:84/imagenes',
