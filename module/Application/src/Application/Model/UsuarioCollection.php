@@ -43,25 +43,43 @@ class UsuarioCollection {// extends MongoCollection
 
 
 //
+     public function obtenerUsuario($id)
+       {        
+        
+         $usarios=$this->collection->findOne(array('_id'=> new \MongoId($id)));
+
+        if (!$usarios) {
+                   throw new \Exception("Could not find row $id");
+               }
+               return $usarios;
+      
+  }
+
+
+
     public function eliminarUsuario($valor)
        {        
-       $eliminar = array ('id'=>"$valor");
-         $usarios=$this->collection->remove($eliminar);
+        $usarios=$this->collection->remove(array('_id'=> new \MongoId($valor)));
         if($usarios==true)
         {return $usarios; }
         else{echo 'error al eliminar';}
-      
     }
-   public function agregarUsuario($valor)
-       {       
+   public function agregarUsuario(Usuario $valor)
+   {  
+      
       $cantidad = array('login'=>$valor->login,
           'pass'=>$valor->pass,
-          'rol'=>$valor->rol);
-     
-         $usarios=$this->collection->insert($cantidad);
+          'rol'=>$valor->rol,
+         // 'id'=>"$val"
+          );
+      if($valor->_id==null)
+        {$usarios=$this->collection->insert($cantidad);
         if($usarios==true)
-        {return $usarios; }
-        else{echo 'error al eliminar';}
-      
-    }
+        {return $usarios; }}
+        else
+        {$cantidad['_id']=new \MongoId($valor->_id);
+         $usarios=$this->collection->update($cantidad);
+        if($usarios==true)
+        {return $usarios; }}
+     }
 }

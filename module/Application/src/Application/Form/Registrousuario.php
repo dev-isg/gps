@@ -2,17 +2,16 @@
 namespace Application\Form;
 
 use Zend\Form\Form;
-
 class Registrousuario extends Form
 {
     public function __construct($name = null)
     {
         // we want to ignore the name passed
-        parent::__construct('registroplato');
+        parent::__construct('registrusuario');
         $this->setAttribute('method', 'post');
-        $this->setInputFilter(new \Application\Form\RegistrousuarioFiltro());
+   //     $this->setInputFilter(new \Application\Form\RegistrousuarioFiltro());
         $this->add(array(
-            'name' => 'id',
+            'name' => '_id',
             'type' => 'Hidden',
         ));
         $this->add(array(
@@ -52,7 +51,7 @@ class Registrousuario extends Form
             'name' => 'submit',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Rol',          
+                'label' => 'add',          
             ),
             'attributes' => array(
             
