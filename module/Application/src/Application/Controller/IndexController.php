@@ -11,7 +11,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
+use Application\Form\Registrousuario;
 use Mongo;
 use PhlyMongo\Mongodb;
 use PhlyMongo\MongoConnectionFactory;
@@ -28,22 +28,31 @@ class IndexController extends AbstractActionController
         
       public function indexAction()
     {
-
        $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
-      return new ViewModel(array('valores'=>$usuario->findAll()));
-     }
+       $resultados=$usuario->findAll();
+       $cantidad=count($resultados);
+       return new ViewModel(array('valores'=>$resultados,'cantidad'=>$cantidad));
+    }
      
-      public function dosAction()
-    {
-      
+      public function eliminarusuarioAction()
+    {$id = $this->params()->fromQuery('id');
      $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
-  //   var_dump($usuario);exit;
-     $usuario->eliminarUsuario(3);
-//      $c_users = $r->vehiculo;
-//     $users = $c_users->findOne();      
-//     return new ViewModel(array('valores'=>$users['nombre_corto']));
-    } 
+     $usuario->eliminarUsuario($id);
     
+    } 
+      public function agregarusuarioAction()
+    {
+      $form = new Registrousuario("form");
+       
+        $request = $this->getRequest();
+       if ($request->isPost()) {
+           $datos =$this->request->getPost();  
+       $usuario = $this->getServiceLocator()->get('Application\Model\UsuarioCollection');
+       $usuario->agregarUsuario($datos);
+       return $this->redirect()->toUrl($this->getRequest()->getBaseUrl().'/application/index/index'); 
+      }
+     return new ViewModel(array('form' => $form));
+    } 
     
     public function mongoConect()
     {
@@ -54,13 +63,7 @@ class IndexController extends AbstractActionController
                return $db;
     }
    
-      public function tresAction()
-    {
-     $r= $this->mongoConect();
-     $c_users = $r->usuario;
-     $users = $c_users->findOne();      
-     return new ViewModel(array('valores'=>$users['rol']));
-    }
+    
    
 }   
 
