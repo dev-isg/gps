@@ -64,7 +64,7 @@ class UsuarioCollection {// extends MongoCollection
         {return $usarios; }
         else{echo 'error al eliminar';}
     }
-   public function agregarUsuario(Usuario $valor)
+   public function agregarUsuario(Usuario $valor,$id=null)
    {  
       
       $cantidad = array('login'=>$valor->login,
@@ -72,13 +72,14 @@ class UsuarioCollection {// extends MongoCollection
           'rol'=>$valor->rol,
          // 'id'=>"$val"
           );
-      if($valor->_id==null)
+ 
+      if($id)
         {$usarios=$this->collection->insert($cantidad);
         if($usarios==true)
         {return $usarios; }}
         else
-        {$cantidad['_id']=new \MongoId($valor->_id);
-         $usarios=$this->collection->update($cantidad);
+        { 
+         $usarios=$this->collection->update(array('_id'=> new \MongoId($id)),$cantidad);
         if($usarios==true)
         {return $usarios; }}
      }

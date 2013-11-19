@@ -95,7 +95,7 @@ class IndexController extends AbstractActionController
              $form->setData($request->getPost()); 
                 if ($form->isValid()) {   
                    $usuarios->exchangeArray($form->getData());
-                 $this->getUsuariosMongoDb()->agregarUsuario($usuarios);
+                 $this->getUsuariosMongoDb()->agregarUsuario($usuarios,$id);
                  return $this->redirect()->toUrl($this->getRequest()->getBaseUrl().'/application/index/index'); 
                  }
        }
