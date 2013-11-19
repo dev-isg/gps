@@ -50,16 +50,17 @@ return array(
                     ),
                 ),
             ),
-//             'dos' => array(
-//                'type' => 'Literal',
-//                'options' => array(
-//                    'route' => '/dos',
-//                    'defaults' => array(
-//                        'controller' => 'Application\Controller\Index',
-//                        'action' => 'dos'
-//                    )
-//                )
-//            ),
+  'editarusuario' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar-usuario[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'editarusuario'
+                    )
+                    
+                )
+            ),
         ),
     ),
     'service_manager' => array(
