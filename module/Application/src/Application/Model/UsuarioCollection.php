@@ -25,14 +25,15 @@ class UsuarioCollection {// extends MongoCollection
 );
       
        
-//        foreach ($usarios as $id => $value) {
+        foreach ($usarios as $id => $value) {
 //            echo "$id: ";
-//            print_r($value);
-//        }
-//        exit;
+            print_r($value['rol']);
+        }
+        echo '</br>';
         //o esto:
         foreach ($resultset as $status) {
-            printf('%s <%s>: %s', $status->id, $status->login, $status->rol);
+            print_r($status->rol);
+//            printf('%s <%s>: %s', $status->id, $status->login, $status->rol);
         }
         exit;
         
