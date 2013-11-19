@@ -22,4 +22,11 @@ class MongoCollectionFactory implements FactoryInterface
         $db = $services->get($this->dbService);
         return new MongoCollection($db, $this->collectionName);
     }
+    /*
+     * Obtiene la connecion de la bd
+     * @return dbService
+     */
+    public function getConnection(){
+        return $this->dbService;
+    }
 }

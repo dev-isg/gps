@@ -16,41 +16,71 @@ class UsuarioCollection {// extends MongoCollection
 //        return parent::__construct($adapter,'usuario');
     }
     public function findAll(){
+
+   // $usarios=$this->collection->db_gps2->usuario->find();
+
         $usarios=$this->collection->find();//$this->collection->db_gps2->usuario->find();
+
+//        $resultset = new HydratingMongoCursor(
+//        $usarios,
+//        new ObjectProperty,
+//        new Usuario() );
+//      
+       $resultados= array();
+        foreach ($usarios as $result) {
+         $resultados[]=$result;
+        }
         
-        $resultset = new HydratingMongoCursor(
-        $usarios,
-        new ObjectProperty,
-        new Usuario()
-);
+//        $resultset = new HydratingMongoCursor(
+//        $usarios,
+//        new ObjectProperty,
+//        new Usuario()
+//);
+//      
+//       
+//        foreach ($usarios as $id => $value) {
+////            echo "$id: ";
+//            print_r($value['rol']);
+//        }
+//        echo '</br>';
+//        //o esto:
+//        foreach ($resultset as $status) {
+//            print_r($status->rol);
+////            printf('%s <%s>: %s', $status->id, $status->login, $status->rol);
+//        }
+//        exit;
+        
+        return $resultados;
+    }
+    
+
+//
+    public function eliminarUsuario($valor)
+       {        
+       $eliminar = array ('id'=>"$valor");
+         $usarios=$this->collection->remove($eliminar);
+        if($usarios==true)
+        {return $usarios; }
+        else{echo 'error al eliminar';}
       
-       
-        foreach ($usarios as $id => $value) {
-//            echo "$id: ";
-            print_r($value['rol']);
-        }
-        echo '</br>';
-        //o esto:
-        foreach ($resultset as $status) {
-            print_r($status->rol);
-//            printf('%s <%s>: %s', $status->id, $status->login, $status->rol);
-        }
-        exit;
-        
-        return $resultset;
+    }
+   public function agregarUsuario($valor)
+       {       
+      $cantidad = array('login'=>$valor->login,
+          'pass'=>$valor->pass,
+          'rol'=>$valor->rol);
+     
+         $usarios=$this->collection->insert($cantidad);
+        if($usarios==true)
+        {return $usarios; }
+        else{echo 'error al eliminar';}
+      
+    }
+    
+  public function editarUsuario($idusuario, $valor) {
+        $datos = array('login' => $valor->login,
+            'pass' => $valor->pass,
+            'rol' => $valor->rol);
+        $this->collection->update(array('id' => "$idusuario"), $datos);
     }
 }
-//class UsuarioCollection {
-//
-//    protected $collection;
-//
-//    public function __construct(MongoCollectionFactory $coleccion) {
-//        $this->collection = $coleccion;
-//    }
-//
-//    public function findAll() {
-//        $usarios = $this->collection->find();
-//        return $usarios;
-//    }
-//
-//}
