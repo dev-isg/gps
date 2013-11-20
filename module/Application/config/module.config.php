@@ -61,6 +61,17 @@ return array(
                     
                 )
             ),
+              'editarempresa' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar-empresa[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Empresa',
+                        'action' => 'editarempresa'
+                    )
+                    
+                )
+            ),
               'editar-vehiculo' => array(
                 'type' => 'Segment',
                 'options' => array(

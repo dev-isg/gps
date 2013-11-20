@@ -1,4 +1,5 @@
 <?php
+
 namespace Application\Model;
 
 use PhlyMongo\MongoCollectionFactory;
@@ -10,41 +11,54 @@ use Application\Model\UsuarioCollection;
 use PhlyMongo\HydratingMongoCursor;
 use Zend\Stdlib\Hydrator\ObjectProperty;
 
-class EmpresaCollection{
-   protected $collection;
-    public function __construct( MongoCollection $adapter) {
-        $this->collection=$adapter;
+class EmpresaCollection {
+
+    protected $collection;
+
+    public function __construct(MongoCollection $adapter) {
+        $this->collection = $adapter;
     }
 
-    public function getListaCombo(){
-      //  $listEmp=$this->collection->find(array(),array('nombre'=>true));
-          $listEmp=$this->collection->find();
+    public function getListaCombo() {
+        $listEmp = $this->collection->find();
         foreach ($listEmp as $value) {
-                  $aux[]=$value;
-               
+            $aux[] = $value;
         }
         return $aux;
     }
-    
-    public function agregarEmpresa(Empresa $valor, $id) {
+
+    public function obtenerEmpresa($id) {
+
+        $empresa = $this->collection->findOne(array('_id' => new \MongoId($id)));
+
+        if (!$empresa) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $empresa;
+    }
+
+    public function agregarEmpresa(Empresa $valor, $id, $editar = null) {
+
         $cantidad = array('descripcion' => $valor->descripcion,
             'ruc' => $valor->ruc,
             'nombre' => $valor->nombre,
-            'direccion'=>$valor->direccion,
-            'usuario_id'=>$id,
-            
+            'direccion' => $valor->direccion,
         );
-     
-//        if ($id==null) {
-            $usarios = $this->collection->insert($cantidad);
-//            if ($usarios == true) {
-                return $usarios;
-//            }
-//        }    else {
-//            $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
-//            if ($usarios == true) {
-//                return $usarios;
-//            }
-//        }
+
+        if ($editar == null) {
+            $cantidad['usuario_id'] = $id;
+            $empresa = $this->collection->insert($cantidad);
+            if ($empresa == true) {
+                return $empresa;
+            }
+        } else {
+
+            $cantidad['usuario_id'] = $valor->usuario_id;
+            $empresa = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
+            if ($empresa == true) {
+                return $empresa;
+            }
+        }
     }
+
 }

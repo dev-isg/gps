@@ -1,0 +1,39 @@
+<?php
+$title = 'Editar empresa';
+$this->headTitle($title);
+?>
+
+<div class="span12">
+<?php
+
+$form = $this->form;
+$form->setAttributes(array(
+       'action' => $this->url.'/editar-empresa/'.$this->id,
+    'method' => 'post',
+    'class'=>'form-horizontal'
+));
+
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<legend><?php echo $this->escapeHtml($title); ?></legend>
+<?php echo $this->formRow($form->get('rol')->setValue('empresa'));?>
+<?php echo $this->formRow($form->get('_id'));?>
+<?php echo $this->formRow($form->get('usuario_id'));?>
+<div class="row-fluid">
+<div class="control-group span6"><?php echo $this->formRow($form->get('descripcion'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('ruc'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?>
+    <div class="control-group span6"><?php echo $this->formRow($form->get('direccion'));?>
+</div>
+</div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass')->setValue($this->pass));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass2')->setValue($this->pass));?></div>
+    <?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
+<div class="row-fluid">
+<div class="control-group span12 "><?php echo $this->formSubmit($form->get('submit'));?></div></div><?php echo $this->form()->closeTag();?> 
+</div>
+
+
+

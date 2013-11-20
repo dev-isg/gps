@@ -33,7 +33,6 @@ class UsuarioCollection {// extends MongoCollection
     public function obtenerUsuario($id) {
 
         $usarios = $this->collection->findOne(array('_id' => new \MongoId($id)));
-        
         if (!$usarios) {
             throw new \Exception("Could not find row $id");
         }
@@ -49,26 +48,18 @@ class UsuarioCollection {// extends MongoCollection
         }
     }
 
-    public function agregarUsuario($valor, $id = null) {
-
+    public function agregarUsuario($valor, $accion = null) {
         $cantidad = array('login' => $valor->login,
             'pass' => $valor->pass,
-            'rol' => $valor->rol,
-            '_id'=>new \MongoId()
-        );
-//           $ss = new \MongoId();
-//           var_dump($ss);exit;
-        if ($id==null) {
+            'rol' => $valor->rol);
+        if ($accion == null) {
+            $cantidad['_id'] = new \MongoId();
             $usarios = $this->collection->insert($cantidad);
-          //  if ($usarios == true) {
-                return $cantidad['_id'];
-            //}
-        }    else {
-            $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
+            return $cantidad['_id'];
+        } else {
+            $usarios = $this->collection->update(array('_id' => new \MongoId($valor->usuario_id)), $cantidad);
             return $cantidad['_id'];
         }
     }
-
-   
 
 }

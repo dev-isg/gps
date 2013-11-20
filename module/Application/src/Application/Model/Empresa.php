@@ -63,6 +63,15 @@ class Empresa
                     array('name' => 'StringTrim'),
                 ),
             )));
+             $inputFilter->add($factory->createInput(array(
+                'name'     => 'usuario_id',
+                'required' => true,
+               'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+            )));
+
 
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'descripcion',
