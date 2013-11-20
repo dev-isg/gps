@@ -54,19 +54,18 @@ class UsuarioCollection {// extends MongoCollection
         $cantidad = array('login' => $valor->login,
             'pass' => $valor->pass,
             'rol' => $valor->rol,
+            '_id'=>new \MongoId()
         );
-           $ss = new \MongoId();
-           var_dump($ss);exit;
+//           $ss = new \MongoId();
+//           var_dump($ss);exit;
         if ($id==null) {
             $usarios = $this->collection->insert($cantidad);
-            if ($usarios == true) {
-                return $usarios;
-            }
+          //  if ($usarios == true) {
+                return $cantidad['_id'];
+            //}
         }    else {
             $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
-            if ($usarios == true) {
-                return $usarios;
-            }
+            return $cantidad['_id'];
         }
     }
 
