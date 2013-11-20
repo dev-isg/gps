@@ -55,14 +55,19 @@ class IndexController extends AbstractActionController {
         $form = new Registrousuario("form");
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $usuarios = new Usuario();
+           $datos =$this->request->getPost();    
+           $pass1 = $datos['pass'];
+           $pass2 = $datos['pass2'];
+           if($pass1==$pass2){$usuarios = new Usuario();
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $usuarios->exchangeArray($form->getData());
+               $usuarios->exchangeArray($form->getData());
                 $this->getUsuariosMongoDb()->agregarUsuario($usuarios);
                 return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-            }
+            }}else{
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/agregarusuario?m=1');}
+            
         }
         return new ViewModel(array('form' => $form));
     }
@@ -79,12 +84,17 @@ class IndexController extends AbstractActionController {
         }
         $form = new Registrousuario();
         $form->get('login')->setValue($usuario['login']);
-      //  $form->get('pass')->setValue($usuario['pass']);
+        $form->get('pass')->setValue($usuario['pass']);
         $form->get('_id')->setValue($usuario['_id']);
         $form->get('rol')->setValue($usuario['rol']);
-        // $form->bind($usuario);
+         $form->get('submit')->setValue('Editar');
+     //    $form->bind($usuario);
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $datos =$this->request->getPost();    
+           $pass1 = $datos['pass'];
+           $pass2 = $datos['pass2'];
+           if($pass1==$pass2){
             $usuarios = new Usuario();
             $form->setInputFilter($usuarios->getInputFilter());
             $form->setData($request->getPost());
@@ -93,7 +103,8 @@ class IndexController extends AbstractActionController {
                 $this->getUsuariosMongoDb()->agregarUsuario($usuarios, $id);
                 return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
             }
-        }
+        }else{return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/editar-usuario/'.$id.'?m=1');}
+            }
         return new ViewModel(array('form' => $form, 'id' => $id,'pass'=>$usuario['pass']));
     }
 
