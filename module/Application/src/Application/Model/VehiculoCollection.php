@@ -70,7 +70,8 @@ class VehiculoCollection{
                 $this->collection->insert($data);
             }
         } else {
-            $this->collection->update(array('_id' => new \MongoId($vehiculo->_id)), $data);
+            $datain = array_merge_recursive($data, array('empresa_id' => new \MongoId($vehiculo->empresa_id)));
+            $this->collection->update(array('_id' => new \MongoId($vehiculo->_id)), $datain);
         }
         
     }
