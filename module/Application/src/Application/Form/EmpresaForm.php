@@ -23,7 +23,7 @@ class EmpresaForm extends Form{
         ));
         $this->add(array(
             'name' => 'descripcion',
-            'type' => 'Text',
+            'type' => 'Textarea',
             'options' => array(
                 'label' => 'descripcion: ',          
             ),

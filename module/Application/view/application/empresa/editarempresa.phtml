@@ -21,9 +21,10 @@ echo $this->form()->openTag($form);
 <?php echo $this->formRow($form->get('_id'));?>
 <?php echo $this->formRow($form->get('usuario_id'));?>
 <div class="row-fluid">
+    <div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?>
 <div class="control-group span6"><?php echo $this->formRow($form->get('descripcion'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('ruc'));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?>
+
     <div class="control-group span6"><?php echo $this->formRow($form->get('direccion'));?>
 </div>
 </div>

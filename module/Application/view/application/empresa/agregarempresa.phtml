@@ -19,10 +19,10 @@ echo $this->form()->openTag($form);
 <legend><?php echo $this->escapeHtml($title); ?></legend>
 <?php echo $this->formRow($form->get('rol')->setValue('empresa'));?>
 <div class="row-fluid">
+<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?>
 <div class="control-group span6"><?php echo $this->formRow($form->get('descripcion'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('ruc'));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?>
-    <div class="control-group span6"><?php echo $this->formRow($form->get('direccion'));?>
+<div class="control-group span6"><?php echo $this->formRow($form->get('direccion'));?>
 </div>
 </div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
