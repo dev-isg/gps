@@ -9,6 +9,13 @@ use Application\Form\VehiculoForm;
 use Mongo;
 class VehiculoController extends AbstractActionController{
     
+    public function indexAction() {
+        $resultados = $this->getUsuariosMongoDb()->findAll();
+
+        $cantidad = count($resultados);
+        //echo json_encode($resultados);exit;
+        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+    }
     
     public function agregarvehiculoAction() {
         
@@ -29,7 +36,7 @@ class VehiculoController extends AbstractActionController{
             $vehiculo = $this->getServiceLocator()->get('Application\Model\VehiculoCollection');
             $vehiculo->guardarVehiculo($datos);
             
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
         }
         return new ViewModel(array('form' => $form));
     }
