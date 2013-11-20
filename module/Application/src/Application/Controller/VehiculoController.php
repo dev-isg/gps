@@ -20,16 +20,12 @@ class VehiculoController extends AbstractActionController{
     public function agregarvehiculoAction() {
         
         $form = new VehiculoForm();
-        
         $resultados = $this->getEmpresaMongoDb()->getListaCombo();
-     //$f = new \MongoId($resultados['_id']);
-//     //var_dump($resultados);exit;
-     $com = array();
-        foreach($resultados as $y){
-            $com[$y['_id']] = $y['nombre'];
-        }
-    // var_dump($resultados);exit;
-        $form->get('empresa_id')->setValueOptions($resultados);
+        $com = array();
+        for($i=0;$i<count($resultados);$i++){
+        $com= array((String) $resultados[$i]['_id'] => $resultados[$i]['nombre']);
+                 $i++; }
+        $form->get('empresa_id')->setValueOptions($com);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();

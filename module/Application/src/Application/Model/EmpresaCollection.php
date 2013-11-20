@@ -16,10 +16,10 @@ class EmpresaCollection{
     }
 
     public function getListaCombo(){
-       // $listEmp=$this->collection->find(array(),array('nombre'=>true));
+      //  $listEmp=$this->collection->find(array(),array('nombre'=>true));
           $listEmp=$this->collection->find();
         foreach ($listEmp as $value) {
-                  $aux[]=$value['nombre'];
+                  $aux[]=$value;
                
         }
      //   var_dump($aux);exit;
