@@ -69,8 +69,6 @@ class IndexController extends AbstractActionController {
 
     public function editarusuarioAction() {
         $id = $this->params()->fromRoute('id', 0);
-
-
         if (!$id) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
         }
@@ -81,7 +79,7 @@ class IndexController extends AbstractActionController {
         }
         $form = new Registrousuario();
         $form->get('login')->setValue($usuario['login']);
-        $form->get('pass')->setValue($usuario['pass']);
+      //  $form->get('pass')->setValue($usuario['pass']);
         $form->get('_id')->setValue($usuario['_id']);
         $form->get('rol')->setValue($usuario['rol']);
         // $form->bind($usuario);
@@ -96,7 +94,7 @@ class IndexController extends AbstractActionController {
                 return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
             }
         }
-        return new ViewModel(array('form' => $form, 'id' => $id));
+        return new ViewModel(array('form' => $form, 'id' => $id,'pass'=>$usuario['pass']));
     }
 
     public function mongoConect() {
