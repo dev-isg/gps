@@ -17,8 +17,8 @@
         <td><?php echo $this->valores[$i]['nombre_corto']; ?></td>
         <td><?php echo $this->valores[$i]['chofer']['chofer_nom']; ?></td>
         <td><?php echo $this->valores[$i]['pass']; ?></td>
-    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/editar-usuario/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
+    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/application/vehiculo/eliminarvehiculo?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/editar/vehiculo/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
                 
          </tr>
        <?php }; ?>

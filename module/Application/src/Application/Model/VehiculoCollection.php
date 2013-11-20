@@ -9,16 +9,26 @@ class VehiculoCollection{
     }
     public function findAll(){
         $vehiculos=$this->collection->find();
+      
         $result=array();
+        
         foreach ($vehiculos as $value) {
-            $result[]=$value;
+//            $id=new \MongoId($value['empresa']['empresa_id']);
+            $resultvehi[]=$value;
+            $idempresa=$value['empresa_id'];
+            $dataempre=$this->collection->db->empresa->findOne(array('_id'=>$idempresa),array('nombre'=>true));
+//            $resultvehi=array($value,'nombre_empresa'=>$dataempre['nombre']);
+            var_dump($dataempre['nombre']);
+                array_push($resultvehi,$dataempre['nombre']);
         }
-            
+        exit;
+//        $result=  array_merge_recursive($resultvehi,$nameemp);
+         var_dump($resultvehi);exit;
         return $result;
     }
     
     public function getVehiculo($idvehiculo){
-        $vehiculo=$this->collection->findOne(array('id'=>$idvehiculo));
+        $vehiculo=$this->collection->findOne(array('_id'=>new \MongoId($idvehiculo)));
         return $vehiculo;
     }
     
@@ -54,8 +64,8 @@ class VehiculoCollection{
                         'chofer_nom'=>$vehiculo->chofer_nom
                     )
         );
-//        var_dump($data);Exit;
-        $id = $vehiculo->id;
+//        var_dump($vehiculo->_id);Exit;
+        $id = (int)$vehiculo->_id;
         if ($id == 0) {
             if ($vehiculo->empresa_id>0){
                 $datain = array_merge_recursive($data, array('empresa_id' => new \MongoId($vehiculo->empresa_id)));
@@ -64,7 +74,7 @@ class VehiculoCollection{
                 $this->collection->insert($data);
             }
         } else {
-            $this->collection->update(array('id' => "$vehiculo->id_usuario"), $data);
+            $this->collection->update(array('_id' => new \MongoId($vehiculo->_id)), $data);
         }
         
     }

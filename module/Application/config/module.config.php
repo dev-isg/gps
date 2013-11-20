@@ -50,13 +50,24 @@ return array(
                     ),
                 ),
             ),
-  'editarusuario' => array(
+              'editarusuario' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/editar-usuario[/:id]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Index',
                         'action' => 'editarusuario'
+                    )
+                    
+                )
+            ),
+              'editar-vehiculo' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar/vehiculo[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Vehiculo',
+                        'action' => 'editarvehiculo'
                     )
                     
                 )

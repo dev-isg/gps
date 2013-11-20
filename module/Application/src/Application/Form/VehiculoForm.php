@@ -1,6 +1,8 @@
 <?php
 namespace Application\Form;
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\InputFilter\InputFilter;
 
 class VehiculoForm extends Form{
     public function __construct($name = null, $options = array()) {
@@ -9,10 +11,10 @@ class VehiculoForm extends Form{
         $this->setAttribute('method', 'post');
      //   $this->setInputFilter(new \Application\Form\RegistrousuarioFiltro());
         
-//        $this->add(array(
-//            'name' => 'id',
-//            'type' => 'Hidden',
-//        ));
+        $this->add(array(
+            'name' => '_id',
+            'type' => 'Hidden',
+        ));
         $this->add(array(
             'name' => 'nombre_corto',
             'type' => 'Text',
@@ -62,7 +64,22 @@ class VehiculoForm extends Form{
                 'class' => 'btn btn-primary btn-solicito'
             ),
         ));
+        
+        $this->setInputFilter( $this->validadores());
+    }
+    
+        public function validadores(){
+    
+        $inputFilter = new InputFilter();
+  
+        $inputFilter->add(array(
+            'name' => '_id',
+            'required' => false,
 
+        ));
+         
+    
+        return $inputFilter;
     }
     
 }

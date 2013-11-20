@@ -1,0 +1,22 @@
+<?php
+
+return array(
+    'skar' => array(
+        'mandango' => array(
+            'connections' => array(
+                'default' => array(
+                    'server'   => 'mongodb://localhost:27017',
+                    'database' => 'database',
+                ),
+            ),
+            'cache'              => 'Skar\Mandango\FilesystemCache',
+            'default_connection' => 'default',
+            'config_classes'     => 'mandango_config_classes',
+
+            // TODO: HARDCODE!!!
+            'metadata_factory_class'  => 'Model\Mapping\MetadataFactory',
+            'metadata_factory_output' => 'data/mandango/Model/Mapping',
+            'default_output'          => 'data/mandango/Model',
+        ),
+    ),
+);
