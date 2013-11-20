@@ -33,7 +33,7 @@ class UsuarioCollection {// extends MongoCollection
     public function obtenerUsuario($id) {
 
         $usarios = $this->collection->findOne(array('_id' => new \MongoId($id)));
-
+        
         if (!$usarios) {
             throw new \Exception("Could not find row $id");
         }

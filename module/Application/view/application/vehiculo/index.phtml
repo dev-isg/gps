@@ -1,26 +1,25 @@
-
-
 <div class="row-fluid">
     <div class="span12" id="flip-scroll">
-        <a data-id="" href="<?php echo $this->basePath();?>/application/index/agregarusuario" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar</a>
+        <a data-id="" href="<?php echo $this->basePath();?>/application/vehiculo/agregarvehiculo" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar</a>
         <br><br>
        <table class="table table-bordered table-hover">
-            <thead class="cf"> <tr>
+             <thead class="cf"> <tr>
             <th>idMongo</th>
-            <th>id</th>
-            <th>rol</th>
-            <th>login</th>
+            <th>Nombre</th>
+            <th>Chofer</th>
             <th>pass</th>
+            <th>Operaciones</th>
         </tr> </thead>
         <?php  for($i=0;$i<$this->cantidad;$i++) {?>
        <tr>
         <td><?php echo $this->valores[$i]['_id']; ?></td>
-        <td><?php echo $this->valores[$i]['id']; ?></td>
-        <td><?php echo $this->valores[$i]['rol']; ?></td>
-        <td><?php echo $this->valores[$i]['login']; ?></td>
+      <!--  <td><?php// echo $this->valores[$i]['id']; ?></td>-->
+        <td><?php echo $this->valores[$i]['nombre_corto']; ?></td>
+        <td><?php echo $this->valores[$i]['chofer']['chofer_nom']; ?></td>
         <td><?php echo $this->valores[$i]['pass']; ?></td>
-    <td><a data-id="<?php echo $this->valores[$i]['id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-          
+    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/application/vehiculo/eliminarvehiculo?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/editar/vehiculo/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
+                
          </tr>
        <?php }; ?>
         </table>
