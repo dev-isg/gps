@@ -26,6 +26,7 @@ class UsuarioCollection {// extends MongoCollection
         foreach ($usarios as $result) {
             $resultados[] = $result;
         }
+
         return $resultados;
     }
 
@@ -68,5 +69,7 @@ class UsuarioCollection {// extends MongoCollection
             }
         }
     }
+
+   
 
 }

@@ -17,6 +17,8 @@ use PhlyMongo\MongoConnectionFactory;
 use PhlyMongo\MongoDbFactory;
 
 use Application\Model\UsuarioCollection;
+use Application\Model\VehiculoCollection;
+use Application\Model\EmpresaCollection;
 
 class Module
 {
@@ -50,6 +52,16 @@ class Module
             'Application\Model\UsuarioCollection' => function($services) {
                     $mycollection = new MongoCollectionFactory('usuario','MyMongoDB' );
                     return new UsuarioCollection($mycollection->createService($services));
+                   
+                },
+             'Application\Model\VehiculoCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('vehiculo','MyMongoDB' );
+                    return new VehiculoCollection($mycollection->createService($services));
+                   
+                },
+                'Application\Model\EmpresaCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('empresa','MyMongoDB' );
+                    return new EmpresaCollection($mycollection->createService($services));
                    
                 },
              'MyMongoDB' => function ($services) {
