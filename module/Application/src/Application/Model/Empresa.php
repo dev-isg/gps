@@ -94,7 +94,7 @@ class Empresa
                         'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 10,
+                            'min'      => 3,
                             'max'      => 20,
                         ),
                     ),
@@ -131,7 +131,7 @@ class Empresa
                         'options' => array(
                             'encoding' => 'UTF-8',
                             'min'      => 6,
-                            'max'      =>20 ,
+                            'max'      =>200 ,
                         ),
                     ),
                 ),

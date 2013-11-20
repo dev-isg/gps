@@ -47,6 +47,13 @@ class EmpresaController extends AbstractActionController {
         return $this->usuarioMongodb;
     }
 
+    
+    public function indexAction() {
+        $resultados = $this->getEmpresaMongoDb()->getListaCombo();
+        $cantidad = count($resultados);
+        //echo json_encode($resultados);exit;
+        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+    } 
    public function agregarempresaAction() {
         $form = new EmpresaForm("form");
         $request = $this->getRequest();
@@ -60,10 +67,9 @@ class EmpresaController extends AbstractActionController {
                 $form->setData($request->getPost());
                 if ($form->isValid()){
                     $empresa->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($empresa);
-                    exit;
-                    $this->getEmpresaMongoDb()->agregarEmpresa($empresa);
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+                   $id_usuario=$this->getUsuariosMongoDb()->agregarUsuario($empresa);
+                   $this->getEmpresaMongoDb()->agregarEmpresa($empresa,$id_usuario);
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
                 }
                 else {
                 foreach ($form->getInputFilter()->getInvalidInput() as $error) {
@@ -72,7 +78,7 @@ class EmpresaController extends AbstractActionController {
                 }
             }
             } else {
-                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/agregarusuario?m=1');
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/agregarempresa?m=1');
             }
         }
         return new ViewModel(array('form' => $form));

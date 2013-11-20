@@ -25,24 +25,26 @@ class EmpresaCollection{
         }
         return $aux;
     }
-    public function agregarEmpresa(Empresa $valor, $id = null) {
+    
+    public function agregarEmpresa(Empresa $valor, $id) {
         $cantidad = array('descripcion' => $valor->descripcion,
             'ruc' => $valor->ruc,
             'nombre' => $valor->nombre,
             'direccion'=>$valor->direccion,
+            'usuario_id'=>$id,
             
         );
      
-        if ($id==null) {
+//        if ($id==null) {
             $usarios = $this->collection->insert($cantidad);
-            if ($usarios == true) {
+//            if ($usarios == true) {
                 return $usarios;
-            }
-        }    else {
-            $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
-            if ($usarios == true) {
-                return $usarios;
-            }
-        }
+//            }
+//        }    else {
+//            $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
+//            if ($usarios == true) {
+//                return $usarios;
+//            }
+//        }
     }
 }

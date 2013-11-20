@@ -4,9 +4,9 @@ return array(
     'modules' => array(    
         'Application',
         'PhlyMongo',
-        'ZfcBase',
-        'mandango',
-        'Skar'
+//        'ZfcBase',
+//        'mandango',
+//        'Skar'
 
     ),
 
