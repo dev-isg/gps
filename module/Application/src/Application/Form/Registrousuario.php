@@ -49,14 +49,16 @@ class Registrousuario extends Form
         ));
            $this->add(array(
             'name' => 'rol',
-            'type' => 'Text',
+            'type' => 'Select',
             'options' => array(
-                'label' => 'rol: ',          
-            ),
-              'attributes' => array(    
-                   'placeholder'=>'Ingrese rol'
-            
-            ),
+                'label' => 'Rol: ', 
+                'value_options'=>array(
+                    'administrador'=>'administrador',
+                    'empresa'=>'empresa',
+                    'vehiculo'=>'vehiculo'
+                ),
+                'empty_option'  => '--- elija ---',
+            )
         ));
         
         $this->add(array(
