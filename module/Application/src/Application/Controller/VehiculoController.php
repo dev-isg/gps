@@ -8,12 +8,12 @@ use Application\Model\VehiculoCollection;
 use Application\Form\VehiculoForm;
 use Mongo;
 class VehiculoController extends AbstractActionController{
+    protected $vehiculoMongodb;
+    protected $empresaMongodb;
     
     public function indexAction() {
-        $resultados = $this->getUsuariosMongoDb()->findAll();
-
+        $resultados = $this->getVehiculoMongoDb()->findAll();
         $cantidad = count($resultados);
-        //echo json_encode($resultados);exit;
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
     
@@ -41,6 +41,36 @@ class VehiculoController extends AbstractActionController{
         return new ViewModel(array('form' => $form));
     }
     
+    public function editarvehiculoAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+        }
+        try {
+            $vehiculo = $this->getVehiculoMongoDb()->getVehiculo($id);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+        }
+        $form = new Registrousuario();
+        $form->get('login')->setValue($vehiculo['login']);
+        $form->get('pass')->setValue($vehiculo['pass']);
+        $form->get('_id')->setValue($vehiculo['_id']);
+        $form->get('rol')->setValue($vehiculo['rol']);
+        // $form->bind($usuario);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $usuarios = new Usuario();
+            $form->setInputFilter($usuarios->getInputFilter());
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $usuarios->exchangeArray($form->getData());
+                $this->getUsuariosMongoDb()->agregarUsuario($usuarios, $id);
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+            }
+        }
+        return new ViewModel(array('form' => $form, 'id' => $id));
+    }
+    
     
        public function getEmpresaMongoDb() {
         if (!$this->empresaMongodb) {
@@ -48,6 +78,14 @@ class VehiculoController extends AbstractActionController{
             $this->empresaMongodb = $sm->get('Application\Model\EmpresaCollection');
         }
         return $this->empresaMongodb;
+    }
+    
+        public function getVehiculoMongoDb() {
+        if (!$this->vehiculoMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->vehiculoMongodb = $sm->get('Application\Model\VehiculoCollection');
+        }
+        return $this->vehiculoMongodb;
     }
     
 }

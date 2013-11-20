@@ -9,13 +9,28 @@ class VehiculoCollection{
     }
     public function findAll(){
         $vehiculos=$this->collection->find();
-        return $vehiculos;
+        $result=array();
+        foreach ($vehiculos as $value) {
+            $result[]=$value;
+        }
+            
+        return $result;
     }
     
     public function getVehiculo($idvehiculo){
         $vehiculo=$this->collection->findOne(array('id'=>$idvehiculo));
         return $vehiculo;
     }
+    
+   public function eliminarVehiculo($valor) {
+        $vehiculo = $this->collection->remove(array('_id' => new \MongoId($valor)));
+        if ($vehiculo == true) {
+            return $vehiculo;
+        } else {
+            echo 'error al eliminar';
+        }
+    }
+    
     public function guardarVehiculo($vehiculo){
         //obteniendo otra collecion en mi module
 //        var_dump($this->collection->db->empresa->findOne());Exit;
