@@ -13,18 +13,14 @@ class VehiculoCollection{
         $result=array();
         
         foreach ($vehiculos as $value) {
-//            $id=new \MongoId($value['empresa']['empresa_id']);
-            $resultvehi[]=$value;
             $idempresa=$value['empresa_id'];
             $dataempre=$this->collection->db->empresa->findOne(array('_id'=>$idempresa),array('nombre'=>true));
-//            $resultvehi=array($value,'nombre_empresa'=>$dataempre['nombre']);
-            var_dump($dataempre['nombre']);
-                array_push($resultvehi,$dataempre['nombre']);
+              $dataname=array('nombre_empresa'=>$dataempre['nombre']);
+//            array_push($value,$dataempre['nombre']);
+            $resultvehi[]=array_merge_recursive($value,$dataname);
         }
-        exit;
-//        $result=  array_merge_recursive($resultvehi,$nameemp);
-         var_dump($resultvehi);exit;
-        return $result;
+//         var_dump($resultvehi);exit;
+        return $resultvehi;
     }
     
     public function getVehiculo($idvehiculo){
