@@ -19,7 +19,9 @@ echo $this->form()->openTag($form);
 <?php echo $this->formRow($form->get('_id'));?>
 <div class="row-fluid">
 <div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('pass'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass')->setValue($this->pass));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass2')->setValue($this->pass));?></div>
+<?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
 </div>
 <div class="row-fluid">
 <div class="control-group span5"><?php echo $this->formRow($form->get('rol'));?></div>

@@ -83,7 +83,24 @@ class Usuario
                     ),
                 ),
             )));
-
+ $inputFilter->add($factory->createInput(array(
+                'name'     => 'pass2',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 5,
+                            'max'      => 100,
+                        ),
+                    ),
+                ),
+            )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'rol',
                 'required' => true,

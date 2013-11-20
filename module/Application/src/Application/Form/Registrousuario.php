@@ -35,6 +35,18 @@ class Registrousuario extends Form
             
             ),
         ));
+        
+         $this->add(array(
+            'name' => 'pass2',
+            'type' => 'password',
+            'options' => array(
+                'label' => 'Repita Pass: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Repita su pass'
+            
+            ),
+        ));
            $this->add(array(
             'name' => 'rol',
             'type' => 'Text',
