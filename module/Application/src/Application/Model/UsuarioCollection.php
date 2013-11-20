@@ -57,12 +57,12 @@ class UsuarioCollection {// extends MongoCollection
                 // 'id'=>"$val"
         );
 
-        if ($id) {
+        if ($id==null) {
             $usarios = $this->collection->insert($cantidad);
             if ($usarios == true) {
                 return $usarios;
             }
-        } else {
+        }    else {
             $usarios = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
             if ($usarios == true) {
                 return $usarios;
