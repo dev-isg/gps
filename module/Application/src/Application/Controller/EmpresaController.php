@@ -12,14 +12,16 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Application\Form\Registrousuario;
+use Application\Form\EmpresaForm;
 use Application\Form\Fieldset;
 use Mongo;
+use Application\Model\Empresa;
 use PhlyMongo\Mongodb;
 use Application\Model\Usuario;
 use PhlyMongo\MongoConnectionFactory;
 use PhlyMongo\MongoCollectionFactory;
 use Application\Model\EmpresaCollection;
+use Application\Model\UsuarioCollection;
 
 class EmpresaController extends AbstractActionController {
 
@@ -37,75 +39,43 @@ class EmpresaController extends AbstractActionController {
         return $this->empresaMongodb;
     }
 
-    public function indexAction() {
-        $resultados = $this->getEmpresaMongoDb()->getListaCombo();
-        var_dump($resultados);exit;
-        $cantidad = count($resultados);
-        //echo json_encode($resultados);exit;
-        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+     public function getUsuariosMongoDb() {
+        if (!$this->usuarioMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->usuarioMongodb = $sm->get('Application\Model\UsuarioCollection');
+        }
+        return $this->usuarioMongodb;
     }
-//
-//    public function eliminarusuarioAction() {
-//        $id = $this->params()->fromQuery('id');
-//        $this->getUsuariosMongoDb()->eliminarUsuario($id);
-//        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//    }
-//
-//    public function agregarusuarioAction() {
-//        $form = new Registrousuario("form");
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $usuarios = new Usuario();
-//            $form->setInputFilter($usuarios->getInputFilter());
-//            $form->setData($request->getPost());
-//            if ($form->isValid()) {
-//                $usuarios->exchangeArray($form->getData());
-//                $this->getUsuariosMongoDb()->agregarUsuario($usuarios);
-//                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//            }
-//        }
-//        return new ViewModel(array('form' => $form));
-//    }
-//
-//    public function editarusuarioAction() {
-//        $id = $this->params()->fromRoute('id', 0);
-//
-//
-//        if (!$id) {
-//            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//        }
-//        try {
-//            $usuario = $this->getUsuariosMongoDb()->obtenerUsuario($id);
-//        } catch (\Exception $ex) {
-//            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//        }
-//        $form = new Registrousuario();
-//        $form->get('login')->setValue($usuario['login']);
-//        $form->get('pass')->setValue($usuario['pass']);
-//        $form->get('_id')->setValue($usuario['_id']);
-//        $form->get('rol')->setValue($usuario['rol']);
-//        // $form->bind($usuario);
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $usuarios = new Usuario();
-//            $form->setInputFilter($usuarios->getInputFilter());
-//            $form->setData($request->getPost());
-//            if ($form->isValid()) {
-//                $usuarios->exchangeArray($form->getData());
-//                $this->getUsuariosMongoDb()->agregarUsuario($usuarios, $id);
-//                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//            }
-//        }
-//        return new ViewModel(array('form' => $form, 'id' => $id));
-//    }
-//
-//    public function mongoConect() {
-//        $imagen = $this->_options->mongo->server;
-//        $imagen2 = $this->_options->mongo->db;
-//        $m = new Mongo($imagen);
-//        $db = $m->$imagen2;
-//        return $db;
-//    }
 
+   public function agregarempresaAction() {
+        $form = new EmpresaForm("form");
+        $request = $this->getRequest();
+        if ($request->isPost()){
+           $datos = $this->request->getPost();
+            $pass1 = $datos['pass'];
+            $pass2 = $datos['pass2'];
+            if ($pass1 == $pass2) {
+                $empresa = new Empresa();
+                $form->setInputFilter($empresa->getInputFilter());
+                $form->setData($request->getPost());
+                if ($form->isValid()){
+                    $empresa->exchangeArray($form->getData());
+                    $this->getUsuariosMongoDb()->agregarUsuario($empresa);
+                    exit;
+                    $this->getEmpresaMongoDb()->agregarEmpresa($empresa);
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+                }
+                else {
+                foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                    print_r($error->getMessages());
+                    print_r($error->getName());
+                }
+            }
+            } else {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/agregarusuario?m=1');
+            }
+        }
+        return new ViewModel(array('form' => $form));
+    }  
 }
 

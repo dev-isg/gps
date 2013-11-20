@@ -49,14 +49,14 @@ class UsuarioCollection {// extends MongoCollection
         }
     }
 
-    public function agregarUsuario(Usuario $valor, $id = null) {
+    public function agregarUsuario($valor, $id = null) {
 
         $cantidad = array('login' => $valor->login,
             'pass' => $valor->pass,
             'rol' => $valor->rol,
-                // 'id'=>"$val"
         );
-
+           $ss = new \MongoId();
+           var_dump($ss);exit;
         if ($id==null) {
             $usarios = $this->collection->insert($cantidad);
             if ($usarios == true) {
