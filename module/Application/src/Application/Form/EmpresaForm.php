@@ -18,8 +18,12 @@ class EmpresaForm extends Form{
             'type' => 'Hidden',
         ));
         $this->add(array(
+            'name' => 'usuario_id',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
             'name' => 'descripcion',
-            'type' => 'Text',
+            'type' => 'Textarea',
             'options' => array(
                 'label' => 'descripcion: ',          
             ),
