@@ -20,7 +20,7 @@
        <tr>
         <td><?php echo $this->valores[$i]['_id']; ?></td>
       <!--  <td><?php// echo $this->valores[$i]['id']; ?></td>-->
-        <td><?php echo $this->valores[$i]['nombre']; ?></td>
+        <td><a href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores[$i]['_id'];?>" ><?php echo $this->valores[$i]['nombre']; ?> </a></td>
         <td><?php echo $this->valores[$i]['descripcion']; ?></td>
         <td><?php echo $this->valores[$i]['ruc']; ?></td>
         <td><?php echo $this->valores[$i]['usuario_id']; ?></td>

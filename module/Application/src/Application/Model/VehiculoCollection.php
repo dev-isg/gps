@@ -22,6 +22,8 @@ class VehiculoCollection{
 //         var_dump($resultvehi);exit;
         return $resultvehi;
     }
+
+    
     
     public function getVehiculo($idvehiculo){
         $vehiculo=$this->collection->findOne(array('_id'=>new \MongoId($idvehiculo)));
@@ -75,5 +77,15 @@ class VehiculoCollection{
         }
         
     }
-    
+     public function getVehiculos($idempresa){
+         
+       $vehiculos=$this->collection->find(array('empresa_id'=>new \MongoId($idempresa)));
+       $resultvehi=array();
+        foreach ($vehiculos as $value) {
+            $dataempre=$this->collection->db->empresa->findOne(array('_id'=>new \MongoId($idempresa)));
+            $dataname=array('nombre_empresa'=>$dataempre['nombre']);
+            $resultvehi[]=array_merge_recursive($value,$dataname);
+        }
+        return $resultvehi;
+    }
 }
