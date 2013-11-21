@@ -83,6 +83,17 @@ return array(
                     
                 )
             ),
+             'listarvehiculo' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/listar-vehiculo[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Vehiculo',
+                        'action' => 'listarvehiculo'
+                    )
+                    
+                )
+            ),
         ),
     ),
     'service_manager' => array(

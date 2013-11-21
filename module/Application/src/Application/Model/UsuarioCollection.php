@@ -61,5 +61,5 @@ class UsuarioCollection {// extends MongoCollection
             return $cantidad['_id'];
         }
     }
-
+    
 }

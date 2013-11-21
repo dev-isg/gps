@@ -71,7 +71,7 @@ class EmpresaForm extends Form{
             'name' => 'login',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Login: ',          
+                'label' => 'Usuario: ',          
             ),
              'attributes' => array(  
                   'placeholder'=>'Ingrese login'

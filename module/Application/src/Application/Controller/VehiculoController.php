@@ -20,17 +20,16 @@ class VehiculoController extends AbstractActionController {
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
 
+ 
     public function agregarvehiculoAction() {
 
         $form = new VehiculoForm();
         $resultados = $this->getEmpresaMongoDb()->getListaCombo();
-        $com = array();
-        for ($i = 0; $i < count($resultados); $i++) {
-            $com[] = array((String) $resultados[$i]['_id'] => $resultados[$i]['nombre']);
-            //$i++;
+        $medi = array();
+        foreach($resultados as $yes){
+            $medi[(String)$yes['_id']] = $yes['nombre'];
         }
-       var_dump($com);exit;
-        $form->get('empresa_id')->setValueOptions($com);
+        $form->get('empresa_id')->setValueOptions($medi);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();
@@ -98,7 +97,13 @@ class VehiculoController extends AbstractActionController {
         }
         return $this->empresaMongodb;
     }
-
+   
+     public function listarvehiculoAction() {
+       $id = $this->params()->fromRoute('id', 0);
+        $resultados = $this->getVehiculoMongoDb()->getVehiculos($id);
+        $cantidad = count($resultados);
+        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+    }
     public function getVehiculoMongoDb() {
         if (!$this->vehiculoMongodb) {
             $sm = $this->getServiceLocator();
