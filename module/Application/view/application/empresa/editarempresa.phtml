@@ -33,6 +33,7 @@ echo $this->form()->openTag($form);
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass')->setValue($this->pass));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass2')->setValue($this->pass));?></div>
     <?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
+ <div class="control-group span6"><?php echo $this->formRow($form->get('enviar'));?> 
 <div class="row-fluid">
 <div class="control-group span12 "><?php echo $this->formSubmit($form->get('submit'));?></div></div><?php echo $this->form()->closeTag();?> 
 </div>
