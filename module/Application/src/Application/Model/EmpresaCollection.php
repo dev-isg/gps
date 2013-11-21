@@ -19,8 +19,13 @@ class EmpresaCollection {
         $this->collection = $adapter;
     }
 
-    public function getListaCombo() {
-        $listEmp = $this->collection->find();
+    public function getListaCombo($consulta = null) {
+        if ($consulta == null) {
+            $listEmp = $this->collection->find();
+        } else {
+            $regex = new \MongoRegex("/$consulta/");
+            $listEmp = $this->collection->find(array('nombre' => $regex));
+        }
         foreach ($listEmp as $value) {
             $aux[] = $value;
         }
@@ -43,6 +48,8 @@ class EmpresaCollection {
             'ruc' => $valor->ruc,
             'nombre' => $valor->nombre,
             'direccion' => $valor->direccion,
+            'email'=>$valor->email,
+            'telefono'=>$valor->telefono
         );
 
         if ($editar == null) {

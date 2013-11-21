@@ -20,6 +20,7 @@ use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
 use Application\Model\TramasCollection;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -80,7 +81,13 @@ class Module
                     $config = $config['mongo'];
                     $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
                     return $factory->createService($services);
-                }
+                },
+             'mail.transport' => function ($sm) {
+                $config = $sm->get('config'); 
+                $transport = new \Zend\Mail\Transport\Smtp();   
+                $transport->setOptions(new \Zend\Mail\Transport\SmtpOptions($config['mail']['transport']['options']));
+                return $transport;
+            }
                 //'PhlyMongo\MongoConnectionFactory'
                 ));
     }

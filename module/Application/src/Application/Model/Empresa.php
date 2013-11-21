@@ -17,6 +17,8 @@ class Empresa
     public $login;
     public $pass;
     public $rol;
+    public $email;
+    public $telefono;
     
     
     public function exchangeArray($data)
@@ -30,6 +32,8 @@ class Empresa
         $this->login = (!empty($data['login'])) ? $data['login'] : null;
         $this->pass= (!empty($data['pass'])) ? $data['pass'] : null;
         $this->rol     = (!empty($data['rol'])) ? $data['rol'] : null;
+        $this->email     = (!empty($data['email'])) ? $data['email'] : null;
+         $this->telefono     = (!empty($data['telefono'])) ? $data['telefono'] : null;
     }
 // Add content to these methods:
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -64,6 +68,14 @@ class Empresa
                 ),
             )));
              $inputFilter->add($factory->createInput(array(
+                'name'     => 'enviar',
+                'required' => false,
+               'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+            )));
+             $inputFilter->add($factory->createInput(array(
                 'name'     => 'usuario_id',
                 'required' => true,
                'filters'  => array(
@@ -71,8 +83,45 @@ class Empresa
                     array('name' => 'StringTrim'),
                 ),
             )));
-
-
+           $inputFilter->add($factory->createInput(array(
+                'name'     => 'telefono',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 18,
+                        ),
+                    ),
+                ),
+            )));
+              $inputFilter->add($factory->createInput(array( 
+                'name' => 'email', 
+                'required' => true, 
+                'filters' => array( 
+                    array('name' => 'StripTags'), 
+                    array('name' => 'StringTrim'), 
+                ), 
+                'validators' => array( 
+                    array( 
+                        'name' => 'EmailAddress', 
+                        'options' => array( 
+                            'encoding' => 'UTF-8', 
+                            'min'      => 5, 
+                            'max'      => 255, 
+                            'messages' => array( 
+                                \Zend\Validator\EmailAddress::INVALID_FORMAT => 'Formato de Email Inválido' 
+                            ) 
+                        ), 
+                    ), 
+                ), 
+            )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'descripcion',
                 'required' => false,

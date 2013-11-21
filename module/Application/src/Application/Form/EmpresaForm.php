@@ -25,13 +25,48 @@ class EmpresaForm extends Form{
             'name' => 'descripcion',
             'type' => 'Textarea',
             'options' => array(
-                'label' => 'descripcion: ',          
+                'label' => 'descripción: ',          
             ),
              'attributes' => array(  
                   'placeholder'=>'Ingrese descripcion'
             ),
         ));
         
+         $this->add(array(
+            'name' => 'telefono',
+            'type' => 'Text',       
+            'options' => array(
+                'label' => 'Teléfono',          
+            ),
+            'attributes' => array(               
+                'class' => 'span10  ',
+                'id'   => 'va_telefono',
+                'placeholder'=>'Ingrese el telefono'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'email',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Correo: ',          
+            ),
+            'attributes' => array(
+                'class' => 'span10',
+                'placeholder' => 'Ingrese el mail... '
+            ),
+        ));
+        
+          $this->add(array(
+            'type' => 'Checkbox',
+            'name' => 'enviar',
+         
+            'options' => array(
+                'label' => 'enviar credenciales?: ',  
+                'use_hidden_element' => true,
+                'checked_value' => 'si',
+                'unchecked_value' => 'no'
+            )
+        ));
         $this->add(array(
             'name' => 'ruc',
             'type' => 'Text',
@@ -59,7 +94,7 @@ class EmpresaForm extends Form{
             'name' => 'direccion',
             'type' => 'Text',
             'options' => array(
-                'label' => 'direccion: ',          
+                'label' => 'dirección: ',          
             ),
               'attributes' => array(    
                    'placeholder'=>'Ingrese direccion'
