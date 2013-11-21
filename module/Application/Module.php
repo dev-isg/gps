@@ -19,6 +19,7 @@ use PhlyMongo\MongoDbFactory;
 use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
+use Zend\I18n\Translator\Translator;
 
 class Module
 {
@@ -75,7 +76,13 @@ class Module
                     $config = $config['mongo'];
                     $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
                     return $factory->createService($services);
-                }
+                },
+             'mail.transport' => function ($sm) {
+                $config = $sm->get('config'); 
+                $transport = new \Zend\Mail\Transport\Smtp();   
+                $transport->setOptions(new \Zend\Mail\Transport\SmtpOptions($config['mail']['transport']['options']));
+                return $transport;
+            }
                 //'PhlyMongo\MongoConnectionFactory'
                 ));
     }

@@ -19,4 +19,18 @@ return array(
             'version'=>1,
         ),
     
+      'mail' => array(
+        'transport' => array(
+            'options' => array(
+                'host'              => 'smtp.innovationssystems.com',
+                'connection_class'  => 'login',
+                'connection_config' => array(
+                    'username' => 'listadelsabor@innovationssystems.com',
+                    'password' => 'L1st@d3ls@b0r',
+                    // 'ssl' => 'tls'
+                ),
+            ),
+        ),
+    ),
+    
 );
