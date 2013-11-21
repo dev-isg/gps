@@ -19,7 +19,7 @@ use PhlyMongo\MongoDbFactory;
 use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
-
+use Application\Model\TramasCollection;
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -49,6 +49,11 @@ class Module
 //                    $factory = new MongoConnectionFactory($config['server'], $config['server_options']);
 //                    return $factory->createService($services);
 //                }
+            'Application\Model\TramasCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('tramas','MyMongoDB' );
+                    return new TramasCollection($mycollection->createService($services));
+                   
+                },
             'Application\Model\UsuarioCollection' => function($services) {
                     $mycollection = new MongoCollectionFactory('usuario','MyMongoDB' );
                     return new UsuarioCollection($mycollection->createService($services));

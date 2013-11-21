@@ -119,7 +119,8 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Vehiculo' => 'Application\Controller\VehiculoController',
-            'Application\Controller\Empresa' => 'Application\Controller\EmpresaController'
+            'Application\Controller\Empresa' => 'Application\Controller\EmpresaController',
+            'Application\Controller\Tramas' => 'Application\Controller\TramasController'
         ),
     ),
     'view_manager' => array(
