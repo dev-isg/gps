@@ -48,7 +48,11 @@ class EmpresaController extends AbstractActionController {
     }
 
     public function indexAction() {
+        
+        $consulta = $this->params()->fromPost('texto');
         $resultados = $this->getEmpresaMongoDb()->getListaCombo();
+        if ($this->getRequest()->isPost()) {
+       $resultados = $this->getEmpresaMongoDb()->getListaCombo($consulta);}
         $cantidad = count($resultados);
         //echo json_encode($resultados);exit;
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
