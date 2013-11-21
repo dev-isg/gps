@@ -8,10 +8,13 @@ class VehiculoCollection{
        $this->collection=$adapter;
     }
     public function findAll(){
+//        $var=$this->collection->db->execute(new \MongoCode('listarVehiculos'));
+//        foreach($var as $val){
+//             var_dump($val);
+//        }
+//       Exit;
         $vehiculos=$this->collection->find();
-      
-        $result=array();
-        
+
         foreach ($vehiculos as $value) {
             $idempresa=$value['empresa_id'];
             $dataempre=$this->collection->db->empresa->findOne(array('_id'=>$idempresa),array('nombre'=>true));
@@ -19,7 +22,6 @@ class VehiculoCollection{
 //            array_push($value,$dataempre['nombre']);
             $resultvehi[]=array_merge_recursive($value,$dataname);
         }
-//         var_dump($resultvehi);exit;
         return $resultvehi;
     }
     

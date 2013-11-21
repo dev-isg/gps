@@ -59,11 +59,12 @@ class VehiculoController extends AbstractActionController {
         $form->get('_id')->setValue($vehiculo['_id']);
         
         $resultados = $this->getEmpresaMongoDb()->getListaCombo();
+        
         $com = array();
-        for ($i = 0; $i < count($resultados); $i++) {
-            $com = array((String) $resultados[$i]['_id'] => $resultados[$i]['nombre']);
-            $i++;
+        foreach($resultados as $res){
+            $com[(String)$res["_id"]]=$res["nombre"];
         }
+        
         $form->get('empresa_id')->setValueOptions($com);
         
         // $form->bind($usuario);
