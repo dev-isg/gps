@@ -16,41 +16,163 @@ class VehiculoForm extends Form{
             'type' => 'Hidden',
         ));
         $this->add(array(
+            'name' => 'empresa_id',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
+            'name' => 'usuario_id',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
+            'name' => 'rol',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
             'name' => 'nombre_corto',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Nombre de vehiculo: ',          
+                'label' => 'Nombre del vehículo: ',          
+            ),
+             'attributes' => array(  
+                  'placeholder'=>'ingrese Nombre del vehículo'
+            ),
+        ));
+        
+          $this->add(array(
+            'name' => 'chofer_nom',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Nombre del chofer: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'ingrese nombre del chofer'
+            
+            ),
+        ));
+        $this->add(array(
+            'name' => 'email',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Correo: ',          
+            ),
+            'attributes' => array(
+                'class' => 'span10',
+                'placeholder' => 'Ingrese el mail... '
+            ),
+        ));
+        
+         $this->add(array(
+            'name' => 'login',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Usuario: ',          
             ),
              'attributes' => array(  
                   'placeholder'=>'Ingrese login'
             ),
         ));
-        
-        $this->add(array(
-            'name' => 'chofer_nom',
+         $this->add(array(
+            'name' => 'num_imei',
             'type' => 'Text',
             'options' => array(
-                'label' => 'nombre de chofer: ',          
+                'label' => 'num_imei: ',          
+            ),
+             'attributes' => array(  
+                  'placeholder'=>'Ingrese num_imei'
+            ),
+        ));
+          $this->add(array(
+            'name' => 'num_sim',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'num_sim: ',          
+            ),
+             'attributes' => array(  
+                  'placeholder'=>'Ingrese num_sim'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'pass',
+            'type' => 'password',
+            'options' => array(
+                'label' => 'Pass: ',          
             ),
               'attributes' => array(    
-                   'placeholder'=>'Ingrese rol'
+                   'placeholder'=>'Ingrese pass'
             
             ),
         ));
-           
-       $this->add(array(
-            'name' => 'empresa_id',
-            'type' => 'Select',
+        $this->add(array(
+            'name' => 'pass2',
+            'type' => 'password',
             'options' => array(
-                'label' => 'Empresa: ', 
-                'value_options'=>array(
-                    '1'=>'La estafa SAC',
-                    '528ba218bf8eb1f40e000009'=>'Gps corporation'
-                ),
-                'empty_option'  => '--- Sin Empresa ---',
-            )
+                'label' => 'Repita Pass: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Repita su pass'
+            
+            ),
+        ));
+        $this->add(array(
+            'name' => 'color_ruta',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'color_ruta: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese color_ruta'
+            
+            ),
+        ));
+         $this->add(array(
+            'name' => 'placa',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'placa: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese placa'
+            
+            ),
         ));
         
+//         $this->add(array(
+//            'name' => 'estado',
+//            'type' => 'Text',
+//            'options' => array(
+//                'label' => ' estado: ',          
+//            ),
+//              'attributes' => array(    
+//                   'placeholder'=>'Repita '
+//            
+//            ),
+//        )); 
+       
+
+             $this->add(array(
+            'name' => 'chofer_telefono',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'teléfono: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese teléfono'
+            
+            ),
+        ));
+         
+    
+          $this->add(array(
+            'type' => 'Checkbox',
+            'name' => 'enviar',
+         
+            'options' => array(
+                'label' => 'enviar credenciales?: ',  
+                'use_hidden_element' => true,
+                'checked_value' => 'si',
+                'unchecked_value' => 'no'
+            )
+        ));
         $this->add(array(
             'name' => 'submit',
             'type' => 'Text',
@@ -65,21 +187,21 @@ class VehiculoForm extends Form{
             ),
         ));
         
-        $this->setInputFilter( $this->validadores());
+      //  $this->setInputFilter( $this->validadores());
     }
     
-        public function validadores(){
-    
-        $inputFilter = new InputFilter();
-  
-        $inputFilter->add(array(
-            'name' => '_id',
-            'required' => false,
-
-        ));
-         
-    
-        return $inputFilter;
-    }
-    
+//        public function validadores(){
+//    
+//        $inputFilter = new InputFilter();
+//  
+//        $inputFilter->add(array(
+//            'name' => '_id',
+//            'required' => false,
+//
+//        ));
+//         
+//    
+//        return $inputFilter;
+//    }
+//    
 }

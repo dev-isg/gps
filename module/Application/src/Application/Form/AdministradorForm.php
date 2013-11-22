@@ -2,12 +2,12 @@
 namespace Application\Form;
 
 use Zend\Form\Form;
-class Registrousuario extends Form
+class AdministradorForm extends Form
 {
     public function __construct($name = null)
     {
         // we want to ignore the name passed
-        parent::__construct('registrusuario');
+        parent::__construct('registroadministrador');
         $this->setAttribute('method', 'post');
    //     $this->setInputFilter(new \Application\Form\RegistrousuarioFiltro());
         $this->add(array(
@@ -15,13 +15,21 @@ class Registrousuario extends Form
             'type' => 'Hidden',
         ));
         $this->add(array(
+            'name' => 'rol',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
+            'name' => 'usuario_id',
+            'type' => 'Hidden',
+        ));
+        $this->add(array(
             'name' => 'login',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Login: ',          
+                'label' => 'Usuario: ',          
             ),
              'attributes' => array(  
-                  'placeholder'=>'Ingrese login'
+                  'placeholder'=>'Ingrese Usuario'
             ),
         ));
         $this->add(array(
@@ -60,19 +68,7 @@ class Registrousuario extends Form
             
             ),
         ));
-           $this->add(array(
-            'name' => 'rol',
-            'type' => 'Select',
-            'options' => array(
-                'label' => 'Rol: ', 
-                'value_options'=>array(
-                    'administrador'=>'administrador',
-                    'empresa'=>'empresa',
-                    'vehiculo'=>'vehiculo'
-                ),
-                'empty_option'  => '--- elija ---',
-            )
-        ));
+
         
         $this->add(array(
             'name' => 'submit',

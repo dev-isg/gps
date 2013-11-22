@@ -48,7 +48,7 @@ class UsuarioCollection {// extends MongoCollection
         }
     }
 
-    public function agregarUsuario($valor, $accion = null) {
+    public function agregarUsuario($valor,$usuario_id=null, $accion = null) {
         $cantidad = array('login' => $valor->login,
             'pass' => $valor->pass,
             'rol' => $valor->rol);
@@ -56,8 +56,8 @@ class UsuarioCollection {// extends MongoCollection
             $cantidad['_id'] = new \MongoId();
             $usarios = $this->collection->insert($cantidad);
             return $cantidad['_id'];
-        } else {
-            $usarios = $this->collection->update(array('_id' => new \MongoId($valor->usuario_id)), $cantidad);
+        } else { 
+            $usarios = $this->collection->update(array('_id' => new \MongoId($usuario_id)), $cantidad);
             return $cantidad['_id'];
         }
     }

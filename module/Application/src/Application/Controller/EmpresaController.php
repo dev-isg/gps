@@ -110,7 +110,7 @@ class EmpresaController extends AbstractActionController {
                 $form->setData($request->getPost());
                 if ($form->isValid()) {
                     $empresa->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($empresa, 'editar');
+                    $this->getUsuariosMongoDb()->agregarUsuario($empresa,$datos['usuario_id'], 'editar');
                     $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $datos['_id'], 'editar');
                     if ($datos['enviar'] == 'si') {
                         $this->correo($empresa);

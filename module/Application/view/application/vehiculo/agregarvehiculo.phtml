@@ -16,11 +16,24 @@ $form->prepare();
 echo $this->form()->openTag($form);
 ?>
 <legend><?php echo $this->escapeHtml($title); ?></legend>
-
+<?php echo $this->formRow($form->get('empresa_id'));?>
+<?php echo $this->formRow($form->get('rol')->setValue('vehiculo'));?>
+<h3>datos del vehiculo</h3>
 <div class="row-fluid">
 <div class="control-group span6"><?php echo $this->formRow($form->get('nombre_corto'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('num_imei'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('num_sim'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('color_ruta'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('placa'));?></div>
+<h3>datos del chofer</h3>
 <div class="control-group span6"><?php echo $this->formRow($form->get('chofer_nom'));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('empresa_id'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('chofer_telefono'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('email'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass2'));?></div>
+   <?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
+<div class="control-group span6"><?php echo $this->formRow($form->get('enviar'));?></div>
 </div>
 
 <div class="row-fluid">

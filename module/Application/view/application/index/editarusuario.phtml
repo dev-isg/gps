@@ -18,6 +18,7 @@ echo $this->form()->openTag($form);
 <legend><?php echo $this->escapeHtml($title); ?></legend>
 <?php echo $this->formRow($form->get('_id'));?>
 <div class="row-fluid">
+<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass')->setValue($this->pass));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass2')->setValue($this->pass));?></div>

@@ -20,6 +20,7 @@ use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
 use Application\Model\TramasCollection;
+use Application\Model\AdministradorCollection;
 
 class Module
 {
@@ -68,6 +69,11 @@ class Module
                 'Application\Model\EmpresaCollection' => function($services) {
                     $mycollection = new MongoCollectionFactory('empresa','MyMongoDB' );
                     return new EmpresaCollection($mycollection->createService($services));
+                   
+                },
+               'Application\Model\AdministradorCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('administrador','MyMongoDB' );
+                    return new AdministradorCollection($mycollection->createService($services));
                    
                 },
              'MyMongoDB' => function ($services) {
