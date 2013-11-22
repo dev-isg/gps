@@ -38,8 +38,8 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
-        $resultados = $this->getUsuariosMongoDb()->findAll();
-        $cantidad = count($resultados);
+      //  $resultados = $this->getUsuariosMongoDb()->findAll();
+       // $cantidad = count($resultados);
         //echo json_encode($resultados);exit;
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
