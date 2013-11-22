@@ -2,18 +2,20 @@
 
 <div class="row-fluid">
     <div class="span12" id="flip-scroll">
-        <a data-id="" href="<?php echo $this->basePath();?>/application/index/agregarusuario" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar Usuario</a>
-        <a data-id="" href="<?php echo $this->basePath();?>/application/empresa/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listado de Empresa</a>
-        <a data-id="" href="<?php echo $this->basePath();?>/application/vehiculo/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listado de Vehiculo</a>
-
+        <a data-id="" href="<?php echo $this->basePath();?>/application/administrador/agregaradministrador" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar Administrador</a>
+      <a data-id="" href="<?php echo $this->basePath();?>/application/administrador/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listado de  Admin</a>
+         <a data-id="" href="<?php echo $this->basePath();?>/application/empresa/agregarempresa" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar Empresa</a>
+    <a data-id="" href="<?php echo $this->basePath();?>/application/empresa/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listado de Empresa</a>
+       <!-- <a data-id="" href="<?php echo $this->basePath();?>/application/vehiculo/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listado de Vehiculo</a>-->
+       
          <br><br>
-       <table class="table table-bordered table-hover">
+     <!--  <table class="table table-bordered table-hover">
              <thead class="cf"> <tr>
             <th>idMongo</th>
-          <!--  <th>id</th>-->
+          <!--  <th>id</th>
             <th>rol</th>
             <th>Usuario</th>
-         <!--   <th>pass</th>-->
+            <th>pass</th>
             <th>Operaciones</th>
         </tr> </thead>
         <?php  for($i=0;$i<$this->cantidad;$i++) {?>
@@ -23,11 +25,11 @@
         <td><?php echo $this->valores[$i]['rol']; ?></td>
         <td><?php echo $this->valores[$i]['login']; ?></td>
      <!--   <td><?php// echo $this->valores[$i]['pass']; ?></td>-->
-    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-usuario/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
-                
+    <!-- <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-usuario/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
+      <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+             
          </tr>
        <?php }; ?>
         </table>
-    </div>
+    </div>-->
 </div>

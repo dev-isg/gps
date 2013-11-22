@@ -72,13 +72,35 @@ return array(
                     
                 )
             ),
+            'editaradministrador' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar-administrador[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Administrador',
+                        'action' => 'editaradministrador'
+                    )
+                    
+                )
+            ),
               'editar-vehiculo' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/editar/vehiculo[/:id]',
+                    'route' => '/editar/vehiculo[/:id_empresa/:id_vehiculo]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Vehiculo',
                         'action' => 'editarvehiculo'
+                    )
+                    
+                )
+            ),
+             'eliminar-vehiculo' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/eliminar/vehiculo[/:id_usuario/:id_vehiculo/:id_empresa]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Vehiculo',
+                        'action' => 'eliminarvehiculo'
                     )
                     
                 )
@@ -118,9 +140,11 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Administrador' => 'Application\Controller\AdministradorController',
             'Application\Controller\Vehiculo' => 'Application\Controller\VehiculoController',
             'Application\Controller\Empresa' => 'Application\Controller\EmpresaController',
-            'Application\Controller\Tramas' => 'Application\Controller\TramasController'
+            'Application\Controller\Tramas' => 'Application\Controller\TramasController',
+             
         ),
     ),
     'view_manager' => array(

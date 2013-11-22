@@ -48,8 +48,8 @@ class EmpresaCollection {
             'ruc' => $valor->ruc,
             'nombre' => $valor->nombre,
             'direccion' => $valor->direccion,
-            'email'=>$valor->email,
-            'telefono'=>$valor->telefono
+            'email' => $valor->email,
+            'telefono' => $valor->telefono
         );
 
         if ($editar == null) {

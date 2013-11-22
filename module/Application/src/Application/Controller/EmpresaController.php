@@ -110,8 +110,11 @@ class EmpresaController extends AbstractActionController {
                 $form->setData($request->getPost());
                 if ($form->isValid()) {
                     $empresa->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($empresa, 'editar');
+                    $this->getUsuariosMongoDb()->agregarUsuario($empresa,$datos['usuario_id'], 'editar');
                     $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $datos['_id'], 'editar');
+                    if ($datos['enviar'] == 'si') {
+                        $this->correo($empresa);
+                    }
                     return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
                 } else {
                     foreach ($form->getInputFilter()->getInvalidInput() as $error) {
@@ -129,7 +132,7 @@ class EmpresaController extends AbstractActionController {
     public function correo($empresa) {
         $message = new Message();
         $message->addTo($empresa->email, $empresa->nombre)
-                ->setFrom('listadelsabor@innovationssystems.com', 'listadelsabor.com')
+                ->setFrom('listadelsabor@innovationssystems.com', 'GPS')
                 ->setSubject('Credenciales para el acceso a GPS');
         $bodyHtml = '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
                                                        <head>
@@ -140,7 +143,7 @@ class EmpresaController extends AbstractActionController {
                                                              Hola  Empresa <strong style="color:#133088; font-weight: bold;">' . $empresa->nombre . ',</strong><br /><br />
                                                 Tu cuenta en GPS es :<br /><br />
                                                 Tus Usuario es : ' . $empresa->login . '</a> <br /><br />
-                                                Tus Pass es : : ' . $empresa->pass . '</a> <br /><br />
+                                                Tus Pass es : ' . $empresa->pass . '</a> <br /><br />
                                                 <br /><br /><br />                                               
                                                              </div>
                                                        </body>
