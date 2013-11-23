@@ -20,3 +20,9 @@ require 'init_autoloader.php';
 
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+$cwd = getcwd();
+chdir('/path/to/zf2-application');
+require 'init_autoloader.php';
+Zend\Mvc\Application::init(require 'config/application.config.php');
+chdir($cwd);
+session_start();

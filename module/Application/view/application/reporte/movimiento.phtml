@@ -1,0 +1,59 @@
+<?php
+$title = 'Movimiento Global';
+$this->headTitle($title);
+?>
+<div class="row-fluid">
+<div class="span12" id="flip-scroll">
+    <?php
+    $form = $this->form;
+    $form->setAttributes(array(
+        'action' => $this->url . '/application/reporte/movimiento',
+        'method' => 'post',
+        'class' => 'form-inline',
+        'role' => 'form'
+    ));
+
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    ?>
+    <legend><?php echo $this->escapeHtml($title); ?></legend>
+    <div class="control-group">
+        <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
+        <div class="form-group"><?php echo $this->formRow($form->get('fechafin')); ?></div>
+        <?php echo $this->formSubmit($form->get('submit')); ?>
+    </div>
+    <?php echo $this->form()->closeTag(); ?> 
+<!--    <button type="button" class="btn">Excel</button>
+    <button type="button" class="btn">Imprimir</button>-->
+    <br><br>
+    <table class="table table-bordered table-hover">
+    <thead class="cf"> <tr>
+            <th>idMongo</th>
+            <th>Nombre</th>
+            <th>Tiempo</th>
+            <th>Kilometraje</th>
+            <th>Quedar</th>
+            <th>Exeso de velocidad</th>
+            <th>Work time</th>
+        </tr> </thead>
+    <!--<?php for ($i = 0; $i < $this->cantidad; $i++) { ?>
+        <tr>
+            <td><?php echo $this->valores[$i]['_id']; ?></td>
+            <td><?php echo $this->valores[$i]['nombre_corto']; ?></td>
+            <td><?php echo $this->valores[$i]['chofer']['chofer_nom']; ?></td>
+            <td><?php echo $this->valores[$i]['nombre_empresa']; ?></td>
+            <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath(); ?>/application/vehiculo/eliminarvehiculo?id=<?php echo $this->valores[$i]['_id']; ?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+                <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath(); ?>/editar/vehiculo/<?php echo $this->valores[$i]['_id']; ?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
+
+        </tr>
+    <?php }; ?> -->
+</table>
+</div>
+    </div>
+
+
+
+
+
+
+

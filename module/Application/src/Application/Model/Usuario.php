@@ -87,7 +87,7 @@ class Usuario
             )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'nombre',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -105,7 +105,7 @@ class Usuario
             )));
  $inputFilter->add($factory->createInput(array(
                 'name'     => 'pass2',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -123,7 +123,7 @@ class Usuario
             )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'rol',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),

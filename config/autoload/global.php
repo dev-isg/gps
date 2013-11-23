@@ -27,8 +27,22 @@ return array(
                 'connection_config' => array(
                     'username' => 'listadelsabor@innovationssystems.com',
                     'password' => 'L1st@d3ls@b0r',
-                    // 'ssl' => 'tls'
                 ),
+            ),
+        ),
+    ),
+     'session' => array(
+        'config' => array(
+            'class' => 'Zend\Session\Config\SessionConfig',
+            'options' => array(
+                'name' => 'myapp',
+            ),
+        ),
+        'storage' => 'Zend\Session\Storage\SessionArrayStorage',
+        'validators' => array(
+            array(
+                'Zend\Session\Validator\RemoteAddr',
+                'Zend\Session\Validator\HttpUserAgent',
             ),
         ),
     ),

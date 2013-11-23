@@ -12,13 +12,13 @@ class VehiculoCollection {
         $this->collection = $adapter;
     }
 
-    public function findAll() {
+    public function vehiculosParticulares() {
 //        $var=$this->collection->db->execute(new \MongoCode('listarVehiculos'));
 //        foreach($var as $val){
 //             var_dump($val);
 //        }
 //       Exit;
-        $vehiculos = $this->collection->find();
+        $vehiculos = $this->collection->find(array('empresa_id'=>''));
 
         foreach ($vehiculos as $value) {
             $idempresa = $value['empresa_id'];

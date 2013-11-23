@@ -1,5 +1,5 @@
 <?php
-$title = 'Agregar nuevo vehiculo';
+$title = 'Agregar nuevo vehiculo a '.$this->empresa;
 $this->headTitle($title);
 ?>
 
@@ -38,4 +38,6 @@ echo $this->form()->openTag($form);
 
 <div class="row-fluid">
 <div class="control-group span12 "><?php echo $this->formSubmit($form->get('submit'));?></div></div><?php echo $this->form()->closeTag();?> 
+<a data-id="" href="javascript:history.back(1)" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>cancelar</a>
+       
 </div>

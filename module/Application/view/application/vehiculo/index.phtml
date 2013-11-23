@@ -1,26 +1,32 @@
 <div class="row-fluid">
     <div class="span12" id="flip-scroll">
-        <a data-id="" href="<?php echo $this->basePath();?>/application/vehiculo/agregarvehiculo" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar</a>
+         <a data-id="" href="<?php echo $this->basePath();?>/application/empresa/index" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>< Atras</a>
+        <a data-id="" href="<?php echo $this->basePath();?>/application/vehiculo/agregarvehiculo" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Agregar Vehiculo Particular</a>
+        <i><?php echo $this->valores[0]['nombre_empresa'] ?></i>
         <br><br>
        <table class="table table-bordered table-hover">
              <thead class="cf"> <tr>
-            <th>idMongo</th>
-            <th>Nombre</th>
+           <th>N°</th>
+            <th>Nombre Vehículo</th>
+            <th>Num Imei</th>
+            <th>Num Sim</th>
+            <th>Placa</th>
             <th>Chofer</th>
-            <th>Empresa</th>
+            <th>telefono</th>
             <th>Operaciones</th>
         </tr> </thead>
-        <?php  for($i=0;$i<$this->cantidad;$i++) {?>
+        <?php $count = 1; for($i=0;$i<$this->cantidad;$i++) {?>
        <tr>
-        <td><?php echo $this->valores[$i]['_id']; ?></td>
-      <!--  <td><?php// echo $this->valores[$i]['id']; ?></td>-->
+        <td><?php echo $count++ ?></td>
         <td><?php echo $this->valores[$i]['nombre_corto']; ?></td>
+        <td><?php echo $this->valores[$i]['num_imei']; ?></td>
+        <td><?php echo $this->valores[$i]['num_sim']; ?></td>
+        <td><?php echo $this->valores[$i]['placa']; ?></td>
         <td><?php echo $this->valores[$i]['chofer']['chofer_nom']; ?></td>
-        <td><?php echo $this->valores[$i]['nombre_empresa']; ?></td>
-    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/application/vehiculo/eliminarvehiculo?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/editar/vehiculo/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
-                
-         </tr>
+          <td><?php echo $this->valores[$i]['chofer']['chofer_telefono']; ?></td>
+    <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/editar/vehiculo/particular/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
+       <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php //echo $this->basePath();?>/eliminar/vehiculo/<?php echo $this->valores[$i]['usuario_id'];?>/<?php echo $this->valores[$i]['_id'];?>/eliminar" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+     </tr>
        <?php }; ?>
         </table>
     </div>
