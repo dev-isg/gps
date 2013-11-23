@@ -20,6 +20,13 @@ use Application\Model\Usuario;
 use PhlyMongo\MongoConnectionFactory;
 use PhlyMongo\MongoCollectionFactory;
 use Application\Model\UsuarioCollection;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+use Zend\Session\SessionManager;
+use Zend\Session\Storage\ArrayStorage;
+
+//use Zend\Session\SaveHandler\MongoDB;
+//use Zend\Session\SaveHandler\MongoDBOptions;
 
 class IndexController extends AbstractActionController {
 
@@ -38,10 +45,61 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
-      //  $resultados = $this->getUsuariosMongoDb()->findAll();
-       // $cantidad = count($resultados);
+       // $S=new SessionManager();
+       // $storage = new SessionManager();
+       // $cc =$S->getStorage()->fromArray($array);
+       // var_dump($storage->getStorage());exit;
+       // var_dump($storage->fromArray($populateStorage)->_id);exit;
+        //  $resultados = $this->getUsuariosMongoDb()->findAll();
+        // $cantidad = count($resultados);
         //echo json_encode($resultados);exit;
-        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+        return new ViewModel(array());
+    }
+
+    public function loginAction() {
+        $form = new Registrousuario();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $usuarios = new Usuario();
+            $form->setInputFilter($usuarios->getInputFilter());
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $usuarios->exchangeArray($form->getData());
+                $datosLogin = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
+                $populateStorage = array('rol' => $datosLogin['rol'], 'login' => $datosLogin['login'],'_id'=>(String)$datosLogin['_id']);
+                $storage = new ArrayStorage($populateStorage);
+                $manager = new SessionManager();
+                
+                $manager->setStorage($storage);
+               $manager->start();  
+                //$storage->read()->in_id;
+      
+                // $stors = $this->getServiceLocator('Zend\Session\SessionManager');
+//           var_dump($storage->read()->va_imagen);exit;
+              //   $id = $stors->read()->_id;
+               //  var_dump($stors->);exit;
+//                exit;
+//                    $mongo = new \Mongo();
+//                    $options = new MongoDBOptions(array(
+//                        'database' => $this->_options->mongo->db,
+//                     'collection' =>'usuario',));
+//                    $saveHandler = new MongoDB($mongo, $options);
+//                    $manager = new SessionManager();
+//                    var_dump($manager);exit;
+//                    $manager->setSaveHandler($saveHandler);
+
+                if ($manager->sessionExists() == true) {
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+                } else {
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/login');
+                }
+            } else {
+                foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                    //print_r($error->getMessages());
+                }
+            }
+        }
+        return new ViewModel(array('form' => $form));
     }
 
     public function eliminarusuarioAction() {

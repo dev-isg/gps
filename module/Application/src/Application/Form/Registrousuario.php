@@ -18,10 +18,10 @@ class Registrousuario extends Form
             'name' => 'login',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Login: ',          
+                'label' => 'Usuario: ',          
             ),
              'attributes' => array(  
-                  'placeholder'=>'Ingrese login'
+                  'placeholder'=>'Ingrese su usuario'
             ),
         ));
         $this->add(array(

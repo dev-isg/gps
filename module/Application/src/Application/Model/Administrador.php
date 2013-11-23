@@ -78,7 +78,7 @@ class Administrador
                         'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 5,
+                            'min'      => 6,
                             'max'      => 100,
                         ),
                     ),

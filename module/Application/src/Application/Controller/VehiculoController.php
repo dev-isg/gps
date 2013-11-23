@@ -19,13 +19,17 @@ class VehiculoController extends AbstractActionController {
     protected $empresaMongodb;
 
     public function indexAction() {
-        $resultados = $this->getVehiculoMongoDb()->findAll();
+        $resultados = $this->getVehiculoMongoDb()->vehiculosParticulares();
         $cantidad = count($resultados);
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
 
     public function agregarvehiculoAction() {
+
         $id = $this->params()->fromQuery('id');
+        if ($id) {
+            $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
+        }
         $form = new VehiculoForm();
         $form->get('empresa_id')->setValue($id);
         $request = $this->getRequest();
@@ -44,7 +48,11 @@ class VehiculoController extends AbstractActionController {
                     if ($datos['enviar'] == 'si') {
                         $this->correo($vehiculo);
                     }
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $datos['empresa_id']);
+                    if ($datos['empresa_id'] == '') {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+                    } else {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $datos['empresa_id']);
+                    }
                 } else {
                     foreach ($form->getInputFilter()->getInvalidInput() as $error) {
                         print_r($error->getMessages());
@@ -55,19 +63,27 @@ class VehiculoController extends AbstractActionController {
                 return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/agregarvehiculo?id=' . $datos['empresa_id'] . '&m=1');
             }
         }
-        return new ViewModel(array('form' => $form));
+        return new ViewModel(array('form' => $form, 'empresa' => $empresa['nombre']));
     }
 
     public function editarvehiculoAction() {
         $id = $this->params()->fromRoute('id_vehiculo', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
         if (!$id) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            if ($idempresa != 'particular') {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            } else {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+            }
         }
         try {
             $vehiculo = $this->getVehiculoMongoDb()->getVehiculo($id);
         } catch (\Exception $ex) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            if ($idempresa != 'particular') {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            } else {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+            }
         }
         $form = new VehiculoForm();
         $form->get('nombre_corto')->setValue($vehiculo[0]['nombre_corto']);
@@ -100,7 +116,11 @@ class VehiculoController extends AbstractActionController {
                     if ($datos['enviar'] == 'si') {
                         $this->correo($vehiculo);
                     }
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+                    if ($idempresa == 'particular') {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+                    } else {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+                    }
                 } else {
                     foreach ($form->getInputFilter()->getInvalidInput() as $error) {
                         print_r($error->getMessages());
@@ -119,7 +139,11 @@ class VehiculoController extends AbstractActionController {
         $idusuario = $this->params()->fromRoute('id_usuario', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
         $this->getVehiculoMongoDb()->eliminarVehiculo($id, $idusuario);
-        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+        if ($idempresa == 'eliminar') {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+        }
     }
 
     public function correo($vehiculo) {

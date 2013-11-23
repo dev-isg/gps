@@ -16,27 +16,29 @@
          <br><br>
        <table class="table table-bordered table-hover">
              <thead class="cf"> <tr>
-            <th>idMongo</th>
+            <th>N°</th>
           <!--  <th>id</th>-->
             <th>nombre</th>
             <th>descripcion</th>
             <th>ruc</th>
-            <th>usuario</th>
+            <th>Teléfono</th>
          <!--   <th>pass</th>-->
             <th>Operaciones</th>
         </tr> </thead>
-        <?php  for($i=0;$i<$this->cantidad;$i++) {?>
+        <?php $count = 1; for($i=0;$i<$this->cantidad;$i++) {?>
        <tr>
-        <td><?php echo $this->valores[$i]['_id']; ?></td>
+       <!-- <td><?php echo $this->valores[$i]['_id']; ?></td>-->
+            <td><?php echo $count++ ?></td>
       <!--  <td><?php// echo $this->valores[$i]['id']; ?></td>-->
         <td><a href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores[$i]['_id'];?>" ><?php echo $this->valores[$i]['nombre']; ?> </a></td>
         <td><?php echo $this->valores[$i]['descripcion']; ?></td>
         <td><?php echo $this->valores[$i]['ruc']; ?></td>
-        <td><?php echo $this->valores[$i]['usuario_id']; ?></td>
+        <td><?php echo $this->valores[$i]['telefono']; ?></td>
      <!--   <td><?php// echo $this->valores[$i]['pass']; ?></td>-->
     <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-empresa/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
-     <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-              
+  <!--   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
+          -->  
+         <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listar Vehículos</a>
          </tr>
        <?php }; ?>
         </table>

@@ -20,7 +20,7 @@ class UsuarioCollection {// extends MongoCollection
     }
 
     public function findAll() {
-
+        
         $usarios = $this->collection->find(); //$this->collection->db_gps2->usuario->find();
         $resultados = array();
         foreach ($usarios as $result) {
@@ -60,6 +60,13 @@ class UsuarioCollection {// extends MongoCollection
             $usarios = $this->collection->update(array('_id' => new \MongoId($usuario_id)), $cantidad);
             return $cantidad['_id'];
         }
+    }
+    
+      public function obtenerUsuarioLogin($datos) {
+       $cantidad = array('login' => $datos->login,
+                'pass' => $datos->pass);      
+        $usarios = $this->collection->findOne($cantidad);
+        return $usarios;
     }
     
 }

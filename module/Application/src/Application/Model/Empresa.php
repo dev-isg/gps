@@ -152,7 +152,7 @@ class Empresa
                         'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 3,
+                            'min'      => 5,
                             'max'      => 20,
                         ),
                     ),
