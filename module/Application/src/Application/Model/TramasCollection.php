@@ -22,7 +22,28 @@ class TramasCollection {
     }
     
     public function getSeguimientoVehiculos($idempresa){
-        $empresa = $this->collection->empresa->find(array('_id' => new \MongoId($idempresa)));
+        $vehiculo = $this->collection->vehiculo->find(array('empresa_id' => new MongoId($idempresa)),
+                array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
+        foreach($vehiculo as $vehi){
+//                $vehi['chofer_nom']=$vehi['chofer']['chofer_nom'];
+//                $vehi['placa']=$vehi['placa'];
+                
+                $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],'fecha_ubicacion' => array('$gt' => $fecha))
+                , array('alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
+                'lat' => true, 'lng' => true,'vehiculo_id'=>true)
+                );
+                $vehi['alerta']=$trama['alerta'];
+                $vehi['hms']=$trama['hms'];
+                $vehi['fecha_ubicacion']=$trama['fecha_ubicacion'];
+                $vehi['orientacion']=$trama['orientacion'];
+                $vehi['velocidad']=$trama['velocidad'];
+                $vehi['lat']=$trama['lat'];
+                $vehi['lng']=$trama['lng'];
+                $vehi['vehiculo_id']=$trama['vehiculo_id'];
+                
+                $auxtramas[]=$vehi;
+         }
+      return json_encode($auxtramas);
         
     }
 
@@ -97,5 +118,34 @@ class TramasCollection {
 //        var_dump($this->collection->db->lastError());
         return json_encode($auxtime);
     
+    }
+    
+    public function buscarMovimiento($inicio, $fin){
+//       $trama = $this->collection->find(array('fecha_ubicacion' => array('$gt' => $iniciof,'$lte' => $finf))                                                      
+//                , array('alerta'=>true,'hms'=>true,'orientacion' => true, 'velocidad' => true, 'lat' => true, 'lng' => true, 'fecha_ubicacion' => true,'vehiculo_id'=>true)
+//                );
+       
+      $vehiculo = $this->collection->vehiculo->find(array('empresa_id' => new MongoId($idempresa)),
+                array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
+      
+        foreach($vehiculo as $vehi){
+                $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],'fecha_ubicacion' => array('$gt' => $fecha))
+                , array('alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
+                'lat' => true, 'lng' => true,'vehiculo_id'=>true)
+                );
+                $vehi['alerta']=$trama['alerta'];
+                $vehi['hms']=$trama['hms'];
+                $vehi['fecha_ubicacion']=$trama['fecha_ubicacion'];
+                $vehi['orientacion']=$trama['orientacion'];
+                $vehi['velocidad']=$trama['velocidad'];
+                $vehi['lat']=$trama['lat'];
+                $vehi['lng']=$trama['lng'];
+                $vehi['vehiculo_id']=$trama['vehiculo_id'];
+                
+                $auxtramas[]=$vehi;
+         }
+      return json_encode($auxtramas);
+       
+        
     }
 }

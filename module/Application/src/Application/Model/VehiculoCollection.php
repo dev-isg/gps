@@ -89,5 +89,4 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
-
 }

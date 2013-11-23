@@ -13,7 +13,11 @@ class TramasController extends AbstractActionController{
     protected $tramaMongodb;
     
 
-    
+    public function homeAction(){
+        $seguimiento=$this->getTramaMongoDb()->getSeguimientoVehiculos("528d3ab3bf8eb1780c000046");
+        var_dump($seguimiento);Exit;
+        return array();
+    }
     public function seguimientoAction(){
         $idvehiculo='528e9378bf8eb1140e00004e';
         $fechaactual='2013-11-21 18:47:27';
