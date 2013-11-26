@@ -86,7 +86,7 @@ return array(
               'editar-vehiculo' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/editar/vehiculo[/:id_empresa[/:id_vehiculo]]',
+                    'route' => '/editar/vehiculo[/:id_vehiculo[/:id_empresa]]',///:id_empresa
                     'defaults' => array(
                         'controller' => 'Application\Controller\Vehiculo',
                         'action' => 'editarvehiculo'
@@ -154,7 +154,8 @@ return array(
             'Application\Controller\Administrador' => 'Application\Controller\AdministradorController',
             'Application\Controller\Vehiculo' => 'Application\Controller\VehiculoController',
             'Application\Controller\Empresa' => 'Application\Controller\EmpresaController',
-            'Application\Controller\Tramas' => 'Application\Controller\TramasController'
+            'Application\Controller\Tramas' => 'Application\Controller\TramasController',
+            'Application\Controller\Reporte' => 'Application\Controller\ReporteController',
              
         ),
     ),
@@ -174,6 +175,9 @@ return array(
             __DIR__ . '/../view',
         ),
     ),
+     'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     // Placeholder for console routes
     'console' => array(
         'router' => array(

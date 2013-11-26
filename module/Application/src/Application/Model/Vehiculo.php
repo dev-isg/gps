@@ -23,8 +23,7 @@ class Vehiculo
     
     public $empresa_id;
     public $email;
-    
-    
+
     public $nombre_corto;
     public $num_imei;
     public $num_sim;
