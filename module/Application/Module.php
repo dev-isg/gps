@@ -20,6 +20,7 @@ use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
 use Application\Model\TramasCollection;
+use Application\Model\SessionCollection;
 use Application\Model\AdministradorCollection;
 use Zend\Session\SessionManager;
 use Zend\Session\Container;
@@ -122,6 +123,11 @@ class Module
                'Application\Model\AdministradorCollection' => function($services) {
                     $mycollection = new MongoCollectionFactory('administrador','MyMongoDB' );
                     return new AdministradorCollection($mycollection->createService($services));
+                   
+                },
+               'Application\Model\SessionCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('session','MyMongoDB' );
+                    return new SessionCollection($mycollection->createService($services));
                    
                 },
              'MyMongoDB' => function ($services) {

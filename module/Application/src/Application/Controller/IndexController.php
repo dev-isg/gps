@@ -23,7 +23,10 @@ use Application\Model\UsuarioCollection;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Session\SessionManager;
+use Zend\Session\ManagerInterface;
 use Zend\Session\Storage\ArrayStorage;
+use Zend\Session\Storage\SessionStorage;
+use Application\Model\SessionCollection;
 
 //use Zend\Session\SaveHandler\MongoDB;
 //use Zend\Session\SaveHandler\MongoDBOptions;
@@ -31,6 +34,7 @@ use Zend\Session\Storage\ArrayStorage;
 class IndexController extends AbstractActionController {
 
     protected $usuarioMongodb;
+    protected $sessionMongodb;
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
@@ -44,16 +48,30 @@ class IndexController extends AbstractActionController {
         return $this->usuarioMongodb;
     }
 
+    public function getSessionMongoDb() {
+        if (!$this->sessionMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->sessionMongodb = $sm->get('Application\Model\SessionCollection');
+        }
+        return $this->sessionMongodb;
+    }
+
     public function indexAction() {
-       // $S=new SessionManager();
-       // $storage = new SessionManager();
-       // $cc =$S->getStorage()->fromArray($array);
-       // var_dump($storage->getStorage());exit;
-       // var_dump($storage->fromArray($populateStorage)->_id);exit;
-        //  $resultados = $this->getUsuariosMongoDb()->findAll();
-        // $cantidad = count($resultados);
-        //echo json_encode($resultados);exit;
-        return new ViewModel(array());
+
+        $resultado=$this->getUsuariosMongoDb()->read();
+        if ($resultado==!false) {
+            return new ViewModel(array('rol'=>$_SESSION['rol']));
+        } else {
+            
+            
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
+    }
+
+    public function logoutAction() {
+
+        $this->getUsuariosMongoDb()->logout($_SESSION['user_id']);
+        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
     }
 
     public function loginAction() {
@@ -65,34 +83,26 @@ class IndexController extends AbstractActionController {
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $usuarios->exchangeArray($form->getData());
-                $datosLogin = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
-                $populateStorage = array('rol' => $datosLogin['rol'], 'login' => $datosLogin['login'],'_id'=>(String)$datosLogin['_id']);
-                $storage = new ArrayStorage($populateStorage);
-                $manager = new SessionManager();
-                
-                $manager->setStorage($storage);
-               $manager->start();  
-                //$storage->read()->in_id;
-      
-                // $stors = $this->getServiceLocator('Zend\Session\SessionManager');
-//           var_dump($storage->read()->va_imagen);exit;
-              //   $id = $stors->read()->_id;
-               //  var_dump($stors->);exit;
-//                exit;
-//                    $mongo = new \Mongo();
-//                    $options = new MongoDBOptions(array(
-//                        'database' => $this->_options->mongo->db,
-//                     'collection' =>'usuario',));
-//                    $saveHandler = new MongoDB($mongo, $options);
-//                    $manager = new SessionManager();
-//                    var_dump($manager);exit;
-//                    $manager->setSaveHandler($saveHandler);
-
-                if ($manager->sessionExists() == true) {
+                $resultado = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
+                // var_dump($resultado);exit;
+                if (!empty($resultado)) {
                     return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
                 } else {
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/login');
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
                 }
+
+//                $usuarios->exchangeArray($form->getData());
+//                $datosLogin = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
+//                $populateStorage = array('rol' => $datosLogin[0]['rol'], 'login' => $datosLogin[0]['login'],'_id'=>(String)$datosLogin[0]['_id']);
+//                $storage = new ArrayStorage($populateStorage);
+//                $manager = new SessionManager(); 
+//                $manager->setStorage($storage);
+//                var_dump($manager->getConfig());exit;
+//                if ($manager->sessionExists() == true) { 
+//                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
+//                } else {
+//                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/login');
+//                }
             } else {
                 foreach ($form->getInputFilter()->getInvalidInput() as $error) {
                     //print_r($error->getMessages());

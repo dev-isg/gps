@@ -116,6 +116,17 @@ return array(
                     
                 )
             ),
+              'login' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/login',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'login'
+                    )
+                    
+                )
+            ),
         ),
     ),
     'service_manager' => array(
@@ -143,7 +154,7 @@ return array(
             'Application\Controller\Administrador' => 'Application\Controller\AdministradorController',
             'Application\Controller\Vehiculo' => 'Application\Controller\VehiculoController',
             'Application\Controller\Empresa' => 'Application\Controller\EmpresaController',
-            'Application\Controller\Tramas' => 'Application\Controller\TramasController',
+            'Application\Controller\Tramas' => 'Application\Controller\TramasController'
              
         ),
     ),

@@ -1,14 +1,9 @@
 <?php
-
-    
-  
-
-
 return array(
       'mongo' => array(  
         'server'         => 'mongodb://192.168.1.50',
         'server_options' => array('connect' => true),
-        'db'             => 'db_gps2',
+      'db'             => 'db_gps2',
     ),
    'host' => array(
             'base' => 'http://192.168.1.34:84',
