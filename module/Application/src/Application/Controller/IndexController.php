@@ -31,7 +31,8 @@ use Zend\Session\Storage\ArrayStorage;
 class IndexController extends AbstractActionController {
 
     protected $usuarioMongodb;
-
+    protected $vehiculoMongodb;
+    
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
     }
@@ -43,8 +44,19 @@ class IndexController extends AbstractActionController {
         }
         return $this->usuarioMongodb;
     }
+    
+    public function getVehiculoMongoDb() {
+        if (!$this->vehiculoMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->vehiculoMongodb = $sm->get('Application\Model\VehiculoCollection');
+        }
+        return $this->vehiculoMongodb;
+    }
 
     public function indexAction() {
+        
+        $idempresa = $this->params()->fromRoute('id', 0);
+        $resultados = $this->getVehiculoMongoDb()->getVehiculos($idempresa);
        // $S=new SessionManager();
        // $storage = new SessionManager();
        // $cc =$S->getStorage()->fromArray($array);
@@ -53,7 +65,7 @@ class IndexController extends AbstractActionController {
         //  $resultados = $this->getUsuariosMongoDb()->findAll();
         // $cantidad = count($resultados);
         //echo json_encode($resultados);exit;
-        return new ViewModel(array());
+        return new ViewModel(array('vehiculos'=>$resultados));
     }
 
     public function loginAction() {

@@ -36,6 +36,18 @@ $this->headTitle($title);
             <th>Exeso de velocidad</th>
             <th>Work time</th>
         </tr> </thead>
+        <?php foreach($this->tramas as $trama){ ?>
+            <tr>
+            <td><?php echo $trama['_id']; ?></td>
+            <td><?php echo $trama['chofer_nom']; ?></td>
+            <td></td>
+            <td><?php echo $trama['hms']; ?></td
+            <td></td>
+             <td></td>
+              <td></td>
+               <td></td>
+            </tr>
+        <?php }?>
     <!--<?php for ($i = 0; $i < $this->cantidad; $i++) { ?>
         <tr>
             <td><?php echo $this->valores[$i]['_id']; ?></td>

@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use MongoCollection;
+use MongoId;
 
 class VehiculoCollection {
 
@@ -89,4 +90,25 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
+    
+     /*
+     * obtiene listado de conductores segun id de empresa
+     * @return array
+     */
+    
+    public function getConductor($idempresa){
+        $conductores=$this->collection->find(array('empresa_id'=>new MongoId($idempresa)),
+                    array('chofer.chofer_nom'=>true,'chofer.chofer_id'=>true));
+        $listconduc=array();
+        foreach($conductores as $conductor){
+            $listconduc[(String)$conductor['_id']]=$conductor['chofer']['chofer_nom'];
+             //(String)$conductor['chofer']['chofer_id']
+            
+        }
+      
+        return $listconduc;
+        
+    }
+
+
 }

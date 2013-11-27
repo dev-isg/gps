@@ -36,32 +36,18 @@ class MovimientoForm extends Form{
 //                'label_attributes'=>'col-sm-2 control-label'
             ),
         ));
-//      
-//         $this->add(array(
-//            'name' => 'placa',
-//            'type' => 'Text',
-//            'options' => array(
-//                'label' => 'placa: ',          
-//            ),
-//              'attributes' => array(    
-//                   'placeholder'=>'Ingrese placa'
-//            
-//            ),
-//        ));
-//        
-//      
-//             $this->add(array(
-//            'name' => 'chofer_telefono',
-//            'type' => 'Text',
-//            'options' => array(
-//                'label' => 'teléfono: ',          
-//            ),
-//              'attributes' => array(    
-//                   'placeholder'=>'Ingrese teléfono'
-//            
-//            ),
-//        ));
-//         
+      
+           $this->add(array(
+            'name' => 'usario_vehiculo',
+            'type' => 'Select',
+            'attributes'=>array('class'=>'form-control'),
+            'options' => array(
+                'value_options'=>array(
+                ),
+                'empty_option'  => '--- chofer ---',
+            )
+        ));
+      
    
         $this->add(array(
             'name' => 'submit',
@@ -92,6 +78,12 @@ class MovimientoForm extends Form{
         $inputFilter->add(array(
             'name' => 'fechafin',
             'required' => true,
+
+        ));
+        
+        $inputFilter->add(array(
+            'name' => 'usario_vehiculo',
+            'required' => false,
 
         ));
          

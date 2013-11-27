@@ -21,6 +21,7 @@ class TramasCollection {
         return $trama;
     }
     
+    
     public function getSeguimientoVehiculos($idempresa){
         $vehiculo = $this->collection->vehiculo->find(array('empresa_id' => new MongoId($idempresa)),
                 array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
@@ -51,7 +52,7 @@ class TramasCollection {
         $fechaactual= str_replace("/","-", $fechaactual);
         $fecha=new MongoDate(strtotime($fechaactual));
         //nombre de vehiculo
-        $trama = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo),'fecha_ubicacion' => array('$gt' => $fecha))
+        $trama = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo))//,array('$gt' => $fecha))
                 , array('alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
                 'lat' => true, 'lng' => true, 'fecha_ubicacion' => true,'vehiculo_id'=>true)
                 );
@@ -67,8 +68,7 @@ class TramasCollection {
             $auxtrama[]=$tr;
             }
         
-//            var_dump(iterator_to_array($trama));Exit;
-        return json_encode($auxtrama);
+        return $auxtrama;//json_encode($auxtrama);
     }
 
     public function getReproduccionVehiculo($inicio, $fin,$idvehiculo=null) {
@@ -116,36 +116,78 @@ class TramasCollection {
         }
         
 //        var_dump($this->collection->db->lastError());
-        return json_encode($auxtime);
+  
+        return $auxtime;//json_encode($auxtime);
     
     }
-    
-    public function buscarMovimiento($inicio, $fin){
-//       $trama = $this->collection->find(array('fecha_ubicacion' => array('$gt' => $iniciof,'$lte' => $finf))                                                      
-//                , array('alerta'=>true,'hms'=>true,'orientacion' => true, 'velocidad' => true, 'lat' => true, 'lng' => true, 'fecha_ubicacion' => true,'vehiculo_id'=>true)
-//                );
-       
-      $vehiculo = $this->collection->vehiculo->find(array('empresa_id' => new MongoId($idempresa)),
-                array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
+    /*
+     * Retorna todos los vehiculos segun fecha y empreas
+     * params inicio , fin  idempresa
+     * @return json 
+     */
+    //
+    public function buscarMovimiento($inicio=null, $fin=null,$idempresa){
+        $iniciof=new MongoDate(strtotime($inicio));//new MongoDate(strtotime("2013-11-21T20:30:51.656Z"));//new MongoDate(date("c",$timeI));//
+        $finf=new MongoDate(strtotime($fin));
+        
+      $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => new MongoId($idempresa))
+              ,array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true)
+              );
       
         foreach($vehiculo as $vehi){
-                $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],'fecha_ubicacion' => array('$gt' => $fecha))
+                $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id']
+                    ,'fecha_ubicacion' => array('$gt' => $iniciof
+                    ,'$lte' => $finf)
+                    )
                 , array('alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
                 'lat' => true, 'lng' => true,'vehiculo_id'=>true)
                 );
-                $vehi['alerta']=$trama['alerta'];
-                $vehi['hms']=$trama['hms'];
-                $vehi['fecha_ubicacion']=$trama['fecha_ubicacion'];
-                $vehi['orientacion']=$trama['orientacion'];
-                $vehi['velocidad']=$trama['velocidad'];
-                $vehi['lat']=$trama['lat'];
-                $vehi['lng']=$trama['lng'];
-                $vehi['vehiculo_id']=$trama['vehiculo_id'];
-                
-                $auxtramas[]=$vehi;
+
+                foreach($trama as $tr){
+                   $auxve=array('chofer_nom'=>$vehi['chofer']['chofer_nom'],'placa'=>$vehi ['placa']);
+                   $tr2=  array_merge_recursive($tr, $auxve);
+                    $auxtramas[]=$tr2;
+                    
+                }
+           
          }
-      return json_encode($auxtramas);
-       
+         
+      return $auxtramas;
+    }
+    
+      /*
+     * Retorna registros de vehiculo los  segun idvehiculos,fecha y empreas
+     * params inicio , fin  idempresa
+     * @return json 
+     */
+    //
+    public function buscarMovimientoVehic($inicio = null, $fin = null, $idvehiculo = null) {
+        $iniciof =new MongoDate(strtotime($inicio));//date("c",strtotime($inicio)); //
+        $finf =new MongoDate(strtotime($fin));//date("c",strtotime($fin)); //
+
+        $vehiculo = $this->collection->db->vehiculo->find(array('_id' => new MongoId($idvehiculo))
+                , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true)
+        );
+         foreach($vehiculo as $vehi){
+             $vehi['chofer']=$vehi['chofer']['chofer_nom'];
+             $dataempresa=$this->collection->db->empresa->findOne(array('_id'=>$vehi['empresa_id']),
+                    array('nombre'=>true));
+             $vehi['nombre_empresa']=$dataempresa['nombre'];
+             $arrx=$vehi;
+        }
         
+        $total=$this->collection->db->execute(
+                new \MongoCode('estadisticaDispositivo(fechai,fechaf)', array(
+                    'fechai' => $iniciof,'fechaf' =>$finf
+                ))
+            );
+//        Ejecutando directamente
+//        $salida=$this->collection->db->execute('db.tramas.aggregate( [ { $match: { fecha_ubicacion:{$gte:ISODate("'.$iniciof.'"), $lte:ISODate("'.$finf.'")},vehiculo_id:ObjectId("'.$idvehiculo.'") } },{ $group: { _id: {$dayOfYear:"$fecha_ubicacion"},totalkilom: { $sum: "$hms" } } } ] )');
+//        foreach($salida['retval']['result'] as $result){
+//            $total[]=  array_merge_recursive($arrx,array('total_km'=>$result['totalkilom']));          
+//        }
+        $auxtramas=array_merge_recursive($arrx,$total);
+        var_dump($auxtramas);Exit;
+        return $auxtramas;
     }
 }
