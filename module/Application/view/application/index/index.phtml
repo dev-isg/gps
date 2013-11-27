@@ -1,7 +1,83 @@
- <a data-id="" href="<?php echo $this->basePath();?>/application/index/logout" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>serrar Session</a>  
 <? if ($this->rol=='administrador'){  ?>
-  <a data-id="" href="<?php echo $this->basePath();?>/application/administrador/admin" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>admin</a>     
- <?php  } elseif($this->rol=='empresa'){ echo $this->rol;
-  
-  }else echo $this->rol;?>
+ <div>
+    <div  id="flip-scroll">
+         <br><br>
+       <table  width="250" class=" table-bordered table-hover">
+             <thead class="cf"> <tr>
+                     <tr>
+            <th><form name='form_busqueda'class="form-search" action='/application/index/index' method ="post">
+                    <div class="control-group">
+                    <input type='text' name='texto' id="texto" placeholder="Nombre de empresa" />
+                    <input type="submit" class="btn" name="submit" value="Buscar">
+                    </div>
+            </form></th>
+        </tr>
+            <th>Empresas</th>
+        </tr> </thead>
+        <?php $count = 1; for($i=0;$i<$this->cantidad;$i++) {?>
+       <tr>
+       <!-- <td><?php echo $this->valores[$i]['_id']; ?></td>-->
+       <!--     <td><?php echo $count++ ?></td>-->
+       <!-- <td><a href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores[$i]['_id'];?>" ><?php echo $this->valores[$i]['nombre']; ?> </a></td>-->
+<td><a href="<?php echo $this->basePath();?>/application/index/index?id=<?php echo $this->valores[$i]['_id'];?>" ><?php echo $this->valores[$i]['nombre']; ?> (<?php echo $this->valores[$i]['cantidad']; ?>) </a></td>
+       <?php }; ?>
+        </table><br>
+         <table width="250"  class=" table-bordered table-hover">
+             <thead class="cf"> <tr>
+            <th>Vehículos</th>
+        </tr>    <tr>
+            <th><form name='form'class="form-search" action='/application/index/index' method ="post">
+                    <div class="control-group">
+                    <input type='text' name='vehiculo' id="texto" placeholder="nombre o placa" />
+                    <input type="submit" class="btn" name="submit" value="Buscar">
+                    </div>
+            </form></th>
+        </tr>
+             <tr>
+                 <th><a href="#">todos</a>/<a href="#" >on line</a>/<a href="#">off line</a></th>
+        </tr> </thead>
+        <?php for($i=0;$i<$this->cantidadVehiculo;$i++) {?>
+       <tr>
+        <td><?php echo $this->vehiculo[$i]['nombre_corto']; ?> (<?php echo $this->vehiculo[$i]['placa']; ?>) </a></td>
+       <?php }; ?>
+        </table>
+    </div>
+</div>
+      <?php  } elseif($this->rol=='empresa'){ 
+      ?>  <table width="250" class=" table-bordered table-hover">
+             <thead class="cf"> <tr>
+            <th>Empresa</th>
+        </tr> </thead>
+       <tr>
+       <!-- <td><?php echo $this->valores['_id']; ?></td>-->
+        <td><?php echo $this->valores[0]['nombre']; ?> (<?php echo $this->valores[0]['cantidad']; ?>) </a></td>
+        </table> <br>
+          <table width="250"  class=" table-bordered table-hover">
+             <thead class="cf"> <tr>
+            <th>Vehículos</th>
+        </tr>    <tr>
+            <th><form name='form'class="form-search" action='/application/index/index' method ="post">
+                    <div class="control-group">
+                    <input type='text' name='vehiculo' id="texto" placeholder="nombre o placa" />
+                    <input type="submit" class="btn" name="submit" value="Buscar">
+                    </div>
+            </form></th>
+        </tr>
+             <tr>
+                 <th><a href="<?php echo $this->basePath();?>/application/index/index?estado=1">todos</a>/<a href="<?php echo $this->basePath();?>/application/index/index?estado=2" >on line</a>/<a href="<?php echo $this->basePath();?>/application/index/index?estado=3">off line</a></th>
+        </tr> </thead>
+        <?php for($i=0;$i<$this->cantidadVehiculo;$i++) {?>
+       <tr>
+        <td><a href="<?php echo $this->basePath();?>/application/index/index?detalle=<?php echo $this->vehiculo[$i]['_id']; ?>"><?php echo $this->vehiculo[$i]['nombre_corto']; ?> (<?php echo $this->vehiculo[$i]['placa']; ?>) </a></td>
+       <?php }; ?>
+       </table><?php
+  }else {?>
+  <table width="250" class=" table-bordered table-hover">
+             <thead class="cf"> <tr>
+            <th>Vehículo</th>
+        </tr> </thead>
+       <tr>
+       <!-- <td><?php echo $this->valores['_id']; ?></td>-->
+        <td><?php echo $this->valores[0]['nombre_corto']; ?> (<?php echo $this->valores[0]['placa']; ?>) </a></td>
+        </table> <?php } ?> 
   

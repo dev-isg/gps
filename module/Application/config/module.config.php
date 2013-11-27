@@ -10,7 +10,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'home' => array(
+            'Index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/',
@@ -72,6 +72,28 @@ return array(
                     
                 )
             ),
+            'admin' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/administrador',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Administrador',
+                        'action' => 'admin'
+                    )
+                    
+                )
+            ),
+             'logout' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/logout',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'logout'
+                    )
+                    
+                )
+            ),
             'editaradministrador' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -127,6 +149,7 @@ return array(
                     
                 )
             ),
+            
         ),
     ),
     'service_manager' => array(

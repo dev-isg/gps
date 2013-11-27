@@ -34,6 +34,13 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         $this->bootstrapSession($e);
+       
+//             $controller = $e->getTarget();
+//             $login = new \Application\Model\UsuarioCollection();
+//             $session = $login->isLoggedIn();
+//             $controller->layout()->session = $session;
+         
+        
     }
 
     public function getConfig()
@@ -43,16 +50,19 @@ class Module
     
         public function bootstrapSession($e)
             {
+               $controller = $e->getTarget();
                 $session = $e->getApplication()
                              ->getServiceManager()
-                             ->get('Zend\Session\SessionManager');
-                $session->start();
-
-                $container = new Container('initialized');
-                if (!isset($container->init)) {
-                     $session->regenerateId(true);
-                     $container->init = 1;
-                }
+                             ->get('Application\Model\UsuarioCollection');
+                $session->isLoggedIn();
+                 
+                
+              //  $controller->layout()->session = 'entrada';
+//                $container = new Container('initialized');
+//                if (!isset($container->init)) {
+//                     $session->regenerateId(true);
+//                     $container->init = 1;
+//                }
             }
             
     public function getServiceConfig() {

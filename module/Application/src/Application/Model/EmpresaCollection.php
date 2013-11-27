@@ -32,6 +32,24 @@ class EmpresaCollection {
         return $aux;
     }
 
+    public function getLista($consulta = null) {
+
+        if ($consulta == null) {
+            $listEmp = $this->collection->find();
+        } else {
+            $regex = new \MongoRegex("/$consulta/");
+            $listEmp = $this->collection->find(array('nombre' => $regex));
+        }
+        $resultvehi = array();
+        foreach ($listEmp as $value) {
+            $id = (String) $value['_id'];
+            $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
+            $dataname = array('cantidad' => $vehiculo->count());
+            $resultvehi[] = array_merge_recursive($value, $dataname);
+        }
+        return $resultvehi;
+    }
+
     public function obtenerEmpresa($id) {
 
         $empresa = $this->collection->findOne(array('_id' => new \MongoId($id)));
@@ -40,6 +58,18 @@ class EmpresaCollection {
             throw new \Exception("Could not find row $id");
         }
         return $empresa;
+    }
+
+    public function obtenerEmpresaCantidad($id) {
+
+        $empresa = $this->collection->findOne(array('_id' => new \MongoId($id)));
+        $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
+        $dataname = array('cantidad' => $vehiculo->count());
+        $resultvehi[] = array_merge_recursive($empresa, $dataname);
+        if (!$resultvehi) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $resultvehi;
     }
 
     public function agregarEmpresa(Empresa $valor, $id, $editar = null) {

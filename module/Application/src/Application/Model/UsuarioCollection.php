@@ -13,8 +13,6 @@ namespace Application\Model;
 
 class UsuarioCollection {// extends MongoCollection 
 
-   const COLLECTION = 'sessions'; //nombre de la colección en la que serán almacenadas las sesiones
-    
     const SESSION_TIMEOUT = 600; //La sesión expira después de 10 minutos de inactividad
     const SESSION_LIFESPAN = 3600; //1 hora
     const SESSION_NAME = 'mongosessid'; //nombre de la cookie de sesión
@@ -54,25 +52,15 @@ class UsuarioCollection {// extends MongoCollection
         session_cache_limiter('nocache');
         session_start();
     }
-         public function read()
-    {
-        $query = array(
-                        'user_id' => $_SESSION['user_id'],
-                        // 'set'=>array(
-//                        'timedout_at' => array('$gte' => time()),
-//                        'expired_at' => array('$gte' => time())
-                      );
-             
-        $result =$this->collection->db->session->findOne($query);
-        
-        $this->_currentSession = $result;
-       // var_dump($result[0]['user_id']);exit;
-        if(!isset($result)){
-            return false;
+         public function eliminarUsuario($valor) {
+        $usarios = $this->collection->remove(array('_id' => new \MongoId($valor)));
+        if ($usarios == true) {
+            return $usarios;
+        } else {
+            echo 'error al eliminar';
         }
-        
-        return $result;
     }
+
     public function findAll() {
 
         $usarios = $this->collection->find(); //$this->collection->db_gps2->usuario->find();
@@ -83,25 +71,6 @@ class UsuarioCollection {// extends MongoCollection
 
         return $resultados;
     }
-
-    public function obtenerUsuario($id) {
-
-        $usarios = $this->collection->findOne(array('_id' => new \MongoId($id)));
-        if (!$usarios) {
-            throw new \Exception("Could not find row $id");
-        }
-        return $usarios;
-    }
-
-    public function eliminarUsuario($valor) {
-        $usarios = $this->collection->remove(array('_id' => new \MongoId($valor)));
-        if ($usarios == true) {
-            return $usarios;
-        } else {
-            echo 'error al eliminar';
-        }
-    }
-
     public function agregarUsuario($valor, $usuario_id = null, $accion = null) {
         $cantidad = array('login' => $valor->login,
             'pass' => $valor->pass,
@@ -116,37 +85,29 @@ class UsuarioCollection {// extends MongoCollection
         }
     }
 
-    public function isLoggedIn() {
-        return isset($_SESSION['user_id']);
-    }
+    public function obtenerUsuario($id) {
 
-    private function _loadData() {
-        $id = new \MongoId($_SESSION['user_id']);
-      $usarios=  $this->collection->db->session->findOne(array('_id' => $id));
+        $usarios = $this->collection->findOne(array('_id' => new \MongoId($id)));
+        if (!$usarios) {
+            throw new \Exception("Could not find row $id");
+        }
         return $usarios;
     }
-
-    public function logout($sessionId) { 
-        $this->collection->db->session->remove(array('user_id' => $sessionId));
-        
-        return True;
-    }
-
-    public function obtenerUsuarioLogin($datos) {
+public function obtenerUsuarioLogin($datos) {
         $cantidad = array('login' => $datos->login,
             'pass' => $datos->pass);
         $usarios = $this->collection->findOne($cantidad);
         $usuariorol = array();
         if ($usarios['rol']=='empresa') {
-            $datausuario = $this->collection->db->empresa->findOne(array('usuario_id' => new \MongoId($usarios['_id'])));
+            $id=(String) $usarios['_id'];
+            $datausuario = $this->collection->db->empresa->findOne(array('usuario_id' => $id));
             $dataname = array('_idrol' =>(String) $datausuario['_id']);
-           // var_dump($dataname);exit;
         } elseif ($usarios['rol']=='administrador') {
             $datausuario = $this->collection->db->administrador->findOne(array('usuario_id' => new \MongoId($usarios['_id'])));
             $dataname = array('_idrol' => (String)$datausuario['_id']);
-           // var_dump($dataname);exit;
         } else {
-            $datausuario = $this->collection->db->vehiculo->findOne(array('usuario_id' => new \MongoId($usarios['_id'])));
+            $id=(String) $usarios['_id'];
+            $datausuario = $this->collection->db->vehiculo->findOne(array('usuario_id' =>$id));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
         }
         $usuariorol[] = array_merge_recursive($usarios, $dataname);
@@ -161,6 +122,43 @@ class UsuarioCollection {// extends MongoCollection
             return True;
         }
     }
+   
+    
+    public function read()
+    {
+        $query = array(
+                        'user_id' => $_SESSION['user_id'],
+                        'timedout_at' => array('$gte' => time()),
+                        'expired_at' => array('$gte' => time())
+                      );
+             
+        $result =$this->collection->db->session->findOne($query);
+        
+        $this->_currentSession = $result;
+       // var_dump($result[0]['user_id']);exit;
+        if(!isset($result)){
+            return false;
+        }
+        
+        return $result;
+    }
+    public function isLoggedIn() {
+        return isset($_SESSION['user_id']);
+    }
+
+    private function _loadData() {
+        $id = new \MongoId($_SESSION['user_id']);
+      $usarios=  $this->collection->db->session->findOne(array('_id' => $id));
+        return $usarios;
+    }
+
+    public function logout() {
+        session_destroy();
+        $this->collection->db->session->remove(array('user_id' => $_SESSION['user_id']));
+        return True;
+    }
+
+    
 
      public function write($sessionId,$data)
     {
@@ -169,10 +167,10 @@ class UsuarioCollection {// extends MongoCollection
             'rol' => $data[0]['rol'],    '_idrol'=>$data[0]['_idrol'],     //'data' => $data,
             'upsert' => True,
             'user_id' => (string)$sessionId,
-            'set'=>array(
+         
                           'timedout_at' => time() + self::SESSION_TIMEOUT,
                           'expired_at' => (empty($this->_currentSession)) ? time() + UsuarioCollection::SESSION_LIFESPAN
-                                                                          : $this->_currentSession['expired_at'])
+                                                                          : $this->_currentSession['expired_at']
                         );
       //  var_dump($new_obj);exit;
        // $query = array('session_id' => $sessionId);
@@ -208,3 +206,4 @@ class UsuarioCollection {// extends MongoCollection
     }
 
 }
+//$session = new UsuarioCollection();

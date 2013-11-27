@@ -27,6 +27,10 @@ use Zend\Session\ManagerInterface;
 use Zend\Session\Storage\ArrayStorage;
 use Zend\Session\Storage\SessionStorage;
 use Application\Model\SessionCollection;
+use Application\Model\EmpresaCollection;
+use Application\Model\VehiculoCollection;
+use Application\Model\TramasCollection;
+use Zend\View\Model\JsonModel;
 
 //use Zend\Session\SaveHandler\MongoDB;
 //use Zend\Session\SaveHandler\MongoDBOptions;
@@ -35,43 +39,67 @@ class IndexController extends AbstractActionController {
 
     protected $usuarioMongodb;
     protected $sessionMongodb;
+    protected $empresaMongodb;
+    protected $vehiculoMongodb;
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
     }
 
-    public function getUsuariosMongoDb() {
-        if (!$this->usuarioMongodb) {
-            $sm = $this->getServiceLocator();
-            $this->usuarioMongodb = $sm->get('Application\Model\UsuarioCollection');
-        }
-        return $this->usuarioMongodb;
-    }
-
-    public function getSessionMongoDb() {
-        if (!$this->sessionMongodb) {
-            $sm = $this->getServiceLocator();
-            $this->sessionMongodb = $sm->get('Application\Model\SessionCollection');
-        }
-        return $this->sessionMongodb;
-    }
-
     public function indexAction() {
 
-        $resultado=$this->getUsuariosMongoDb()->read();
-        if ($resultado==!false) {
-            return new ViewModel(array('rol'=>$_SESSION['rol']));
+        if ($this->getUsuariosMongoDb()->isLoggedIn()) {
+            $dato = $this->getUsuariosMongoDb()->read();
+            if ($dato['rol'] == 'administrador') {
+                $id = $this->params()->fromQuery('id', 0);
+                $resultados = $this->getEmpresaMongoDb()->getLista();
+                if ($this->getRequest()->isPost()) {
+                    $consulta = $this->params()->fromPost('texto');
+                    $consultaVehiculo = $this->params()->fromPost('vehiculo');
+                    if (!empty($consulta)) {
+                        $resultados = $this->getEmpresaMongoDb()->getLista($consulta);
+                    }
+                    if (!empty($consultaVehiculo)) {
+                        $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo);
+                    }
+                }
+                if ($id == !'') {
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($id);
+                }
+            } elseif ($dato['rol'] == 'empresa') {
+                $resultados = $this->getEmpresaMongoDb()->obtenerEmpresaCantidad($dato['_idrol']);
+                if ($this->getRequest()->isPost()) {
+                    $consultaVehiculo = $this->params()->fromPost('vehiculo');
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo,$dato['_idrol']);
+                } else {
+                    $estado= $this->params()->fromQuery('estado', 0);
+                    $detalle= $this->params()->fromQuery('detalle', 0);
+                    if (!empty($estado)) {  
+                   
+                      $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculosEstado($dato['_idrol'],$estado);   
+                    }
+                   elseif (!empty($detalle)) { 
+                 
+                  $fechaActual=date("Y-m-d H:i:s");
+                 $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle,$fechaActual); 
+                   //$view= new ViewModel();
+        //$view->setTerminal(true);
+                    echo $resultadosVehiculo;
+                    exit;
+                    }else {
+                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($dato['_idrol']);
+                    }
+                }
+            } else {
+                $resultados = $this->getVehiculoMongoDb()->getVehiculo($dato['_idrol']);
+            }
         } else {
-            
-            
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
-    }
-
-    public function logoutAction() {
-
-        $this->getUsuariosMongoDb()->logout($_SESSION['user_id']);
-        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        $cantidadVehiculo = count($resultadosVehiculo);
+        $cantidad = count($resultados);
+        return new ViewModel(array('valores' => $resultados, 'rol' => $_SESSION['rol'],
+                    'cantidad' => $cantidad, 'vehiculo' => $resultadosVehiculo, 'cantidadVehiculo' => $cantidadVehiculo));
     }
 
     public function loginAction() {
@@ -179,13 +207,49 @@ class IndexController extends AbstractActionController {
         return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $usuario['pass']));
     }
 
-    public function mongoConect() {
-        $imagen = $this->_options->mongo->server;
-        $imagen2 = $this->_options->mongo->db;
-        $m = new Mongo($imagen);
-        $db = $m->$imagen2;
-        return $db;
+    public function logoutAction() {
+
+        $this->getUsuariosMongoDb()->logout();
+        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
     }
 
+    public function getUsuariosMongoDb() {
+        if (!$this->usuarioMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->usuarioMongodb = $sm->get('Application\Model\UsuarioCollection');
+        }
+        return $this->usuarioMongodb;
+    }
+
+    public function getSessionMongoDb() {
+        if (!$this->sessionMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->sessionMongodb = $sm->get('Application\Model\SessionCollection');
+        }
+        return $this->sessionMongodb;
+    }
+
+    public function getVehiculoMongoDb() {
+        if (!$this->vehiculoMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->vehiculoMongodb = $sm->get('Application\Model\VehiculoCollection');
+        }
+        return $this->vehiculoMongodb;
+    }
+
+    public function getEmpresaMongoDb() {
+        if (!$this->empresaMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->empresaMongodb = $sm->get('Application\Model\EmpresaCollection');
+        }
+        return $this->empresaMongodb;
+    }
+  public function getTramaMongoDb() {
+        if (!$this->tramaMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->tramaMongodb = $sm->get('Application\Model\TramasCollection');
+        }
+        return $this->tramaMongodb;
+    }
 }
 
