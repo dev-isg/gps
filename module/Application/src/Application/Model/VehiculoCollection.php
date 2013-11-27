@@ -35,7 +35,12 @@ class VehiculoCollection {
     }
 
     public function getVehiculo($idvehiculo) {
+                //var_dump($idvehiculo);exit;
         $vehiculo = $this->collection->findOne(array('_id' => new \MongoId($idvehiculo)));
+//          foreach ($vehiculo as $value) {
+//             $dd[]= $value;
+//          }
+//          var_dump($dd);exit;
         $resultvehi = array();
         $datausuario = $this->collection->db->usuario->findOne(array('_id' => new \MongoId($vehiculo['usuario_id'])));
         $dataname = array('login' => $datausuario['login']);
@@ -109,6 +114,11 @@ class VehiculoCollection {
         return $resultvehi;
     }
 
+    //obtener vehiculos por empresa y por estado
+    //estado=1 : todos los vehiculos
+     //estado=2 :  vehiculos  on line
+     //estado=3 : todos los vehiculos of line
+    
     public function getVehiculosEstado($idempresa, $estado) {
         if ($estado == 1) {
             $vehiculos = $this->collection->find(array('empresa_id' => "$idempresa"));
@@ -127,14 +137,24 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
+    
+    //obtener vehiculos por empresa y por estado
   public function getVehiculoDetalle($idvehiculo,$fechaactual) {
         $vehiculo = $this->collection->findOne(array('_id' => new \MongoId($idvehiculo)));
         $resultvehi = array();
         $fechaactual= str_replace("/","-", $fechaactual);
         //$fecha=new \MongoDate(strtotime($fechaactual));
+        //$fecha=new \MongoDate(strtotime($fechaactual));
        // var_dump($fechaactual);exit;
          // var_dump($resultvehi);exit;
-        $trama = $this->collection->db->tramas->findOne(array('vehiculo_id' => "$idvehiculo",'fecha_ubicacion' => array('$gt' => $fechaactual)) );
+        $trama = $this->collection->db->tramas->findOne(array('vehiculo_id' =>"$idvehiculo",'fecha_ubicacion' => array('$gt' => $fechaactual)) );
+        
+       // $re=$trama->sort(array('fecha_ubicacion' => -1));
+        $resultvehis = array();
+        foreach ($trama as $tramas) {
+            $resultvehis[] = $tramas;
+        }
+      //  var_dump($resultvehis);exit;
         $latitud = array('lat' => $trama['lat']);
         $longitud= array('lng' => $trama['lng']);
         $resultvehi[] = array_merge_recursive($vehiculo, $latitud, $longitud);

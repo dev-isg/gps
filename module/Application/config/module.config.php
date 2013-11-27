@@ -139,7 +139,7 @@ return array(
                 )
             ),
               'login' => array(
-                'type' => 'Segment',
+                'type' => 'Literal',
                 'options' => array(
                     'route' => '/login',
                     'defaults' => array(

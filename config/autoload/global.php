@@ -6,11 +6,11 @@ return array(
       'db'             => 'db_gps2',
     ),
    'host' => array(
-            'base' => 'http://192.168.1.34:84',
-            'static' => 'http://192.168.1.34:84',
-            'images' => 'http://192.168.1.34:84/imagenes',
-            'img'=>'http://192.168.1.34:84/img',
-            'ruta' => 'http://192.168.1.34:84',
+            'base' => 'http://192.168.1.35:84',
+            'static' => 'http://192.168.1.35:84',
+            'images' => 'http://192.168.1.35:84/imagenes',
+            'img'=>'http://192.168.1.35:84/img',
+            'ruta' => 'http://192.168.1.35:84',
             'version'=>1,
         ),
     

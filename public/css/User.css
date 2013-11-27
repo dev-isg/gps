@@ -1,0 +1,103 @@
+﻿*
+{
+    scrollbar-face-color: "#FFFFFF";
+    scrollbar-shadow-color: "#D2E5F4";
+    scrollbar-highlight-color: "#D2E5F4";
+    scrollbar-3dlight-color: "#FFFFFF";
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: "#FFFFFF";
+    scrollbar-arrow-color: "#D2E5F4";
+}
+.MainTopU
+{
+    background-image: url( '../Images/top_bg.gif' );
+    height: 73px;
+    width: 100%;
+    z-index: 12;
+    background-color: transparent;
+}
+.MenuBarTitle
+{
+    height: 30px;
+    margin-top: 10px;
+    vertical-align: middle;
+    color: White;
+    font-size: 16px;
+}
+.UsersBody
+{
+}
+
+.MenuBartd1
+{
+    text-align: center;
+    background-image: url(../Images/meun_out.gif);
+    width: 100px;
+    height: 25px;
+    color: #9ccce1;
+    font-size: 13px;
+    background-repeat: repeat-x;
+    padding-top: 3px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.MenuBartd2
+{
+    text-align: center;
+    background-image: url(../Images/menu_over.gif);
+    width: 100px;
+    height: 26px;
+    color: White;
+    font-size: 14px;
+    background-repeat: repeat-x;
+    padding-top: 3px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+.MainTopU .info
+{
+    display: inline-block;
+    height: 100%;
+    width: 500px;
+    float: right;
+}
+.MainTopU .info .PerSonInfo
+{
+    padding-left: 40px;
+    color: White;
+    font-size: 13px;
+    
+}
+.MainTopU .info .PerSonInfo a
+{
+    color: White;
+    text-decoration: none;
+}
+
+
+.MainTopU .info .PerSonInfo a:hover
+{
+    color: red;
+}
+.MainTopU .info .SearchBoxx
+{
+    margin-top: 18px;
+}
+.MainTopU .info .SearchBoxx table
+{
+    background-image: url(../Images/search_bg.gif);
+    background-repeat: no-repeat;
+}
+.MainTopU .info .SearchBoxx .DevSe
+{
+    padding: 0px;
+    width: 43px;
+    display: inline-block;
+    font-size: 12px;
+    color: White;
+    text-align: center;
+    cursor: hand;
+}
