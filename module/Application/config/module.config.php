@@ -10,7 +10,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'home' => array(
+            'Index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/',
@@ -72,6 +72,28 @@ return array(
                     
                 )
             ),
+            'admin' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/administrador',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Administrador',
+                        'action' => 'admin'
+                    )
+                    
+                )
+            ),
+             'logout' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/logout',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'logout'
+                    )
+                    
+                )
+            ),
             'editaradministrador' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -116,6 +138,18 @@ return array(
                     
                 )
             ),
+              'login' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/login',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'login'
+                    )
+                    
+                )
+            ),
+            
         ),
     ),
     'service_manager' => array(
@@ -163,10 +197,11 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-    ),
-     'strategies' => array(
+        'strategies' => array(
             'ViewJsonStrategy',
         ),
+    ),
+
     // Placeholder for console routes
     'console' => array(
         'router' => array(

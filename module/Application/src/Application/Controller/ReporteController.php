@@ -3,6 +3,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Form\MovimientoForm;
+use Application\Form\ParadaForm;
 
 class ReporteController extends AbstractActionController{
     protected $tramaMongodb;
@@ -41,6 +42,23 @@ class ReporteController extends AbstractActionController{
         }
         return array('form'=>$form,'tramas'=>$tramas);
         
+    }
+    
+    public function paradaAction(){
+         $form=new ParadaForm();
+         $conductores=$this->getVehiculoMongoDb()->getConductor($idempresa="528d3ab3bf8eb1780c000046");
+          $form->get('usario_vehiculo')->setValueOptions($conductores);
+                $fechaini=$this->params()->fromPost('fechainicio');
+        $fechafin=$this->params()->fromPost('fechafin');
+        $idvehiculo=$this->params()->fromPost('usario_vehiculo');
+        $request=$this->getRequest();
+        if($request->isPost()){
+            $form->setData($request->getPost());
+            if($form->isValid()){
+               $tramas=$this->getTramaMongoDb()->buscarMovimientoVehic($fechaini, $fechafin,$idvehiculo);         
+            }
+        }
+        return array('form'=>$form);
     }
     
    public function getTramaMongoDb() {

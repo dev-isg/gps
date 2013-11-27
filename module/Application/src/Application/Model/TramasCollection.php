@@ -155,9 +155,9 @@ class TramasCollection {
       return $auxtramas;
     }
     
-      /*
+    /**
      * Retorna registros de vehiculo los  segun idvehiculos,fecha y empreas
-     * params inicio , fin  idempresa
+     * @params inicio , fin  idempresa
      * @return json 
      */
     //
@@ -189,5 +189,14 @@ class TramasCollection {
         $auxtramas=array_merge_recursive($arrx,$total);
         var_dump($auxtramas);Exit;
         return $auxtramas;
+    }
+    
+    /*
+     * Retorna paradas segun fecha
+     * @params inicio , fin ,idvehiculo, idempresa 
+     */
+    public function getParada($inicio = null, $fin = null, $idvehiculo = null, $idempresa=null) {
+        
+        
     }
 }

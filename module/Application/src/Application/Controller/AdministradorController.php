@@ -23,9 +23,11 @@ use PhlyMongo\MongoCollectionFactory;
 use Application\Model\UsuarioCollection;
 use Application\Model\AdministradorCollection;
 
+
 class AdministradorController extends AbstractActionController {
 
     protected $administradorMongodb;
+     protected $sessionMongodb;
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
@@ -44,7 +46,17 @@ class AdministradorController extends AbstractActionController {
         $cantidad = count($resultados);
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
+  public function adminAction() {
 
+        $resultado=$this->getUsuariosMongoDb()->read();
+        if ($resultado==!false) {
+            return new ViewModel(array('rol'=>$_SESSION['rol']));
+        } else {
+            
+            
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
+    }
     public function eliminaradministradorAction() {
         $id = $this->params()->fromQuery('id');  
            $administrador = $this->getAdministradorMongoDb()->obtenerAdministrador($id); 

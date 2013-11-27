@@ -20,6 +20,7 @@ use Application\Model\UsuarioCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\EmpresaCollection;
 use Application\Model\TramasCollection;
+use Application\Model\SessionCollection;
 use Application\Model\AdministradorCollection;
 use Zend\Session\SessionManager;
 use Zend\Session\Container;
@@ -33,6 +34,13 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         $this->bootstrapSession($e);
+       
+//             $controller = $e->getTarget();
+//             $login = new \Application\Model\UsuarioCollection();
+//             $session = $login->isLoggedIn();
+//             $controller->layout()->session = $session;
+         
+        
     }
 
     public function getConfig()
@@ -42,16 +50,19 @@ class Module
     
         public function bootstrapSession($e)
             {
+               $controller = $e->getTarget();
                 $session = $e->getApplication()
                              ->getServiceManager()
-                             ->get('Zend\Session\SessionManager');
-                $session->start();
-
-                $container = new Container('initialized');
-                if (!isset($container->init)) {
-                     $session->regenerateId(true);
-                     $container->init = 1;
-                }
+                             ->get('Application\Model\UsuarioCollection');
+                $session->isLoggedIn();
+                 
+                
+              //  $controller->layout()->session = 'entrada';
+//                $container = new Container('initialized');
+//                if (!isset($container->init)) {
+//                     $session->regenerateId(true);
+//                     $container->init = 1;
+//                }
             }
             
     public function getServiceConfig() {
@@ -122,6 +133,11 @@ class Module
                'Application\Model\AdministradorCollection' => function($services) {
                     $mycollection = new MongoCollectionFactory('administrador','MyMongoDB' );
                     return new AdministradorCollection($mycollection->createService($services));
+                   
+                },
+               'Application\Model\SessionCollection' => function($services) {
+                    $mycollection = new MongoCollectionFactory('session','MyMongoDB' );
+                    return new SessionCollection($mycollection->createService($services));
                    
                 },
              'MyMongoDB' => function ($services) {
