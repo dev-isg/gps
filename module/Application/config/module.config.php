@@ -108,7 +108,7 @@ return array(
               'editar-vehiculo' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/editar/vehiculo[/:id_vehiculo[/:id_empresa]]',///:id_empresa
+                    'route' => '/editar/vehiculo[/:id_empresa[/:id_vehiculo]]',///:id_empresa
                     'defaults' => array(
                         'controller' => 'Application\Controller\Vehiculo',
                         'action' => 'editarvehiculo'
