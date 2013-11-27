@@ -24,17 +24,33 @@ class TramasController extends AbstractActionController{
         $seguimiento=$this->getTramaMongoDb()->getSeguimientoVehiculo($idvehiculo,$fechaactual);
         $view= new ViewModel();
         $view->setTerminal(true);
-        echo $seguimiento;
+        
+        header('Content-type: application/x-javascript');
+        header("Status: 200");
+        
+        echo  "jsonpCallback(" . json_encode($seguimiento) . ")";
         return $view;
     }
     
-    public function reproduccionAction(){
-        $inicio=$this->params()->fromPost('fechinicio','2013-11-21 18:47:27'); 
-        $fin=$this->params()->fromPost('fechfin','2013-11-21 18:47:43'); 
-        $reproduccion=$this->getTramaMongoDb()->getReproduccionVehiculo($inicio,$fin);
-        $view= new ViewModel();
-        $view->setTerminal(true);
-        echo $reproduccion;
+    public function reproduccionAction() {
+        $inicio = $this->params()->fromPost('fechinicio', '2013-11-21 18:47:27');
+        $fin = $this->params()->fromPost('fechfin', '2013-11-21 18:47:43');
+        $reproduccion = $this->getTramaMongoDb()->getReproduccionVehiculo($inicio, $fin);
+        $view = new ViewModel();
+        $view->setTerminal(true); 
+//        echo $reproduccion;
+//        return $view;
+//        $request = $this->getRequest();
+//        if ($request->isXmlHttpRequest()) {
+//            if ($_GET['callback']) {
+                header('Content-type: application/x-javascript');
+                header("Status: 200");
+                echo "jsonpCallback(" . json_encode($reproduccion) . ")";
+                
+                
+//            }
+//        }
+
         return $view;
     }
     

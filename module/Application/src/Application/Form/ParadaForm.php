@@ -4,7 +4,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\InputFilter\InputFilter;
 
-class MovimientoForm extends Form{
+class ParadaForm extends Form{
     
         public function __construct($name = null, $options = array()) {
         parent::__construct($name);
@@ -47,6 +47,19 @@ class MovimientoForm extends Form{
                 'empty_option'  => '--- chofer ---',
             )
         ));
+           
+           $this->add(array(
+            'name' => 'empresa',
+            'type' => 'Select',
+            'attributes'=>array('class'=>'form-control'),
+            'options' => array(
+                'value_options'=>array(
+                ),
+                'empty_option'  => '--- Empresa ---',
+            )
+        ));
+           
+           
       
    
         $this->add(array(
@@ -83,6 +96,12 @@ class MovimientoForm extends Form{
         
         $inputFilter->add(array(
             'name' => 'usario_vehiculo',
+            'required' => true,
+
+        ));
+        
+       $inputFilter->add(array(
+            'name' => 'empresa',
             'required' => false,
 
         ));
@@ -92,3 +111,4 @@ class MovimientoForm extends Form{
     }
     
 }
+

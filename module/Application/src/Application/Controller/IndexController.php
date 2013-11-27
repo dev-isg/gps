@@ -47,6 +47,7 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
+
  $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
         if ($this->getUsuariosMongoDb()->isLoggedIn()) {
@@ -71,23 +72,22 @@ class IndexController extends AbstractActionController {
                 $resultados = $this->getEmpresaMongoDb()->obtenerEmpresaCantidad($dato['_idrol']);
                 if ($this->getRequest()->isPost()) {
                     $consultaVehiculo = $this->params()->fromPost('vehiculo');
-                    $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo,$dato['_idrol']);
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo, $dato['_idrol']);
                 } else {
-                    $estado= $this->params()->fromQuery('estado', 0);
-                    $detalle= $this->params()->fromQuery('detalle', 0);
-                    if (!empty($estado)) {  
-                   
-                      $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculosEstado($dato['_idrol'],$estado);   
-                    }
-                   elseif (!empty($detalle)) { 
-                 
-                  $fechaActual=date("Y-m-d H:i:s");
-                 $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle,$fechaActual); 
-                   //$view= new ViewModel();
-        //$view->setTerminal(true);
-                    echo $resultadosVehiculo;
-                    exit;
-                    }else {
+                    $estado = $this->params()->fromQuery('estado', 0);
+                    $detalle = $this->params()->fromQuery('detalle', 0);
+                    if (!empty($estado)) {
+
+                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculosEstado($dato['_idrol'], $estado);
+                    } elseif (!empty($detalle)) {
+
+                        $fechaActual = date("Y-m-d H:i:s");
+                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle, $fechaActual);
+                        //$view= new ViewModel();
+                        //$view->setTerminal(true);
+                        echo $resultadosVehiculo;
+                        exit;
+                    } else {
                         $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($dato['_idrol']);
                     }
                 }
@@ -104,6 +104,15 @@ class IndexController extends AbstractActionController {
             'cantidadVehiculo' => $cantidadVehiculo,'hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=> $this->_options->host->ruta));
        
          return $viewModel; 
+    }
+    
+    public function getvehiculosAction(){
+        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');
+        $resultados = $this->getVehiculoMongoDb()->getVehiculobyIdEmpresa($idempresa);
+        
+        return new JsonModel(array(
+            'd' => array('devices'=>$resultados)
+        ));
     }
 
     public function loginAction() {
@@ -251,12 +260,14 @@ class IndexController extends AbstractActionController {
         }
         return $this->empresaMongodb;
     }
-  public function getTramaMongoDb() {
+
+    public function getTramaMongoDb() {
         if (!$this->tramaMongodb) {
             $sm = $this->getServiceLocator();
             $this->tramaMongodb = $sm->get('Application\Model\TramasCollection');
         }
         return $this->tramaMongodb;
     }
+
 }
 

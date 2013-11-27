@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use MongoCollection;
+use MongoId;
 
 class VehiculoCollection {
 
@@ -98,6 +99,77 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
+    
+    public function getVehiculobyIdEmpresa($idempresa = null) {
+        
+        $vehiculos = $this->collection->find(array('empresa_id' => new \MongoId($idempresa)),
+                                        array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
+        $resultvehi = array();
+        $resultset=array();
+        $auxtram=array(
+            'estado'=>'',
+            'alerta'=>'',
+            'hms'=>'',
+            'fecha_ubicacion'=>'',
+            'orientacion'=>'',
+            'velocidad'=>'',
+            'lat'=>'',
+            'lng'=>'',
+        );
+        foreach ($vehiculos as $value) {
+            $resultvehi['id']=(String)$value['_id'];
+            $resultvehi['nombre']=$value['chofer']['chofer_nom'];
+            $resultvehi['placa']=$value['placa'];
+            
+            $tramas = $this->collection->db->tramas->find(array('vehiculo_id' => $value['_id'])//,'fecha_ubicacion' => array('$gt' => $fecha)
+                , array('estado'=>true,'alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
+                'lat' => true, 'lng' => true,'vehiculo_id'=>true)
+                )->sort(array('_id'=>-1))->limit(1);
+           
+          
+                foreach($tramas as $trama){
+//                     if(!empty($trama)){
+                    $auxtram['estado']=$trama['estado'];
+                    $auxtram['alerta']=$trama['alerta'];
+                    $auxtram['hms']=$trama['hms'];
+                    $auxtram['fecha_ubicacion']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
+                    $auxtram['orientacion']=$trama['orientacion'];
+                    $auxtram['velocidad']=$trama['velocidad'];
+                    $auxtram['lat']=$trama['lat'];
+                    $auxtram['lng']=$trama['lng'];
+
+//                     }
+                     $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+                }                
+//            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
+            
+        }
+//        var_dump($auxzz);exit;
+        return $resultset;
+    }
+
+    
+     /*
+     * obtiene listado de conductores segun id de empresa
+     * @return array
+     */
+    
+    public function getConductor($idempresa){
+        $conductores=$this->collection->find(array('empresa_id'=>new MongoId($idempresa)),
+                    array('chofer.chofer_nom'=>true,'chofer.chofer_id'=>true));
+        $listconduc=array();
+        foreach($conductores as $conductor){
+            $listconduc[(String)$conductor['_id']]=$conductor['chofer']['chofer_nom'];
+             //(String)$conductor['chofer']['chofer_id']
+            
+        }
+      
+        return $listconduc;
+        
+    }
+
+
+
 
     public function buscarVehiculos($consulta,$idempresa) {
         $regex = new \MongoRegex("/$consulta/");
@@ -162,4 +234,5 @@ class VehiculoCollection {
        // var_dump($resultvehi);exit;
        return json_encode($resultvehi);
     }
+
 }

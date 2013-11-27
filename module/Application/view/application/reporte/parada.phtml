@@ -1,0 +1,43 @@
+<?php
+$title = 'Detalle de parada';
+$this->headTitle($title);
+?>
+<div class="row-fluid">
+    <div class="span12" id="flip-scroll">
+        <?php
+        $form = $this->form;
+        $form->setAttributes(array(
+            'action' => $this->url . '/application/reporte/parada',
+            'method' => 'post',
+            'class' => 'form-inline',
+            'role' => 'form'
+        ));
+
+        $form->prepare();
+        echo $this->form()->openTag($form);
+        ?>
+        <legend><?php echo $this->escapeHtml($title); ?></legend>
+        <div class="control-group">
+            <!--<div class="form-group"><?php echo $this->formRow($form->get('empresa')); ?></div>-->
+            <div class="form-group"><?php echo $this->formRow($form->get('usario_vehiculo')); ?></div>
+            <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
+            <div class="form-group"><?php echo $this->formRow($form->get('fechafin')); ?></div> 
+            <?php echo $this->formSubmit($form->get('submit')); ?>
+        </div>
+        <?php echo $this->form()->closeTag(); ?> 
+        <!--    <button type="button" class="btn">Excel</button>
+            <button type="button" class="btn">Imprimir</button>-->
+        <br><br>
+        <table class="table table-bordered table-hover">
+            <thead class="cf"> <tr>
+                    <th>idMongo</th>
+                    <th>De</th>
+                    <th>Para</th>
+                    <th>Lat,Lon</th>
+                    <th>Dirección</th>
+                    <th>Tiempo</th>
+                </tr> </thead>
+
+        </table>
+    </div>
+</div>

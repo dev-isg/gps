@@ -103,6 +103,7 @@ class UsuarioCollection {// extends MongoCollection
             $datausuario = $this->collection->db->administrador->findOne(array('usuario_id' => new \MongoId($usarios['_id'])));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
             $nombre=array('nombre' => $datausuario['nombre']);
+
         } else {
             $id = (String) $usarios['_id'];
             $datausuario = $this->collection->db->vehiculo->findOne(array('usuario_id' => $id));
@@ -117,6 +118,7 @@ class UsuarioCollection {// extends MongoCollection
             $_SESSION['rol'] = (string) $usuariorol[0]['rol'];
             $_SESSION['_idrol'] = (string) $usuariorol[0]['_idrol'];
             $_SESSION['nombre'] =  $usuariorol[0]['nombre'];
+
             $this->write($usuariorol[0]['_id'], $usuariorol);
 
             return True;
