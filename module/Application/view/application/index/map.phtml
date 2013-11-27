@@ -1,0 +1,673 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script src="Language/language01-en-us.js" type="text/javascript"></script>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <title>Map</title>
+    <link href="<?php echo $this->ruta;?>/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN THEME STYLES --> 
+    <link href="<?php echo $this->ruta;?>/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo $this->ruta;?>/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+
+    <link rel="stylesheet" href="<?php echo $this->ruta;?>/CSS/all.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->ruta;?>/CSS/form.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->ruta;?>/CSS/page.css" />
+    <link href="<?php echo $this->ruta;?>/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+    <script src="<?php echo $this->ruta;?>/JS/Valid.js?version=2" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/jquery.easydrag.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/PublicMap.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/PublicJS.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/Map.js?v=20130227" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?php echo $this->ruta;?>/CSS/zTreeStyle/zTreeStyle.css" type="text/css" />
+    <script type="text/javascript" src="<?php echo $this->ruta;?>/JS/jquery.ztree.core-3.1.min.js"></script>
+</head>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	overflow:hidden;
+}
+.showitems
+{
+    position:absolute; left:40px; top:35px; width:auto; height:auto; background-color:White; display:none; font-size:12px;z-index:10000;border:1px #C8C8C8 solid;
+}
+
+-->
+	.navigate{height:30px;border-bottom:1px solid #D2DCDE;margin-top:10px;}
+	.navigate_item{height:30px;line-height:30px;
+				   background:url(images/navigate_item_bg.gif) repeat-x;width:75px;
+				  border-right:#d2dcde 1px solid;text-align:center;float:left;font-size:12px;}
+	.navigate_item a,.navigate_item a:link{color:#030303;text-decoration:none;}
+	.navigate_item a:hover{color:#0000CC;text-decoration:underline;}
+	#navigate_item_over{height:30px;line-height:30px;
+						background:url(images/navigate_select_item_bg.gif) repeat-x;
+						width:75px;border-left:#d2dcde 1px solid;text-align:center;float:left;}
+	#navigate_item_over a,#navigate_item_over a:link{color:#005590;text-decoration:none;outline: none;}
+	
+	.divDeviceTab{background-color:#EFEFEF; border:1px #A3D1E2 solid;}
+	a{text-decoration:none;}
+	
+</style>
+<body>
+    <form method="post" action="map.aspx?id=9564&amp;n=turismoche" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTY3NjIzNzg5Nw9kFgICAQ9kFgICAQ8PFgIeBFRleHQFDVR1cmlzbW8gTW9jaGVkZGRBLApXBg0BpsOC55fhQ+DSTH+8UEqfccTLLa7AFGRMCA==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwLppM6vBwKeqNjdAwLun8xDAo7ThKkEAoGg1cILApmr7fkPAt3ioKoP8ft0wF+PE/l1BwVaJzO/W84tfQowxipyZN2rWLjwQNM=" />
+</div>
+    <span id="spanMapPopupContentSize" style="display: none;"></span>
+    <div id="divSOSPhone" style="position: absolute; width: 310px; height: 180px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="Label1" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                            设置SOS号码</label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanSOSDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        SOS号码：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtSOSPhone" class="input" />
+                    </td>
+                </tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input id="btnSendSOSPhone" type="button" name="Submit" value="" onclick="sendCmdPhone(0);"
+                        class="btn_submit" />
+                    <input id="btnCloseSOSPhone" type="reset" value="" onclick="closeDiv('divSOSPhone');"
+                        class="btn_reset" />
+                </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendMsgSOS"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divInterval" style="position: absolute; width: 310px; height: 180px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="Label3" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                            设置设备上传间隔</label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanIntervalDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        上传间隔：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtSetInterval" class="input" style="width: 50px;"
+                            maxlength="4" />(单位秒,最小5秒)
+                    </td>
+                </tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input id="btnInterval" type="button" name="Submit" value="" onclick="sendCmdPhone(2);"
+                        class="btn_submit" />
+                    <input id="btnCloseInterval" type="reset" value="" onclick="closeDiv('divInterval');"
+                        class="btn_reset" />
+                </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendMsgInterval"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divSendTxt" style="position: absolute; width: 310px; height: 180px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="Label4" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                            给设备下发文字信息</label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSendTxt')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanSendTxtDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        文字内容：
+                    </td>
+                    <td>
+                        <textarea id="txtSendTxtContent"></textarea>
+                    </td>
+                </tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input id="btnSendTxt" type="button" name="Submit" value="" onclick="sendCmdPhone(3);"
+                        class="btn_submit" />
+                    <input id="btnCloseSendTxt" type="reset" value="" onclick="closeDiv('divSendTxt');"
+                        class="btn_reset" />
+                </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendMsgTxt"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divSendCmd" style="position: absolute; width: 310px; height: 230px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="Label5" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                            <script type="text/javascript">
+                                writePage(allPage.sendDeviceMsg); // 给设备下发指令
+                            </script>
+                        </label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSendCmd')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanSendCmdTxtDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.sendMsgText); //指令内容
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <textarea id="txtSendCmdText" cols="15"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.password)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="password" id="CmdPassWord" class="input" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <script type="text/javascript">
+                            writePage(mapPage.sendConfirm);
+                        </script>
+                        <span id="span3"></span>
+                        <script type="text/javascript">
+                            writePage(loginPage.password)
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <input id="btnSendCmd" type="button" name="Submit" value="" onclick="sendDIYCmdInfo($('#txtSendCmdText').val());"
+                            class="btn_submit" />
+                        <input id="btnCloseSendCmd" type="reset" value="" onclick="closeDiv('divSendCmd');"
+                            class="btn_reset" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendCmdTxt"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divCellPhone" style="position: absolute; width: 310px; height: 260px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="Label2" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                            设置亲情号码</label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divCellPhone')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanCellPhoneDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        亲情号码1：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtCellPhone1" class="input" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        亲情号码2：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtCellPhone2" class="input" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        亲情号码3：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtCellPhone3" class="input" />
+                    </td>
+                </tr>
+                <tr style="display: none;">
+                    <td align="right">
+                        亲情号码4：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="text" id="txtCellPhone4" class="input" />
+                    </td>
+                </tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input id="btnCellPhone" type="button" name="Submit" value="" onclick="sendCmdPhone(1);"
+                        class="btn_submit" />
+                    <input id="btnCloseCellPhone" type="reset" value="" onclick="closeDiv('divCellPhone');"
+                        class="btn_reset" />
+                </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendMsgCellPhone"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divMenuLeftImg" onclick="showHideLeft();" onmouseover="overMenuLeft();"
+        onmouseout="outMenuLeft();" style="position: absolute; width: 11px; height: 53px;
+        background-image: url(images/mini-left.gif); background-position: 33px; left: 260px;
+        z-index: 9999; top: 165px;">
+    </div>
+    <div id="divDevicesList" style="border: 1px #CCCCCC solid; width: 260px; position: absolute;
+        z-index: 9999; margin-left: 0px;">
+        <div id="divDevicesListHead" style="background-color: #EFEFEF; height: 25px;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <b>
+                            <script type="text/javascript">
+                                writePage(mapPage.deviceDetailList);
+                            </script>
+                        </b>
+                    </td>
+                    <td width="30">
+                        <img src="icons/iw_min.gif" border="0" onclick="showDevicesListDiv(0);" style="cursor: pointer;" />
+                        <img src="icons/iw_max.gif" border="0" onclick="showDevicesListDiv(1);" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="divDevicesListInfo" style="height: 225px; background-color: White; overflow-y: auto;
+            display: none;">
+        </div>
+    </div>
+    <div id="divCommandList" style="position: absolute; width: 800px; height: 420px;
+        margin-top: 10px; border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="lbldivCommandListTitle" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                        </label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divCommandList')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="divCommandListTable" style="margin-top: 10px;">
+        </div>
+    </div>
+    <div id="divIframe" style="position: absolute; width: 552px; left: 30%; height: 368px;
+        top: 10px; border: 3px solid #66CCFF; overflow: auto; z-index: 99999; background-color: White;
+        display: none;">
+        <div id="divIframeTitle" style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <b><span id="spanIframeTitle"></span></b>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divIframe')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <iframe frameborder="0" id="ifmPage" src="" width="550"></iframe>
+        </div>
+    </div>
+    <div id="divInputPass" style="position: absolute; width: 310px; height: 220px; margin-top: 80px;
+        border: 3px solid #66CCFF; overflow: auto; z-index: 999; background-color: White;
+        display: none;">
+        <div style="height: 25px; background-color: #3399FF; color: #FFFFFF;">
+            <table width="100%" border="0">
+                <tr>
+                    <td>
+                        <label id="lblInputPassTitle" style="font-size: 12px; font-weight: bold; line-height: 24px;">
+                        </label>
+                    </td>
+                    <td width="20">
+                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divInputPass')" style="cursor: pointer;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.device)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <span id="spanPassDeviceName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <script type="text/javascript">
+                            writePage(allPage.password)
+                        </script>
+                        ：
+                    </td>
+                    <td>
+                        <input autocomplete="off" type="password" id="txtInputpassword" class="input" />
+                    </td>
+                </tr>
+                <tr id="trPort" style="display: none;">
+                    <td align="right">
+                        端口 ：
+                    </td>
+                    <td>
+                        <select id="selPort">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <script type="text/javascript">
+                            writePage(mapPage.sendConfirm);
+                        </script>
+                        <span id="spanUserName"></span>
+                        <script type="text/javascript">
+                            writePage(loginPage.password)
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <input id="sendBtn" type="button" name="Submit" value="" onclick="sendCmdInfo()"
+                            class="btn_submit" />
+                        <input id="closeBtn" type="reset" value="" onclick="closeDiv('divInputPass');" class="btn_reset" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left: 25px">
+                        <span id="spanSendMsg"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divLeftMenu">
+        <div id="divLeftMenuContext" style="font-size: 11px;"></div>
+    </div>
+    <div id="divLeftSearchUsers"></div>
+    <div>
+        <div id="divLeft">
+            <div style="height: 170px; clear: left;">
+                <div class="gps-sidebar-1">
+                    <span id="lblUserName">Turismo Moche</span>
+                    <span class="icon-gp">∧</span>
+                </div>
+                <div id="userTreeDiv">
+                    <div id="divLoading">
+                        <div style="height: 30px;"></div>
+                        <img src="icons/loading.gif" width="32" height="32" />
+                    </div>
+                    <div style="clear: left; height: 24px; width: 250px; position: relative; margin: 5px 0px 5px 5px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="SearchText">
+                            <span class="ico-des input-group-addon"><i class="fa fa-sort-asc"></i></span>
+                        </div>
+                        <!--<input id="SearchText" type="text" value="" />
+                        <span class="ico-des">
+                            <img src="Images/productsearch_03.jpg" style="display: inline-block; padding: 0px; margin: 0px;" />
+                        </span>-->
+                    </div>
+                    <div class="clear"></div>
+                    <ul id="uiTreeView" class="ztree"></ul>
+                </div>
+                <div style="clear: left; height: 75px;">
+                    <div style="clear: left; float: right; height: 10px;">
+                        <!--
+						<img src="Images/edit_add.png" border="0" />Add
+						&nbsp;
+						<img src="Images/cancel.png" border="0" />Delete 
+						&nbsp;
+                        -->
+                        &nbsp;
+                    </div>
+                    <div style="clear: left; clear: right; height: 25px; position: relative;">
+                        <div class="form-group">
+                            <label style="float:left;">
+                                <script type="text/javascript">
+                                    writePage(allPage.plsSel);
+                                </script>
+                                :
+                            </label>
+                            <div class="input-group" style="float: left;width: 209px;">
+                                <input type="text" class="form-control" id="txtSearchInput">
+                                <span id="imgProductSearch" class="input-group-addon" style="height: 20px;padding: 3px 0;"><i class="fa fa-sort-asc"></i></span>
+                            </div>
+                        </div>
+                        <div id="divLeftSearchDevices"></div>
+                    </div>
+                    <div style="clear: left;margin-top: 10px;overflow: hidden;">
+                        <div id="navigate_item_over" class="navigate_item" des="divItemAll">
+                            <a id="aAll" hidefocus href="javascript:void(0);" onclick="showDeviceList('aAll');">
+                                <script type="text/javascript">
+                                    writePage(allPage.all);
+                                </script>
+                                (<span id="spanDevicesAll"></span>) </a>
+                        </div>
+                        <div class="navigate_item" des="divItemOnline">
+                            <a id="aOnline" hidefocus href="javascript:void(0);" onclick="showDeviceList('aOnline');">
+                                <script type="text/javascript">
+                                    writePage(allPage.online);
+                                </script>
+                                (<span id="spanDevicesOnline"></span>) </a>
+                        </div>
+                        <div class="navigate_item" des="divItemOffLine">
+                            <a id="aOffline" hidefocus href="javascript:void(0);" onclick="showDeviceList('aOffline');">
+                                <script type="text/javascript">
+                                    writePage(allPage.offline);
+                                </script>
+                                (<span id="spanDevicesOffline"></span>) </a>
+                        </div>
+                    </div>
+                </div>
+                <!--<div style="clear: left; font-size: 12px; height: 20px; background-color: #F2F2F2;
+                    line-height: 150%;">
+                    <div id="divAddGroup" onclick="clkInputGroup(0);" style="width: auto; margin-left: 180px;
+                        clear: left; cursor: pointer; display: block;">
+                        +<script type="text/javascript">
+                             writePage(mapPage.addGroup);
+                        </script></div>
+                    <div id="divInputGroup" style="clear: left; display: none;">
+                        <input id="txtGroupName" type="text" width="120" />
+                        <input id="btnAddGroup" value="" type="button" onclick="saveGroup();" />&nbsp; <a
+                            href="javascript:void(0);" onclick="clkInputGroup(1);">
+                            <script type="text/javascript">
+                                writePage(allPage.cancel);
+                            </script>
+                        </a>
+                    </div>
+                </div>-->
+                <div id="divDevicesTable" style="border: 1px #CCCCFF solid; clear: left; font-size: 12px;overflow: auto;">
+                </div>
+            </div>
+        </div>
+        <div style="float: left; width: 2px;">
+            &nbsp;</div>
+        <div id="Div1" style="float: left;">
+            <iframe frameborder="0" name="ifmMap" id="ifmMap" scrolling="no" style="overflow: hidden;">
+            </iframe>
+        </div>
+    </div>
+    <input name="hidUserID" type="hidden" id="hidUserID" value="9564" />
+    <input name="hidUserName" type="hidden" id="hidUserName" value="Turismo Moche" />
+    <input name="hidStatus" type="hidden" id="hidStatus" value="-1" />
+    <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
+    <input name="hidIframeSrc" type="hidden" id="hidIframeSrc" value="http://192.168.1.35:84/application/index/iframemap?id=9564&amp;n=turismoche&amp;m=Google" />
+    <input name="hidLanguage" type="hidden" id="hidLanguage" value="en-us" />
+    </form>
+    <script type="text/javascript">
+
+        function ifmUpdateClose(id) {
+            $("#" + id).hide();
+            if (id == "divIframe") {
+                $("#ifmPage").attr("src", "");
+            }
+        }
+		
+    </script>
+</body>
+</html>

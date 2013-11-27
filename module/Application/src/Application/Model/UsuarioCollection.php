@@ -98,21 +98,27 @@ class UsuarioCollection {// extends MongoCollection
             $id = (String) $usarios['_id'];
             $datausuario = $this->collection->db->empresa->findOne(array('usuario_id' => $id));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
+            $nombre=array('nombre' => $datausuario['nombre']);
         } elseif ($usarios['rol'] == 'administrador') {
             $datausuario = $this->collection->db->administrador->findOne(array('usuario_id' => new \MongoId($usarios['_id'])));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
+            $nombre=array('nombre' => $datausuario['nombre']);
+
         } else {
             $id = (String) $usarios['_id'];
             $datausuario = $this->collection->db->vehiculo->findOne(array('usuario_id' => $id));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
+            $nombre=array('nombre' =>$datausuario['chofer']['chofer_nom']);
         }
-        $usuariorol[] = array_merge_recursive($usarios, $dataname);
+        $usuariorol[] = array_merge_recursive($usarios, $dataname,$nombre);
         if (empty($usuariorol[0]['_id'])) {
             return False;
         } else {
             $_SESSION['user_id'] = (string) $usuariorol[0]['_id'];
             $_SESSION['rol'] = (string) $usuariorol[0]['rol'];
             $_SESSION['_idrol'] = (string) $usuariorol[0]['_idrol'];
+            $_SESSION['nombre'] =  $usuariorol[0]['nombre'];
+
             $this->write($usuariorol[0]['_id'], $usuariorol);
 
             return True;
@@ -156,7 +162,7 @@ class UsuarioCollection {// extends MongoCollection
     public function write($sessionId, $data) {
         // $valor= array('rol'=>$data[0]['rol'],'_idrol'=>$data[0]['_idrol']); 
         $new_obj = array(
-            'rol' => $data[0]['rol'], '_idrol' => $data[0]['_idrol'], //'data' => $data,
+            'rol' => $data[0]['rol'], '_idrol' => $data[0]['_idrol'],'nombre'=>$data[0]['nombre'], //'data' => $data,
             'upsert' => True,
             'user_id' => (string) $sessionId,
             'timedout_at' => time() + self::SESSION_TIMEOUT,

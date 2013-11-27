@@ -2,6 +2,9 @@
 namespace Application\Form;
 
 use Zend\Form\Form;
+//use Zend\Form\Element;
+
+
 class Registrousuario extends Form
 {
     public function __construct($name = null)
@@ -18,20 +21,25 @@ class Registrousuario extends Form
             'name' => 'login',
             'type' => 'Text',
             'options' => array(
-                'label' => 'Usuario: ',          
+                //'label' => 'Usuario:',
+
             ),
              'attributes' => array(  
-                  'placeholder'=>'Ingrese su usuario'
+                'placeholder'=>'Ingrese su usuario',
+                'class' => 'form-control placeholder-no-fix',
+                'autocomplete' => 'off'
             ),
         ));
         $this->add(array(
             'name' => 'pass',
             'type' => 'password',
             'options' => array(
-                'label' => 'Pass: ',          
+                //'label' => 'Pass: ',          
             ),
               'attributes' => array(    
-                   'placeholder'=>'Ingrese pass'
+                   'placeholder'=>'Ingrese contraseña',
+                   'class' => 'form-control placeholder-no-fix',
+                   'autocomplete' => 'off'
             
             ),
         ));
@@ -73,12 +81,13 @@ class Registrousuario extends Form
                 'empty_option'  => '--- elija ---',
             )
         ));
-        
+//        $element = new Element\Button('my-button');
+//         $element->setLabel("Reset");
         $this->add(array(
             'name' => 'submit',
-            'type' => 'Text',
+            'type' => 'Button',
             'options' => array(
-                'label' => 'add',          
+                'label' => 'Ingresar',         
             ),
             'attributes' => array(
             

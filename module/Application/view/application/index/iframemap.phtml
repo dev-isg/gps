@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	地图内嵌
+</title>
+    <script type="text/javascript">
+        var runIndex = 0;
+        function runMap() {
+            if (runIndex == 0) {
+                var id = '9564';
+                var n = 'turismoche';
+                var m = 'Google';
+                if (m == "Google") {
+                    //                location.href = "IframeMap.aspx?id=" + id + "&n=" + n + "&m=OSM";
+                    //            } else {
+                    //                location.href = "IframeMap.aspx?id=" + id + "&n=" + n + "&m=Baidu";
+                }
+            }
+        }
+        //setTimeout(runMap, 6000);
+    </script>
+    <link rel="stylesheet" href="<?php echo $this->ruta;?>/CSS/all.css" type="text/css" />
+    <script id="MapSrc" src="http://maps.google.com/maps/api/js?sensor=false&language=en-us" type="text/javascript"></script>
+    <script type="text/javascript">runIndex++;</script>
+    <script src="<?php echo $this->ruta;?>/Language/language02-en-us.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/Config.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/PublicMap.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/Valid.js?version=2" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/IframeMap.js?version=20130227" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/_.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/initmap-Google.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/IframeMap-Google.js" type="text/javascript"></script>
+    <script src="<?php echo $this->ruta;?>/JS/popupmarker-Google.js" type="text/javascript"></script>
+    <style type="text/css">
+    <!--
+    body {
+	    margin-left: 0px;
+	    margin-top: 0px;
+	    margin-right: 0px;
+	    margin-bottom: 0px;
+    }
+    </style>
+</head>
+<body style="overflow: hidden;">
+    <form method="post" action="http://192.168.1.35:84/application/index/iframemap?id=9564&amp;n=turismoche&amp;m=Google" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTI5Nzg4Mzk4OWRkNRu2iSxgWHmq+jplPeagb+u8wdjTYg9cwvwig0LhQ8w=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwL//viwBALd4qCqDwLY26miCQLhlfKhBAKO04SpBAKeqNjdAwKBoNXCC2hcItPCxiuvNKmARdCld+jORbs1tlavwDU+Vag3Gi76" />
+</div>
+    <div id="disSecond" style="position: absolute; width: 210px; height: 15px; background-color: White;
+        margin-left: 70px; font-size: 12px; margin-top: 30px; z-index: 999;">
+        <span id="spanSecond" style="color: Red;"></span>
+        <script type="text/javascript">
+            writePage(trackingPage.secondMsg);
+        </script>
+    </div>
+    <div id="divLeftMenu" style="position: absolute; width: 95px; height: auto; background-color: White;
+        display: none; font-size: 12px; z-index: 9999; border: 1px #C8C8C8 solid;">
+        <div id="divLeftMenuContext" style="font-size: 11px;">
+        </div>
+    </div>
+    <div>
+        <div style="z-index: 99999; height: 25px; position: absolute; width: 100%; background-color: White;">
+            <table width="100%" border="0">
+                <tr>
+                    <td width="60%">
+                        <div id="divMarkerAddress" style="background-color: White;">
+                        </div>
+                    </td>
+                    <td>
+                        <select name="select" id="selMap" onchange="changeMap();">
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="chkDeviceName" value="" checked="checked" onclick="checkShowDeviceName(this.checked);" />
+                        <script type="text/javascript">
+                            writePage(iframeMapPage.deviceName);
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="map_canvas" style="border: 0px #CCCCFF solid; width: 100%; position: absolute;
+            overflow: hidden; top: 18px;">
+        </div>
+    </div>
+    <span id="spanMapPopupContentSize"></span>
+    <input name="hidLanguage" type="hidden" id="hidLanguage" value="en-us" />
+    <input name="hidLoginName" type="hidden" id="hidLoginName" value="turismoche" />
+    <input name="hidSelMap" type="hidden" id="hidSelMap" value="Google" />
+    <input name="hidStatus" type="hidden" id="hidStatus" value="-1" />
+    <input name="hidUserID" type="hidden" id="hidUserID" value="9564" />
+    <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
+    </form>
+</body>
+</html>

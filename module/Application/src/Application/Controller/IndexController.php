@@ -47,7 +47,9 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
-        
+
+ $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
         if ($this->getUsuariosMongoDb()->isLoggedIn()) {
             $dato = $this->getUsuariosMongoDb()->read();
             if ($dato['rol'] == 'administrador') {
@@ -97,8 +99,11 @@ class IndexController extends AbstractActionController {
         }
         $cantidadVehiculo = count($resultadosVehiculo);
         $cantidad = count($resultados);
-        return new ViewModel(array('valores' => $resultados, 'rol' => $_SESSION['rol'],
-                    'cantidad' => $cantidad, 'vehiculo' => $resultadosVehiculo, 'cantidadVehiculo' => $cantidadVehiculo));
+        $viewModel->setVariables(array('valores' => $resultados, 'rol' => $_SESSION['rol'],
+                    'cantidad' => $cantidad, 'vehiculo' => $resultadosVehiculo, 
+            'cantidadVehiculo' => $cantidadVehiculo,'hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=> $this->_options->host->ruta));
+       
+         return $viewModel; 
     }
     
     public function getvehiculosAction(){
@@ -111,6 +116,8 @@ class IndexController extends AbstractActionController {
     }
 
     public function loginAction() {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
         $form = new Registrousuario();
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -120,32 +127,20 @@ class IndexController extends AbstractActionController {
             if ($form->isValid()) {
                 $usuarios->exchangeArray($form->getData());
                 $resultado = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
-                // var_dump($resultado);exit;
-                if (!empty($resultado)) {
+                if (!empty($resultado)) { 
                     return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
                 } else {
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+                    $mensaje='usuario ó pass incorrectos';
+                     $viewModel->setVariables(array('form' => $form,'mensaje'=>$mensaje));
+                    return $viewModel;
                 }
-
-//                $usuarios->exchangeArray($form->getData());
-//                $datosLogin = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
-//                $populateStorage = array('rol' => $datosLogin[0]['rol'], 'login' => $datosLogin[0]['login'],'_id'=>(String)$datosLogin[0]['_id']);
-//                $storage = new ArrayStorage($populateStorage);
-//                $manager = new SessionManager(); 
-//                $manager->setStorage($storage);
-//                var_dump($manager->getConfig());exit;
-//                if ($manager->sessionExists() == true) { 
-//                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
-//                } else {
-//                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/login');
-//                }
             } else {
                 foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                    //print_r($error->getMessages());
                 }
             }
         }
-        return new ViewModel(array('form' => $form));
+        $viewModel->setVariables(array('form' => $form));
+         return $viewModel;     
     }
 
     public function eliminarusuarioAction() {
@@ -153,6 +148,19 @@ class IndexController extends AbstractActionController {
         $this->getUsuariosMongoDb()->eliminarUsuario($id);
         return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
     }
+    public function mapAction() {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+         $viewModel->setVariables(array('ruta'=>$this->_options->host->ruta));
+          return $viewModel;
+    }
+       public function iframemapAction() {
+           $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+       $viewModel->setVariables( array('ruta'=>$this->_options->host->ruta));
+        return $viewModel;
+    }
+
 
     public function agregarusuarioAction() {
         $form = new Registrousuario("form");
