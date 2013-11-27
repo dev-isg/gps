@@ -121,9 +121,9 @@ class VehiculoCollection {
                 'lat' => true, 'lng' => true,'vehiculo_id'=>true)
                 )->sort(array('_id'=>-1))->limit(1);
            
-            if($tramas){
+          
                 foreach($tramas as $trama){
-                    
+//                     if(!empty($trama)){
                     $auxtram['estado']=$trama['estado'];
                     $auxtram['alerta']=$trama['alerta'];
                     $auxtram['hms']=$trama['hms'];
@@ -133,10 +133,11 @@ class VehiculoCollection {
                     $auxtram['lat']=$trama['lat'];
                     $auxtram['lng']=$trama['lng'];
 
-                }
-            }                
+//                     }
+                     $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+                }                
 //            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
-            $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+            
         }
 //        var_dump($auxzz);exit;
         return $resultset;
