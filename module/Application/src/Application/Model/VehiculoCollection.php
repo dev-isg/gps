@@ -137,12 +137,12 @@ class VehiculoCollection {
                     $auxtram['velocidad']=$trama['velocidad'];
                     $auxtram['lat']=$trama['lat'];
                     $auxtram['lng']=$trama['lng'];
-
-//                     }
                      $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+//                     }
+                     
                 }                
 //            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
-            
+           
         }
 //        var_dump($auxzz);exit;
         return $resultset;
