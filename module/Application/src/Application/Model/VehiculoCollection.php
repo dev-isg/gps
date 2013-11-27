@@ -36,7 +36,7 @@ class VehiculoCollection {
     }
 
     public function getVehiculo($idvehiculo) {
-                //var_dump($idvehiculo);exit;
+              //var_dump($idvehiculo);exit;
         $vehiculo = $this->collection->findOne(array('_id' => new \MongoId($idvehiculo)));
 //          foreach ($vehiculo as $value) {
 //             $dd[]= $value;
