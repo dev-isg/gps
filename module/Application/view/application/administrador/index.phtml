@@ -22,8 +22,8 @@
         <td><?php echo $this->valores[$i]['login']; ?></td>
      <!--   <td><?php// echo $this->valores[$i]['pass']; ?></td>-->
     <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/administrador/eliminaradministrador?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-administrador/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
-                
+   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-administrador/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar Datos</a>
+      <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-pass-administrador/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar Password</a>             
          </tr>
        <?php }; ?>
         </table>

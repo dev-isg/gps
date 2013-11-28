@@ -43,7 +43,17 @@ class AdministradorForm extends Form
             
             ),
         ));
-        
+          $this->add(array(
+            'name' => 'passantiguo',
+            'type' => 'password',
+            'options' => array(
+                'label' => 'Contraseña Actual: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese Contraseña Actual'
+            
+            ),
+        ));
         $this->add(array(
             'name' => 'nombre',
             'type' => 'Text',

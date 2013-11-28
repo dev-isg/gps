@@ -41,7 +41,7 @@ function showPOIMap(uid) {
     var timeZone = $('#hidTimeZone').val();
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/dataGoogle.json",
+        url: "http://192.168.1.35:84/json/dataGoogle.json",
         contentType: "application/json",
         data: "{UserID:" + uid + ",TimeZone:'" + timeZone + "'}",
         dataType: "json",

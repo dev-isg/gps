@@ -15,6 +15,8 @@ use Zend\View\Model\ViewModel;
 use Application\Form\Registrousuario;
 use Application\Form\Fieldset;
 use Mongo;
+use Application\Form\VehiculoForm;
+use Application\Model\Vehiculo;
 use PhlyMongo\Mongodb;
 use Application\Model\Usuario;
 use PhlyMongo\MongoConnectionFactory;
@@ -46,65 +48,126 @@ class IndexController extends AbstractActionController {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
     }
 
-    public function indexAction() {
-
- $viewModel = new ViewModel();
+    public function editarpassvehiculousuarioAction() {
+        $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
-        if ($this->getUsuariosMongoDb()->isLoggedIn()) {
-            $dato = $this->getUsuariosMongoDb()->read();
-            if ($dato['rol'] == 'administrador') {
-                $id = $this->params()->fromQuery('id', 0);
-                $resultados = $this->getEmpresaMongoDb()->getLista();
-                if ($this->getRequest()->isPost()) {
-                    $consulta = $this->params()->fromPost('texto');
-                    $consultaVehiculo = $this->params()->fromPost('vehiculo');
-                    if (!empty($consulta)) {
-                        $resultados = $this->getEmpresaMongoDb()->getLista($consulta);
-                    }
-                    if (!empty($consultaVehiculo)) {
-                        $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo);
-                    }
-                }
-                if ($id == !'') {
-                    $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($id);
-                }
-            } elseif ($dato['rol'] == 'empresa') {
-                $resultados = $this->getEmpresaMongoDb()->obtenerEmpresaCantidad($dato['_idrol']);
-                if ($this->getRequest()->isPost()) {
-                    $consultaVehiculo = $this->params()->fromPost('vehiculo');
-                    $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo, $dato['_idrol']);
-                } else {
-                    $estado = $this->params()->fromQuery('estado', 0);
-                    $detalle = $this->params()->fromQuery('detalle', 0);
-                    if (!empty($estado)) {
-
-                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculosEstado($dato['_idrol'], $estado);
-                    } elseif (!empty($detalle)) {
-
-                        $fechaActual = date("Y-m-d H:i:s");
-                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle, $fechaActual);
-                        //$view= new ViewModel();
-                        //$view->setTerminal(true);
-                        echo $resultadosVehiculo;
-                        exit;
-                    } else {
-                        $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($dato['_idrol']);
-                    }
-                }
-            } else {
-                $resultados = $this->getVehiculoMongoDb()->getVehiculo($dato['_idrol']);
-            }
-        } else {
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
+        $dato = $this->getUsuariosMongoDb()->read();
+        $id = $dato['_idrol'];
+        if ($dato['rol'] == 'vehiculo') {
+            if (!$id) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+            }
+            try {
+                $vehiculo = $this->getVehiculoMongoDb()->getVehiculo($id);
+            } catch (\Exception $ex) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+            }
+            $form = new VehiculoForm();
+            $form->get('submit')->setValue('Editar');
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $datos = $this->request->getPost();
+                $passanti = md5($datos['passantiguo']);
+                if ($passanti == $vehiculo[0]['pass']) {
+                    if ($datos['pass'] == $datos['pass2']) {
+                        $vehiculo = new Vehiculo();
+                        $form->setInputFilter($vehiculo->getInputFilter());
+                        $form->setData($request->getPost());
+                        if ($form->isValid()) {
+                            $vehiculo->exchangeArray($form->getData());
+                            $this->getUsuariosMongoDb()->editarPassUsuario($vehiculo, $dato['user_id']);
+                            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+                        } else {
+                            foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                                print_r($error->getMessages());
+                                print_r($error->getName());
+                            }
+                        }
+                    } else {
+                        $mensaje = 'las Contraseñas no coinciden';
+                        return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje,
+                                    'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'],
+                                    'ruta' => $this->_options->host->ruta));
+                    }
+                } else {
+                    $mensaje = 'pass antiguo no es verdadero';
+                    return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje,
+                                'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'],
+                                'ruta' => $this->_options->host->ruta));
+                }
+            }
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
+
+        $viewModel->setVariables(array('form' => $form, 'id' => $id, 'hidUserID' => $_SESSION['_idrol'],
+            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+        return $viewModel;
+    }
+
+    public function indexAction() {
+
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
+            $id = $this->params()->fromQuery('id', 0);
+            $resultados = $this->getEmpresaMongoDb()->getLista();
+            if ($this->getRequest()->isPost()) {
+                $consulta = $this->params()->fromPost('texto');
+                $consultaVehiculo = $this->params()->fromPost('vehiculo');
+                if (!empty($consulta)) {
+                    $resultados = $this->getEmpresaMongoDb()->getLista($consulta);
+                }
+                if (!empty($consultaVehiculo)) {
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo);
+                }
+            }
+            if ($id == !'') {
+                $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($id);
+            }
+        } elseif ($dato['rol'] == 'empresa') {
+            $resultados = $this->getEmpresaMongoDb()->obtenerEmpresaCantidad($dato['_idrol']);
+            if ($this->getRequest()->isPost()) {
+                $consultaVehiculo = $this->params()->fromPost('vehiculo');
+                $resultadosVehiculo = $this->getVehiculoMongoDb()->buscarVehiculos($consultaVehiculo, $dato['_idrol']);
+            } else {
+                $estado = $this->params()->fromQuery('estado', 0);
+                $detalle = $this->params()->fromQuery('detalle', 0);
+                if (!empty($estado)) {
+
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculosEstado($dato['_idrol'], $estado);
+                } elseif (!empty($detalle)) {
+
+                    $fechaActual = date("Y-m-d H:i:s");
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle, $fechaActual);
+                    //$view= new ViewModel();
+                    //$view->setTerminal(true);
+                    echo $resultadosVehiculo;
+                    exit;
+                } else {
+                    $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculos($dato['_idrol']);
+                }
+            }
+        } else {
+            $resultados = $this->getVehiculoMongoDb()->getVehiculo($dato['_idrol']);
+        }
+
         $cantidadVehiculo = count($resultadosVehiculo);
         $cantidad = count($resultados);
         $viewModel->setVariables(array('valores' => $resultados, 'rol' => $_SESSION['rol'],
-                    'cantidad' => $cantidad, 'vehiculo' => $resultadosVehiculo, 
-            'cantidadVehiculo' => $cantidadVehiculo,'hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=> $this->_options->host->ruta));
-       
-         return $viewModel; 
+            'cantidad' => $cantidad, 'vehiculo' => $resultadosVehiculo,
+            'cantidadVehiculo' => $cantidadVehiculo, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+
+        return $viewModel;
     }
+
     
     public function getvehiculosAction(){
         $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');//
@@ -128,6 +191,18 @@ class IndexController extends AbstractActionController {
 //            'd' => array('devices'=>$resultados)
 //        ));
     }
+
+    public function getempresaAction() {
+        $idempresa = $this->params()->fromPost('id', '528fb5c3bf8eb1d02100000b');
+        $resultados = $this->getEmpresaMongoDb()->getEmpresabyId($idempresa);
+        return new JsonModel($resultados);
+    }
+     public function getempresatotalesAction() {
+        $idempresa = $this->params()->fromPost('id', '528fb5c3bf8eb1d02100000b');
+        $resultados = $this->getEmpresaMongoDb()->getEmpresabyId($idempresa);
+        return new JsonModel($resultados);
+
+    }
     
 //    function json_encode_objs($item){   
 //        if(!is_array($item) && !is_object($item)){   
@@ -143,6 +218,9 @@ class IndexController extends AbstractActionController {
     
 
     public function loginAction() {
+        if ($this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
         $form = new Registrousuario();
@@ -154,20 +232,21 @@ class IndexController extends AbstractActionController {
             if ($form->isValid()) {
                 $usuarios->exchangeArray($form->getData());
                 $resultado = $this->getUsuariosMongoDb()->obtenerUsuarioLogin($usuarios);
-                if (!empty($resultado)) { 
+                if (!empty($resultado)) {
                     return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
                 } else {
-                    $mensaje='usuario ó pass incorrectos';
-                     $viewModel->setVariables(array('form' => $form,'mensaje'=>$mensaje));
+                    $mensaje = 'usuario ó pass incorrectos';
+                    $viewModel->setVariables(array('form' => $form, 'mensaje' => $mensaje));
                     return $viewModel;
                 }
             } else {
                 foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                    
                 }
             }
         }
         $viewModel->setVariables(array('form' => $form));
-         return $viewModel;     
+        return $viewModel;
     }
 
     public function eliminarusuarioAction() {
@@ -175,19 +254,38 @@ class IndexController extends AbstractActionController {
         $this->getUsuariosMongoDb()->eliminarUsuario($id);
         return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/index');
     }
+
     public function mapAction() {
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
-         $viewModel->setVariables(array('ruta'=>$this->_options->host->ruta));
-          return $viewModel;
-    }
-       public function iframemapAction() {
-           $viewModel = new ViewModel();
-        $viewModel->setTerminal(true);
-       $viewModel->setVariables( array('ruta'=>$this->_options->host->ruta));
+        $viewModel->setVariables(array('hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
 
+    public function iframemapAction() {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        $viewModel->setVariables(array('hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+        return $viewModel;
+    }
+
+    public function perfilAction() {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'empresa') {
+            $resultados = $this->getEmpresaMongoDb()->obtenerEmpresa($dato['_idrol']);
+            if ($this->getRequest()->isPost()) {
+                $resultados = $this->getEmpresaMongoDb()->obtenerEmpresa($dato['_idrol']);
+            }
+        } elseif ($dato['rol'] == 'vehiculo') {
+            
+        }
+        $cantidad = count($resultados);
+
+        $viewModel->setVariables(array('valores' => $resultados, 'cantidad' => $cantidad, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+        return $viewModel;
+    }
 
     public function agregarusuarioAction() {
         $form = new Registrousuario("form");
@@ -228,7 +326,6 @@ class IndexController extends AbstractActionController {
         $form->get('_id')->setValue($usuario['_id']);
         $form->get('rol')->setValue($usuario['rol']);
         $form->get('submit')->setValue('Editar');
-        //    $form->bind($usuario);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();

@@ -7,7 +7,7 @@
         var runIndex = 0;
         function runMap() {
             if (runIndex == 0) {
-                var id = '9564';
+                var id = '<?php echo $this->hidUserID; ?>';
                 var n = 'turismoche';
                 var m = 'Google';
                 if (m == "Google") {
@@ -43,7 +43,7 @@
     </style>
 </head>
 <body style="overflow: hidden;">
-    <form method="post" action="http://192.168.1.35:84/application/index/iframemap?id=9564&amp;n=turismoche&amp;m=Google" id="form1">
+    <form method="post" action="http://192.168.1.35:84/application/index/iframemap?id=<?php echo $this->hidUserID; ?>&amp;n=turismoche&amp;m=Google" id="form1">
 <div class="aspNetHidden">
 <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTI5Nzg4Mzk4OWRkNRu2iSxgWHmq+jplPeagb+u8wdjTYg9cwvwig0LhQ8w=" />
 </div>
@@ -94,7 +94,7 @@
     <input name="hidLoginName" type="hidden" id="hidLoginName" value="turismoche" />
     <input name="hidSelMap" type="hidden" id="hidSelMap" value="Google" />
     <input name="hidStatus" type="hidden" id="hidStatus" value="-1" />
-    <input name="hidUserID" type="hidden" id="hidUserID" value="9564" />
+    <input name="hidUserID" type="hidden" id="hidUserID" value="<?php echo $this->hidUserID; ?>" />
     <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
     </form>
 </body>

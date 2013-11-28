@@ -35,8 +35,8 @@
         <td><?php echo $this->valores[$i]['telefono']; ?></td>
      <!--   <td><?php// echo $this->valores[$i]['pass']; ?></td>-->
     <td><a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-empresa/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar</a>
-  <!--   <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/application/index/eliminarusuario?id=<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Eliminar</a>
-          -->  
+ <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/editar-pass-empresa/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar Pass </a>
+
          <a data-id="<?php echo $this->valores[$i]['_id']; ?>" href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores[$i]['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Listar Vehículos</a>
          </tr>
        <?php }; ?>

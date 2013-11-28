@@ -219,7 +219,7 @@ function ajaxLoadingTree() {
         },
         async: {
             enable: true,
-            url: "http://localhost/car/json/UserTreeAjax.json",
+            url: "http://192.168.1.35:84/application/index/getempresa",
             autoParam: ["id"],
             otherParam: { "staticID": uid }
         },
@@ -236,6 +236,7 @@ function ajaxLoadingTree() {
 function onAsyncSuccess1(event, treeId, treeNode, msg) {
     $("#divLoading").hide();
     var json = eval("(" + msg + ")");
+
     getAllChildrenNodes(json);
 }
 function getAllChildrenNodes(treeNode) {
@@ -243,6 +244,7 @@ function getAllChildrenNodes(treeNode) {
 
     if (treeNode.length == undefined) {
         users.name = treeNode.name;
+
         users.id = treeNode.id;
         allUsers.push(users);
         var childrenNodes = treeNode.children;
@@ -283,7 +285,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 
 function showDeviceList(a) {
-
+    //alert('hi mundo');
     var s = $("#" + a).parent().attr("des");
     for (var i = 0; i < 3; i++) {
         var id = "aAll";
@@ -348,7 +350,7 @@ function ajaxGetDevices() {
     var TimeZone = $("#hidTimeZone").val();
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/GetDevicesByUserID.json",
+        url: "http://192.168.1.35:84/json/prueba.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + ",isFirst:" + isFirst + ",TimeZones:'" + TimeZone + "'}",
         dataType: "json",
@@ -365,11 +367,11 @@ function ajaxGetDevices() {
                         var isCz = false;
                         for (var j = 0; j < allDevices.devices.length; j++) {
                             if (json.devices[i].id == allDevices.devices[j].id) {
-                                allDevices.devices[j].locationID = json.devices[i].locationID;
+                                //allDevices.devices[j].locationID = json.devices[i].locationID;
                                 allDevices.devices[j].groupID = json.devices[i].groupID;
                                 allDevices.devices[j].serverUtcDate = json.devices[i].serverUtcDate;
                                 allDevices.devices[j].deviceUtcDate = json.devices[i].deviceUtcDate;
-                                allDevices.devices[j].stopTimeMinute = json.devices[i].stopTimeMinute;
+                                //allDevices.devices[j].stopTimeMinute = json.devices[i].stopTimeMinute;
                                 allDevices.devices[j].latitude = json.devices[i].latitude;
                                 allDevices.devices[j].longitude = json.devices[i].longitude;
                                 allDevices.devices[j].baiduLat = json.devices[i].baiduLat;
@@ -388,7 +390,6 @@ function ajaxGetDevices() {
                                 isCz = true;
                                 break;
                             }
-
                         }
 
                     }
@@ -408,12 +409,14 @@ function ajaxGetDevices() {
 var showMoreDivDeviceArr = [];
 var openDeviceDivID = null;
 var lastChangeTabState = null;
-function showDevicesTable(s) { 
+function showDevicesTable(s) {
+    //alert('hi mundo');
     if (!ifmMap.window.isFortime) {
         ifmMap.window.forTimeMethod();
         ifmMap.window.isFortime = true;
     }
     if (lastChangeTabState) {
+        //alert(s);
         if (lastChangeTabState != s) {
             ifmMap.window.clearMap();
         }
@@ -517,13 +520,13 @@ function showDevicesTable(s) {
 
             html.push('<div id="' + idTab + '" class="' + divClass + '" style="clear:left;width:243px; margin-left:10px; cursor:pointer;  color:' + color + ';line-height:135%;" ');
             if (isShowMore) {
-                html.push('onclick="showMoreDivDevice(' + allDevices.devices[i].id + ',\'' + status + '\')">');
-                devicesListHtml.push('<tr onclick="showMoreDivDevice(' + allDevices.devices[i].id + ',\'' + status + '\')" style="cursor:pointer;">');
+                html.push('onclick="showMoreDivDevice(\'' + allDevices.devices[i].id + '\',\'' + status + '\')">');
+                devicesListHtml.push('<tr onclick="showMoreDivDevice(\'' + allDevices.devices[i].id + '\',\'' + status + '\')" style="cursor:pointer;">');
             } else {
                 html.push('>');
                 devicesListHtml.push('<tr>');
             }
-            html.push('<img src="icons/' + iconImg + '" width="16" height="16" style="float:left;" />');
+            html.push('<img src="../../icons/' + iconImg + '" width="16" height="16" style="float:left;" />');
 
             var deviceName = allDevices.devices[i].name;
 
@@ -702,7 +705,7 @@ function clkShowMoreMenu(userid, deviceid, model, name, sn) {
             html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="javascript:showPassword(' + deviceid + ',\'HFYD\',\'' + name + '\',\'' + sn + '\',' + model + ')" >' + mapPage.restorePetrol + '</a></div>');
             html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="javascript:showPassword(' + deviceid + ',\'CheckLocation\',\'' + name + '\',\'' + sn + '\',' + model + ')" >' + mapPage.checkLocation + '</a></div>');
         }
- 	else if (model == 27 || model == 28 || model == 29 || model == 30) {
+    else if (model == 27 || model == 28 || model == 29 || model == 30) {
             //GT100=27 GT200=28 ET100=29 GT88=30 
             html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="javascript:showSendCmd(' + deviceid + ',\'DIYSEND\',\'' + name + '\',\'' + sn + '\',' + model + ');" >' + allPage.sendMsg + '</a></div>');
 
@@ -749,9 +752,9 @@ function clkShowMoreMenu(userid, deviceid, model, name, sn) {
                 html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="RoutePlanning.aspx?id=' + UserId + '" target="_blank">路线偏离设置</a></div>');
                 html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="POI.aspx?id=' + UserId + '" target="_blank">用户POI管理</a></div>');
             }else if(language == "en-us")
-	   {
-   		html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="POI.aspx?id=' + UserId + '" target="_blank">Add POI</a></div>');
-	   }
+       {
+        html.push('<div style="padding-top:2px;" onmouseover="this.style.backgroundColor=\'#F0F0F0\';" onmouseout="this.style.backgroundColor=\'#FFFFFF\';" ><a href="POI.aspx?id=' + UserId + '" target="_blank">Add POI</a></div>');
+       }
         }
 
     }
@@ -1336,7 +1339,7 @@ function writeCommandTable(json) {
             } else if (commandName == "BP13") {
                 commandName = "下发文字";
             } else if (commandName == "UserSend") {
- 		commandName = "UserSend";
+        commandName = "UserSend";
                // commandName = "用户下发";
             }
 
@@ -1513,7 +1516,7 @@ function saveGroup() {
                     var inputID = "editGroup-" + res;
                     var divMainID = "divMainGroup-" + res;
                     html.push('<div id="' + divMainID + '" style="clear:left; height:25px;padding-top:5px;padding-bottom:5px;border-bottom:1px #F2F2F2 solid;">');
-                    html.push('<div style="float:left;width:140px;">&nbsp;<img src="Images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + id + '\');" />&nbsp;');
+                    html.push('<div style="float:left;width:140px;">&nbsp;<img src="../../images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + id + '\');" />&nbsp;');
                     html.push('<span id="' + spanNameID + '">' + inputGroupName + '</span><input id="' + inputID + '" onblur="saveGroupName(' + res + ');" style="width:80px;display:none;" />');
                     html.push('(<span id="' + spanID + '">0</span>)</div>');
                     html.push('<div id="' + divEditID + '" style="float:left;display:none;"><a href="javascript:void(0);" onclick="editGroupName(' + res + ');">' + allPage.edit2 + '</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="comfirmDelGroup(' + res + ',\'' + inputGroupName + '\');">' + allPage.deletes + '</a></div>');
@@ -1539,7 +1542,7 @@ function saveGroup() {
 //获取用户的设备分组
 function getGroup() {
     var html = [], divMainIDs = [], divEditIDs = [];
-    html.push('<div style="clear:left; height:25px;padding-top:5px;padding-bottom:5px;border-bottom:1px #F2F2F2 solid;">&nbsp;<img src="Images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + "divGroup-0" + '\');" />&nbsp;' + mapPage.defaultGroup + '(<span id="spanGroup-0">0</span>)');
+    html.push('<div style="clear:left; height:25px;padding-top:5px;padding-bottom:5px;border-bottom:1px #F2F2F2 solid;">&nbsp;<img src="../../images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + "divGroup-0" + '\');" />&nbsp;' + mapPage.defaultGroup + '(<span id="spanGroup-0">0</span>)');
     html.push('</div>');
     html.push('<div id="divGroup-0">');
     html.push("</div>");
@@ -1547,7 +1550,7 @@ function getGroup() {
 
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/GetAllGroupByUserID.json",
+        url: "http://192.168.1.35:84/json/GetAllGroupByUserID.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + "}",
         dataType: "json",
@@ -1563,7 +1566,7 @@ function getGroup() {
                     var inputID = "editGroup-" + allGroups[i].id;
                     var divMainID = "divMainGroup-" + allGroups[i].id;
                     html.push('<div id="' + divMainID + '" style="clear:left; height:20px;padding-top:5px;padding-bottom:5px;border-bottom:1px #F2F2F2 solid;">'); //
-                    html.push('<div style="float:left;width:140px;">&nbsp;<img src="Images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + id + '\');" />&nbsp;');
+                    html.push('<div style="float:left;width:140px;">&nbsp;<img src="../../images/g_o.gif" width="11" height="11" border="0" style="cursor:pointer;" onclick="displyGroupDiv(this,\'' + id + '\');" />&nbsp;');
                     html.push('<span id="' + spanNameID + '">' + allGroups[i].name + '</span><input id="' + inputID + '" onblur="saveGroupName(' + allGroups[i].id + ');" style="width:80px;display:none;" />');
                     html.push('(<span id="' + spanID + '">0</span>)</div>');
                     html.push('<div id="' + divEditID + '" style="float:left;display:none;"><a href="javascript:void(0);" onclick="editGroupName(' + allGroups[i].id + ');">' + allPage.edit2 + '</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="comfirmDelGroup(' + allGroups[i].id + ',\'' + allGroups[i].name + '\');">' + allPage.deletes + '</a></div>');
@@ -1685,10 +1688,10 @@ function closeGroupDiv(id) {
 function displyGroupDiv(t, id) {
     var display = document.getElementById(id).style.display;
     if (display == "block" || display == "") {
-        t.src = "Images/g_c.gif";
+        t.src = "../../images/g_c.gif";
         document.getElementById(id).style.display = "none";
     } else {
-        t.src = "Images/g_o.gif";
+        t.src = "../../images/g_o.gif";
         document.getElementById(id).style.display = "block";
     }
 }

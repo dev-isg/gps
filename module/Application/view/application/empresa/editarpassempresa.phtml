@@ -1,14 +1,14 @@
 <?php
-$title = 'Agregar Nuevo Administrador';
+$title = 'Editar empresa';
 $this->headTitle($title);
 ?>
-
+<?php echo $this->mensaje;?>
 <div class="span12">
 <?php
 
 $form = $this->form;
 $form->setAttributes(array(
-    'action' => $this->url.'/application/administrador/agregaradministrador',
+       'action' => $this->url.'/editar-pass-empresa/'.$this->id,
     'method' => 'post',
     'class'=>'form-horizontal'
 ));
@@ -17,21 +17,17 @@ $form->prepare();
 echo $this->form()->openTag($form);
 ?>
 <legend><?php echo $this->escapeHtml($title); ?></legend>
-<?php echo $this->formRow($form->get('rol')->setValue('administrador'));?>
+<?php echo $this->formRow($form->get('rol')->setValue('empresa'));?>
+<?php echo $this->formRow($form->get('_id'));?>
+<?php echo $this->formRow($form->get('usuario_id'));?>
 <div class="row-fluid">
-<div class="control-group span6"><?php echo $this->formRow($form->get('nombre'));?></div>
-<h3>Datos de Usuario</h3>
-<div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('passantiguo'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass'));?></div>
 <div class="control-group span6"><?php echo $this->formRow($form->get('pass2'));?>
-<?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
-</div>
-</div>
-<div class="row-fluid">
-
-
-</div>
 <div class="row-fluid">
 <div class="control-group span12 "><?php echo $this->formSubmit($form->get('submit'));?></div></div><?php echo $this->form()->closeTag();?> 
 <a data-id="" href="javascript:history.back(1)" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>cancelar</a>
 </div>
+
+
+

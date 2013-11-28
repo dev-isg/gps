@@ -45,12 +45,12 @@ body {
 -->
 	.navigate{height:30px;border-bottom:1px solid #D2DCDE;margin-top:10px;}
 	.navigate_item{height:30px;line-height:30px;
-				   background:url(images/navigate_item_bg.gif) repeat-x;width:75px;
+				   background:url(../../images/navigate_item_bg.gif) repeat-x;width:75px;
 				  border-right:#d2dcde 1px solid;text-align:center;float:left;font-size:12px;}
 	.navigate_item a,.navigate_item a:link{color:#030303;text-decoration:none;}
 	.navigate_item a:hover{color:#0000CC;text-decoration:underline;}
 	#navigate_item_over{height:30px;line-height:30px;
-						background:url(images/navigate_select_item_bg.gif) repeat-x;
+						background:url(../../images/navigate_select_item_bg.gif) repeat-x;
 						width:75px;border-left:#d2dcde 1px solid;text-align:center;float:left;}
 	#navigate_item_over a,#navigate_item_over a:link{color:#005590;text-decoration:none;outline: none;}
 	
@@ -59,7 +59,7 @@ body {
 	
 </style>
 <body>
-    <form method="post" action="map.aspx?id=9564&amp;n=turismoche" id="form1">
+    <form method="post" action="http://192.168.1.35:84/application/index/map?id=<?php echo $this->hidUserID; ?>&amp;n=turismoche" id="form1">
 <div class="aspNetHidden">
 <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTY3NjIzNzg5Nw9kFgICAQ9kFgICAQ8PFgIeBFRleHQFDVR1cmlzbW8gTW9jaGVkZGRBLApXBg0BpsOC55fhQ+DSTH+8UEqfccTLLa7AFGRMCA==" />
 </div>
@@ -80,7 +80,7 @@ body {
                             设置SOS号码</label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -135,7 +135,7 @@ body {
                             设置设备上传间隔</label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divSOSPhone')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -191,7 +191,7 @@ body {
                             给设备下发文字信息</label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSendTxt')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divSendTxt')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -249,7 +249,7 @@ body {
                         </label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divSendCmd')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divSendCmd')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -330,7 +330,7 @@ body {
                             设置亲情号码</label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divCellPhone')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divCellPhone')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -400,7 +400,7 @@ body {
     </div>
     <div id="divMenuLeftImg" onclick="showHideLeft();" onmouseover="overMenuLeft();"
         onmouseout="outMenuLeft();" style="position: absolute; width: 11px; height: 53px;
-        background-image: url(images/mini-left.gif); background-position: 33px; left: 260px;
+        background-image: url(../../images/mini-left.gif); background-position: 33px; left: 260px;
         z-index: 9999; top: 165px;">
     </div>
     <div id="divDevicesList" style="border: 1px #CCCCCC solid; width: 260px; position: absolute;
@@ -416,8 +416,8 @@ body {
                         </b>
                     </td>
                     <td width="30">
-                        <img src="icons/iw_min.gif" border="0" onclick="showDevicesListDiv(0);" style="cursor: pointer;" />
-                        <img src="icons/iw_max.gif" border="0" onclick="showDevicesListDiv(1);" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/icons/iw_min.gif" border="0" onclick="showDevicesListDiv(0);" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/icons/iw_max.gif" border="0" onclick="showDevicesListDiv(1);" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -437,7 +437,7 @@ body {
                         </label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divCommandList')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>iImages/iw_close.gif" border="0" onclick="closeDiv('divCommandList')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -455,7 +455,7 @@ body {
                         <b><span id="spanIframeTitle"></span></b>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divIframe')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divIframe')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -475,7 +475,7 @@ body {
                         </label>
                     </td>
                     <td width="20">
-                        <img src="Images/iw_close.gif" border="0" onclick="closeDiv('divInputPass')" style="cursor: pointer;" />
+                        <img src="<?php echo $this->ruta;?>/images/iw_close.gif" border="0" onclick="closeDiv('divInputPass')" style="cursor: pointer;" />
                     </td>
                 </tr>
             </table>
@@ -560,7 +560,7 @@ body {
                 <div id="userTreeDiv">
                     <div id="divLoading">
                         <div style="height: 30px;"></div>
-                        <img src="icons/loading.gif" width="32" height="32" />
+                        <img src="<?php echo $this->ruta;?>/icons/loading.gif" width="32" height="32" />
                     </div>
                     <div style="clear: left; height: 24px; width: 250px; position: relative; margin: 5px 0px 5px 5px;">
                         <div class="input-group">
@@ -652,11 +652,11 @@ body {
             </iframe>
         </div>
     </div>
-    <input name="hidUserID" type="hidden" id="hidUserID" value="9564" />
+    <input name="hidUserID" type="hidden" id="hidUserID" value="<?php echo $this->hidUserID; ?>" />
     <input name="hidUserName" type="hidden" id="hidUserName" value="Turismo Moche" />
     <input name="hidStatus" type="hidden" id="hidStatus" value="-1" />
     <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
-    <input name="hidIframeSrc" type="hidden" id="hidIframeSrc" value="http://192.168.1.35:84/application/index/iframemap?id=9564&amp;n=turismoche&amp;m=Google" />
+    <input name="hidIframeSrc" type="hidden" id="hidIframeSrc" value="http://192.168.1.35:84/application/index/iframemap?id=<?php echo $this->hidUserID; ?>&amp;n=turismoche&amp;m=Google" />
     <input name="hidLanguage" type="hidden" id="hidLanguage" value="en-us" />
     </form>
     <script type="text/javascript">

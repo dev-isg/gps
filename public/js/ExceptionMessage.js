@@ -6,7 +6,7 @@ function AjaxGetExceptionMessage() {
     var TimeZone = $("#hidTimeZone").val();
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/usersID.json",
+        url: "http://192.168.1.35:84/json/usersID.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + ",TimeZones:'" + TimeZone + "'}",
         dataType: "json",
@@ -33,7 +33,7 @@ function AjaxGetExceptionMessageCount() {
     var TimeZone = $("#hidTimeZone").val();
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/userID.json",
+        url: "http://192.168.1.35:84/json/userID.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + ",TimeZones:'" + TimeZone + "'}",
         dataType: "json",

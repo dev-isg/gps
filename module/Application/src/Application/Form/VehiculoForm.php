@@ -37,7 +37,17 @@ class VehiculoForm extends Form{
                   'placeholder'=>'ingrese Nombre del vehículo'
             ),
         ));
-        
+           $this->add(array(
+            'name' => 'passantiguo',
+            'type' => 'password',
+            'options' => array(
+                'label' => 'Contraseña Actual: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese Contraseña Actual'
+            
+            ),
+        ));
           $this->add(array(
             'name' => 'chofer_nom',
             'type' => 'Text',

@@ -125,7 +125,7 @@ function GetInfoWContx(data) {
 
 function GetPopupHtml(data) {
     var html = [];
-    var imghtml = "<img style='float:right' onclick='HideDeviceInfo(" + data.id + ")' border='0' src='images/iw_close.gif'/>";
+    var imghtml = "<img style='float:right' onclick='HideDeviceInfo(\"" + data.id + "\")' border='0' src='../../images/iw_close.gif'/>";
     html.push("<b>" + data.name + "</b>" + imghtml + "<br />");
     html.push("<b>" + allPage.imeiNo + ":</b>" + data.sn + "<br />");
     var status = getDeviceStatus(data.status);

@@ -66,6 +66,65 @@ class VehiculoController extends AbstractActionController {
         return new ViewModel(array('form' => $form, 'empresa' => $empresa['nombre']));
     }
 
+    public function editarpassvehiculoAction() {
+        $id = $this->params()->fromRoute('id_vehiculo', 0);
+        $idempresa = $this->params()->fromRoute('id_empresa', 0);
+        if (!$id) {
+            if ($idempresa != 'particular') {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            } else {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+            }
+        }
+        try {
+            $vehiculo = $this->getVehiculoMongoDb()->getVehiculo($id);
+        } catch (\Exception $ex) {
+            if ($idempresa != 'particular') {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+            } else {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+            }
+        }
+        $form = new VehiculoForm();
+        $form->get('usuario_id')->setValue($vehiculo[0]['usuario_id']);
+        $form->get('pass')->setValue($vehiculo[0]['pass']);
+        $form->get('_id')->setValue($vehiculo[0]['_id']);
+        $form->get('submit')->setValue('Editar');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $datos = $this->request->getPost();
+            $passanti = md5($datos['passantiguo']);
+            if ($passanti == $vehiculo[0]['pass']) {
+                if ($datos['pass'] == $datos['pass2']) {
+                    $vehiculo = new Vehiculo();
+                    $form->setInputFilter($vehiculo->getInputFilter());
+                    $form->setData($request->getPost());
+                    if ($form->isValid()) {
+                        $vehiculo->exchangeArray($form->getData());
+                        $this->getUsuariosMongoDb()->editarPassUsuario($vehiculo, $datos['usuario_id']);
+                        if ($idempresa == 'particular') {
+                            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
+                        } else {
+                            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+                        }
+                    } else {
+                        foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                            print_r($error->getMessages());
+                            print_r($error->getName());
+                        }
+                    }
+                } else {
+                    $mensaje = 'las Contraseñas no coinciden';
+                    return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje, 'idempresa' => $idempresa, 'idvehiculo' => $id));
+                }
+            } else {
+                $mensaje = 'pass antiguo no es verdadero';
+                return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje, 'idempresa' => $idempresa, 'idvehiculo' => $id));
+            }
+        }
+        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));
+    }
+
     public function editarvehiculoAction() {
         $id = $this->params()->fromRoute('id_vehiculo', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
@@ -103,32 +162,27 @@ class VehiculoController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();
-            $pass1 = $datos['pass'];
-            $pass2 = $datos['pass2'];
-            if ($pass1 == $pass2) {
-                $vehiculo = new Vehiculo();
-                $form->setInputFilter($vehiculo->getInputFilter());
-                $form->setData($request->getPost());
-                if ($form->isValid()) {
-                    $vehiculo->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($vehiculo, $datos['usuario_id'], 'editar');
-                    $this->getVehiculoMongoDb()->guardarVehiculo($vehiculo, $datos['usuario_id'], $datos['empresa_id'], $datos['_id']);
-                    if ($datos['enviar'] == 'si') {
-                        $this->correo($vehiculo);
-                    }
-                    if ($idempresa == 'particular') {
-                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
-                    } else {
-                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
-                    }
+
+            $vehiculo = new Vehiculo();
+            $form->setInputFilter($vehiculo->getInputFilter());
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $vehiculo->exchangeArray($form->getData());
+                $this->getUsuariosMongoDb()->agregarUsuario($vehiculo, $datos['usuario_id'], 'editar');
+                $this->getVehiculoMongoDb()->guardarVehiculo($vehiculo, $datos['usuario_id'], $datos['empresa_id'], $datos['_id']);
+                if ($datos['enviar'] == 'si') {
+                    $this->correo($vehiculo);
+                }
+                if ($idempresa == 'particular') {
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
                 } else {
-                    foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                        print_r($error->getMessages());
-                        print_r($error->getName());
-                    }
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
                 }
             } else {
-                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/editar-empresa/' . $id . '?m=1');
+                foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                    print_r($error->getMessages());
+                    print_r($error->getName());
+                }
             }
         }
         return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));
@@ -176,7 +230,9 @@ class VehiculoController extends AbstractActionController {
         $transport = $this->getServiceLocator()->get('mail.transport');
         $transport->send($message);
     }
-
+    
+ 
+    
     public function getEmpresaMongoDb() {
         if (!$this->empresaMongodb) {
             $sm = $this->getServiceLocator();
