@@ -202,14 +202,21 @@ class TramasCollection {
                 $fparada['fecha_inicio'] = date("Y-m-d H:i:s", $fact->sec);
                 $sig=$tramas->getNext();
                 if($sig['estado']=='moviendo'){
-                    var_dump($sig['estado']);
+                       $resta = ($fact->sec) - ($fant->sec);
+//                        echo(date("Y-m-d H:i:s", $fact->sec) . ' - > ' . date("Y-m-d H:i:s", $fant->sec) . '</br>');
+//                        if ($resta > 0) {
+//                            $fparada['idfechafin'] = $idfechant; 
+//                            $fparada['fecha_fin'] = date("Y-m-d H:i:s", $fant->sec);
+//                            $fparada['tiempo'] = $resta;
+//                        }
+//                    var_dump($sig['estado']);
                 }
                 
                 $resultset[] = $fparada;
             }
 //            $fant = $fact;
         }
-//        var_dump($resultset);
+        var_dump($resultset);
         exit;
     }
 

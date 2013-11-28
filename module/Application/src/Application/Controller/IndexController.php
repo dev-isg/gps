@@ -175,16 +175,22 @@ class IndexController extends AbstractActionController {
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
 
-        $auxresul="[";
+        $auxresul="";
+        $auxresul2="";
         foreach($resultados as $item){
             foreach($item as $key=>$value){
                     $auxresul.=$key.":"."\"$value\"".","; 
             }
+            $pos=strrpos($auxresul,",");
+            $cadena=substr($auxresul,0,$pos);
+            $auxresul2.="{".$cadena."}";
+            $auxresul="";
+
+//            $subarr[]=$cadena;
             
         }
-        $pos=strrpos($auxresul,",");
-        $cadena=substr($auxresul,0,$pos);
-        echo json_encode(array('d'=>'{devices:'.$cadena.']}'));
+       
+        echo json_encode(array('d'=>'{devices:['.$auxresul2.']}'));
         return $viewModel;
         
 //        return new JsonModel(array(
