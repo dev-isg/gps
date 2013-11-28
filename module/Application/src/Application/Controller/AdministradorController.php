@@ -23,11 +23,10 @@ use PhlyMongo\MongoCollectionFactory;
 use Application\Model\UsuarioCollection;
 use Application\Model\AdministradorCollection;
 
-
 class AdministradorController extends AbstractActionController {
 
     protected $administradorMongodb;
-     protected $sessionMongodb;
+    protected $sessionMongodb;
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
@@ -46,22 +45,24 @@ class AdministradorController extends AbstractActionController {
         $cantidad = count($resultados);
         return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
     }
-  public function adminAction() {
 
-        $resultado=$this->getUsuariosMongoDb()->read();
-        if ($resultado==!false) {
-            return new ViewModel(array('rol'=>$_SESSION['rol']));
+    public function adminAction() {
+
+        $resultado = $this->getUsuariosMongoDb()->read();
+        if ($resultado == !false) {
+            return new ViewModel(array('rol' => $_SESSION['rol']));
         } else {
-            
-            
+
+
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
     }
+
     public function eliminaradministradorAction() {
-        $id = $this->params()->fromQuery('id');  
-           $administrador = $this->getAdministradorMongoDb()->obtenerAdministrador($id); 
-            $this->getUsuariosMongoDb()->eliminarUsuario($administrador['usuario_id']);
-           $this->getAdministradorMongoDb()->eliminarAdministrador($id);
+        $id = $this->params()->fromQuery('id');
+        $administrador = $this->getAdministradorMongoDb()->obtenerAdministrador($id);
+        $this->getUsuariosMongoDb()->eliminarUsuario($administrador['usuario_id']);
+        $this->getAdministradorMongoDb()->eliminarAdministrador($id);
         return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
     }
 
@@ -95,9 +96,8 @@ class AdministradorController extends AbstractActionController {
         return new ViewModel(array('form' => $form));
     }
 
-     public function editarapassadministradorAction() {echo 'ss';exit;
-       // $id = $this->params()->fromRoute('id', 0);
-
+    public function editarapassadministradorAction() {
+        $id = $this->params()->fromRoute('id', 0);
         if (!$id) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
         }
@@ -109,34 +109,43 @@ class AdministradorController extends AbstractActionController {
         }
 
         $form = new AdministradorForm();
-        $form->get('nombre')->setValue($administrador['nombre']);
         $form->get('usuario_id')->setValue($administrador['usuario_id']);
         $form->get('_id')->setValue((String) $administrador['_id']);
         $form->get('rol')->setValue($administrador_usuario['rol']);
-        $form->get('login')->setValue($administrador_usuario['login']);
         $form->get('submit')->setValue('Editar');
         //    $form->bind($usuario);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();
-                $administrador = new Administrador();
-                $form->setInputFilter($administrador->getInputFilter());
-                $form->setData($request->getPost());
-                if ($form->isValid()) {
-                    $administrador->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($administrador, $datos['usuario_id'], 'editar');
-                    $this->getAdministradorMongoDb()->agregarAdministrador($administrador, $datos['usuario_id'], $datos['_id'], 'editar');
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
-                } else {
-                    foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                        print_r($error->getMessages());
-                        print_r($error->getName());
+            $passanti = md5($datos['passantiguo']);
+            if ($passanti == $administrador_usuario['pass']) {
+                if ($datos['pass'] == $datos['pass2']) {
+                    $administrador = new Administrador();
+                    $form->setInputFilter($administrador->getInputFilter());
+                    $form->setData($request->getPost());
+                    if ($form->isValid()) {
+                        $administrador->exchangeArray($form->getData());
+                        $this->getUsuariosMongoDb()->editarPassUsuario($administrador, $datos['usuario_id']);
+                        //$this->getAdministradorMongoDb()->agregarAdministrador($administrador, $datos['usuario_id'], $datos['_id'], 'editar');
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
+                    } else {
+                        foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                            print_r($error->getMessages());
+                            print_r($error->getName());
+                        }
                     }
+                } else {
+                    $mensaje = 'las Contraseñas no coinciden';
+                    return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje));
                 }
+            } else {
+                $mensaje = 'pass antiguo no es verdadero';
+                return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje));
+            }
         }
         return new ViewModel(array('form' => $form, 'id' => $id));
-    } 
-    
+    }
+
     public function editaradministradorAction() {
         $id = $this->params()->fromRoute('id', 0);
 
@@ -161,20 +170,20 @@ class AdministradorController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $datos = $this->request->getPost();
-                $administrador = new Administrador();
-                $form->setInputFilter($administrador->getInputFilter());
-                $form->setData($request->getPost());
-                if ($form->isValid()) {
-                    $administrador->exchangeArray($form->getData());
-                    $this->getUsuariosMongoDb()->agregarUsuario($administrador, $datos['usuario_id'], 'editar');
-                    $this->getAdministradorMongoDb()->agregarAdministrador($administrador, $datos['usuario_id'], $datos['_id'], 'editar');
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
-                } else {
-                    foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                        print_r($error->getMessages());
-                        print_r($error->getName());
-                    }
+            $administrador = new Administrador();
+            $form->setInputFilter($administrador->getInputFilter());
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $administrador->exchangeArray($form->getData());
+                $this->getUsuariosMongoDb()->agregarUsuario($administrador, $datos['usuario_id'], 'editar');
+                $this->getAdministradorMongoDb()->agregarAdministrador($administrador, $datos['usuario_id'], $datos['_id'], 'editar');
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/administrador/index');
+            } else {
+                foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                    print_r($error->getMessages());
+                    print_r($error->getName());
                 }
+            }
         }
         return new ViewModel(array('form' => $form, 'id' => $id));
     }

@@ -324,7 +324,11 @@
                   </a>
                   <ul class="dropdown-menu">
                      <li><a href="<?php echo $this->url('logout') ?>"><i class="fa fa-key"></i>Salir</a></li>
-                     <li><a href="extra_profile.html"><i class="fa fa-user"></i> Mí Cuenta</a></li>
+                     <?php if($this->rol=='empresa') { ?>
+                     <li><a href="/application/index/perfil"><i class="fa fa-user"></i> Mí Cuenta</a></li>
+                     <?php  } elseif($this->rol=='vehiculo'){?>
+                     <li><a href="/application/index/editarpassvehiculousuario"><i class="fa fa-user"></i>Cambiar Pass</a></li> 
+                     <?php }?>
                      <li><a href="page_calendar.html"><i class="fa fa-calendar"></i> My Calendar</a></li>
                      <li><a href="inbox.html"><i class="fa fa-envelope"></i> My Inbox <span class="badge badge-danger">3</span></a></li>
                      <li><a href="#"><i class="fa fa-tasks"></i> My Tasks <span class="badge badge-success">7</span></a></li>
@@ -372,7 +376,39 @@
            <div id="divExceptionMessageDivInfo" style="height: 125px; background-color: White; overflow-y: auto; display: none;">
            </div>
       </div>
-      <!-- BEGIN CONTAINER -->      
+      <!-- BEGIN CONTAINER -->   
+      
+      
+   <div class="row-fluid">
+    <div class="span12" id="flip-scroll">
+       
+         <br><br>
+<?php
+$title = 'Editar vehiculo';
+$this->headTitle($title);
+?>
+<?php echo $this->mensaje;?>
+<div class="span12">
+<?php
+$form = $this->form;
+$form->setAttributes(array(
+    'action' => $this->url.'/application/index/editarpassvehiculousuario',
+    'method' => 'post',
+    'class'=>'form-horizontal'
+));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<legend><?php echo $this->escapeHtml($title); ?></legend>
+<div class="row-fluid">
+<div class="control-group span6"><?php echo $this->formRow($form->get('passantiguo'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass'));?></div>
+<div class="control-group span6"><?php echo $this->formRow($form->get('pass2'));?></div>
+<div class="control-group span12 "><?php echo $this->formSubmit($form->get('submit'));?></div></div><?php echo $this->form()->closeTag();?> 
+<a data-id="" href="javascript:history.back(1)" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>cancelar</a>
+</div>
+    </div>
+</div>
       <div class="page-container back-gps">
          <iframe id="MainBox" style="height: 100%; width: 100%" scrolling="no" frameborder="0"></iframe>
       </div>
@@ -381,123 +417,10 @@
       <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
    </form>
 
-   <div class="row-fluid">
-    <div class="span12" id="flip-scroll">
-       
-         <br><br>
-       <table class="table table-bordered table-hover">
-             <thead class="cf"> <tr>
-            <th>nombre</th>
-            <th>descripcion</th>
-            <th>ruc</th>
-            <th>correo</th>
-            <th>Teléfono</th>
-            <th>Operaciones</th>
-        </tr> </thead>
-      
-       <tr>
-        <td><a href="<?php echo $this->basePath();?>/listar-vehiculo/<?php echo $this->valores['_id'];?>" ><?php echo $this->valores['nombre']; ?> </a></td>
-        <td><?php echo $this->valores['descripcion']; ?></td>
-        <td><?php echo $this->valores['ruc']; ?></td>
-        <td><?php echo $this->valores['email']; ?></td>
-        <td><?php echo $this->valores['telefono']; ?></td>
-        <td><a data-id="<?php echo $this->valores['_id']; ?>" href="<?php echo $this->basePath();?>/editar-empresa/<?php echo $this->valores['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar Datos</a>
-            <a data-id="<?php echo $this->valores['_id']; ?>" href="<?php echo $this->basePath();?>/editar-pass-empresa/<?php echo $this->valores['_id'];?>" class='modificar btn btn-success'><i class='icon-edit icon-white'></i>Editar Pass</a>
-        </tr>
-   
-        </table>
-    </div>
-</div>
-   
-   
-   
-   
-   
-   
-   
    
 </body>
 </html>
 
-<!--<? if ($this->rol=='administrador'){  ?>
- <div>
-    <div  id="flip-scroll">
-         <br><br>
-       <table  width="250" class=" table-bordered table-hover">
-             <thead class="cf"> <tr>
-                     <tr>
-            <th><form name='form_busqueda'class="form-search" action='/application/index/index' method ="post">
-                    <div class="control-group">
-                    <input type='text' name='texto' id="texto" placeholder="Nombre de empresa" />
-                    <input type="submit" class="btn" name="submit" value="Buscar">
-                    </div>
-            </form></th>
-        </tr>
-            <th>Empresas</th>
-        </tr> </thead>
-        <?php $count = 1; for($i=0;$i<$this->cantidad;$i++) {?>
-       <tr>
-<td><a href="<?php echo $this->basePath();?>/application/index/index?id=<?php echo $this->valores[$i]['_id'];?>" ><?php echo $this->valores[$i]['nombre']; ?> (<?php echo $this->valores[$i]['cantidad']; ?>) </a></td>
-       <?php }; ?>
-        </table><br>
-         <table width="250"  class=" table-bordered table-hover">
-             <thead class="cf"> <tr>
-            <th>Vehículos</th>
-        </tr>    <tr>
-            <th><form name='form'class="form-search" action='/application/index/index' method ="post">
-                    <div class="control-group">
-                    <input type='text' name='vehiculo' id="texto" placeholder="nombre o placa" />
-                    <input type="submit" class="btn" name="submit" value="Buscar">
-                    </div>
-            </form></th>
-        </tr>
-             <tr>
-                 <th><a href="#">todos</a>/<a href="#" >on line</a>/<a href="#">off line</a></th>
-        </tr> </thead>
-        <?php for($i=0;$i<$this->cantidadVehiculo;$i++) {?>
-       <tr>
-        <td><?php echo $this->vehiculo[$i]['nombre_corto']; ?> (<?php echo $this->vehiculo[$i]['placa']; ?>) </a></td>
-       <?php }; ?>
-        </table>
-    </div>
-</div>
-      <?php  } elseif($this->rol=='empresa'){ 
-      ?>  <table width="250" class=" table-bordered table-hover">
-             <thead class="cf"> <tr>
-            <th>Empresa</th>
-        </tr> </thead>
-       <tr>
-        <td><?php echo $this->valores[0]['nombre']; ?> (<?php echo $this->valores[0]['cantidad']; ?>) </a></td>
-        </table> <br>
-          <table width="250"  class=" table-bordered table-hover">
-             <thead class="cf"> <tr>
-            <th>Vehículos</th>
-        </tr>    
-        <tr>
-            <th><form name='form'class="form-search" action='/application/index/index' method ="post">
-                    <div class="control-group">
-                    <input type='text' name='vehiculo' id="texto" placeholder="nombre o placa" />
-                    <input type="submit" class="btn" name="submit" value="Buscar">
-                    </div>
-            </form></th>
-        </tr>
-             <tr>
-                 <th><a href="<?php echo $this->basePath();?>/application/index/index?estado=1">todos</a>/<a href="<?php echo $this->basePath();?>/application/index/index?estado=2" >on line</a>/<a href="<?php echo $this->basePath();?>/application/index/index?estado=3">off line</a></th>
-        </tr> </thead>
-        <?php for($i=0;$i<$this->cantidadVehiculo;$i++) {?>
-       <tr>
-        <td><a href="<?php echo $this->basePath();?>/application/index/index?detalle=<?php echo $this->vehiculo[$i]['_id']; ?>"><?php echo $this->vehiculo[$i]['nombre_corto']; ?> (<?php echo $this->vehiculo[$i]['placa']; ?>) </a></td>
-       <?php }; ?>
-       </table>
-    <input name="hidUserID" type="hidden" id="hidUserID" value="<?php echo $this->hidUserID; ?>" />
-    <input name="hidLoginName" type="hidden" id="hidLoginName" value="<?php echo $this->nombre; ?>" />
-    <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" /><?php
-  }else {?>
-  <table width="250" class=" table-bordered table-hover">
-        <thead class="cf"> <tr>
-        <th>Vehículo</th>
-    </tr></thead>
-   <tr>
-    <td><?php echo $this->valores[0]['nombre_corto']; ?> (<?php echo $this->valores[0]['placa']; ?>) </a></td>
-    </table> <?php } ?> -->
-  
+
+
+

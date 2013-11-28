@@ -14,7 +14,7 @@ use Application\Model\SessionCollection;
 class UsuarioCollection {// extends MongoCollection 
 
     const SESSION_TIMEOUT = 600; //La sesión expira después de 10 minutos de inactividad
-    const SESSION_LIFESPAN = 3600; //1 hora
+    const SESSION_LIFESPAN = 36000; //1 hora
     const SESSION_NAME = 'mongosessid'; //nombre de la cookie de sesión
     const SESSION_COOKIE_PATH = '/';
     const SESSION_COOKIE_DOMAIN = ''; //el nombre de dominio de tu aplicación web, por ejemplo .muaplicacion.com
@@ -76,9 +76,17 @@ class UsuarioCollection {// extends MongoCollection
             $usarios = $this->collection->insert($cantidad);
             return $cantidad['_id'];
         } else {
-            $usarios = $this->collection->update(array('_id' => new \MongoId($usuario_id)), $cantidad);
+            $newdata = array('$set' => array('login' =>$valor->login,'rol' =>$valor->rol));
+            $usarios = $this->collection->update(array('_id' => new \MongoId($usuario_id)),$newdata);
             return $cantidad['_id'];
         }
+    }
+       public function editarPassUsuario($valor, $usuario_id = null) {
+
+             $newdata = array('$set' => array('pass' => md5($valor->pass)));
+           $this->collection->update(array('_id' => new \MongoId($usuario_id)), $newdata);
+           return ;
+     
     }
 
     public function obtenerUsuario($id) {
@@ -92,8 +100,8 @@ class UsuarioCollection {// extends MongoCollection
 
     public function obtenerUsuarioLogin($datos) {
         $cantidad = array('login' => $datos->login,
-         // 'pass' => md5($datos->pass));
-                 'pass' => $datos->pass);
+          'pass' => md5($datos->pass));
+                 //'pass' => $datos->pass);
         $usarios = $this->collection->findOne($cantidad);
         $usuariorol = array();
         if ($usarios['rol'] == 'empresa') {

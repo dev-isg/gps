@@ -138,6 +138,39 @@ return array(
                     
                 )
             ),
+            'editarapassadministrador' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar-pass-administrador[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Administrador',
+                        'action' => 'editarapassadministrador'
+                    )
+                    
+                )
+            ),
+             'editarpassempresa' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/editar-pass-empresa[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Empresa',
+                        'action' => 'editarpassempresa'
+                    )
+                    
+                )
+            ),
+               'editarpassvehiculo' => array(
+                'type' => 'Segment',
+                'options' => array(
+                     'route' => '/editar/vehiculopass[/:id_empresa[/:id_vehiculo]]',///:id_empresa
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Vehiculo',
+                        'action' => 'editarpassvehiculo'
+                    )
+                    
+                )
+            ),
               'login' => array(
                 'type' => 'Literal',
                 'options' => array(

@@ -100,10 +100,27 @@ class Empresa
                         ),
                     ),
                 ),
+            ))); $inputFilter->add($factory->createInput(array(
+                'name'     => 'passantiguo',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 6,
+                            'max'      => 100,
+                        ),
+                    ),
+                ),
             )));
               $inputFilter->add($factory->createInput(array( 
                 'name' => 'email', 
-                'required' => true, 
+                'required' => false, 
                 'filters' => array( 
                     array('name' => 'StripTags'), 
                     array('name' => 'StringTrim'), 
@@ -160,7 +177,7 @@ class Empresa
             )));
  $inputFilter->add($factory->createInput(array(
                 'name'     => 'nombre',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -178,7 +195,7 @@ class Empresa
             )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'direccion',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -215,7 +232,7 @@ class Empresa
          
          $inputFilter->add($factory->createInput(array(
                 'name'     => 'login',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -233,7 +250,7 @@ class Empresa
             )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'pass',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -251,7 +268,7 @@ class Empresa
             )));
  $inputFilter->add($factory->createInput(array(
                 'name'     => 'pass2',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),

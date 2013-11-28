@@ -30,7 +30,7 @@ function PopupMarker(opts) {
     this.text_ = opts.text || "";
     this.setMap(this.map_);
     this.showpop = opts.showpop || false;
-    this.popupImgSrc_ = "images/1280.png";
+    this.popupImgSrc_ = "../../images/1280.png";
     //this.popupTbl = popupTbl;
     this.updatedPop = false;
     if (document.getElementById('dummyTextNode'))
@@ -55,7 +55,7 @@ PopupMarker.prototype.onAdd = function () {
 
     this.iconContainer.style.width = this.ICON_WIDTH + "px";
     this.iconContainer.style.height = this.ICON_HEIGHT + "px";
-    this.iconContainer.innerHTML = "<img src='" + this.icon_ + "'>";
+    this.iconContainer.innerHTML = "<img src='../../" + this.icon_ + "'>";
     this.iconContainer.style.position = "absolute";
     this.container_.style.position = "absolute";
     if (!this.showpop) this.container_.style.visibility = "hidden";

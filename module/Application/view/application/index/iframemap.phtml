@@ -7,7 +7,7 @@
         var runIndex = 0;
         function runMap() {
             if (runIndex == 0) {
-                var id = '9564';
+                var id = '<?php echo $this->hidUserID; ?>';
                 var n = 'turismoche';
                 var m = 'Google';
                 if (m == "Google") {
@@ -94,7 +94,7 @@
     <input name="hidLoginName" type="hidden" id="hidLoginName" value="turismoche" />
     <input name="hidSelMap" type="hidden" id="hidSelMap" value="Google" />
     <input name="hidStatus" type="hidden" id="hidStatus" value="-1" />
-    <input name="hidUserID" type="hidden" id="hidUserID" value="9564" />
+    <input name="hidUserID" type="hidden" id="hidUserID" value="<?php echo $this->hidUserID; ?>" />
     <input name="hidTimeZone" type="hidden" id="hidTimeZone" value="SA Pacific Standard Time" />
     </form>
 </body>

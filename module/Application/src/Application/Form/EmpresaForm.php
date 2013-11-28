@@ -31,7 +31,17 @@ class EmpresaForm extends Form{
                   'placeholder'=>'Ingrese descripcion'
             ),
         ));
-        
+           $this->add(array(
+            'name' => 'passantiguo',
+            'type' => 'password',
+            'options' => array(
+                'label' => 'Contraseña Actual: ',          
+            ),
+              'attributes' => array(    
+                   'placeholder'=>'Ingrese Contraseña Actual'
+            
+            ),
+        ));
          $this->add(array(
             'name' => 'telefono',
             'type' => 'Text',       

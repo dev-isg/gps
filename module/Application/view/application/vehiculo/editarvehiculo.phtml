@@ -33,9 +33,6 @@ echo $this->form()->openTag($form);
 <div class="control-group span6"><?php echo $this->formRow($form->get('email'));?></div>
 <h3>datos del Usuario chofer</h3>
 <div class="control-group span6"><?php echo $this->formRow($form->get('login'));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('pass')->setValue($this->pass));?></div>
-<div class="control-group span6"><?php echo $this->formRow($form->get('pass2')->setValue($this->pass));?></div>
-   <?php if($_GET['m']==1){echo 'no coinciden los pass';} ?>
 <div class="control-group span6"><?php echo $this->formRow($form->get('enviar'));?></div>
 </div>
 
