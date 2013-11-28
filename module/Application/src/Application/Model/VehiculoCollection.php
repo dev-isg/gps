@@ -107,19 +107,35 @@ class VehiculoCollection {
         $resultvehi = array();
         $resultset=array();
         $auxtram=array(
-            'estado'=>'',
             'alerta'=>'',
-            'hms'=>'',
-            'fecha_ubicacion'=>'',
+            'distance'=>'',
+            'serverUtcDate'=>'',
+            'deviceUtcDate'=>'',
             'orientacion'=>'',
-            'velocidad'=>'',
-            'lat'=>'',
-            'lng'=>'',
+            'latitude'=>'',
+            'longitude'=>'',
+            'status'=>'',
+            
+                'model'=>'26',
+                'sn'=>'862304020076520',
+                'modelName'=>'GT06N',
+                'groupID'=>'-1', 
+                'speedLimit-'=>'0', 
+            
+            'speed:'=>'',
+            'baiduLat'=>'',
+            'baiduLng'=>'',
+            
+                'course'=>'0',
+                'dataContext'=>'1',
+                'dataType'=>'1', 
+                'isStop'=>'1',
+                'icon'=>'2'
         );
         foreach ($vehiculos as $value) {
             $resultvehi['id']=(String)$value['_id'];
-            $resultvehi['nombre']=$value['chofer']['chofer_nom'];
-            $resultvehi['placa']=$value['placa'];
+            $resultvehi['name']=$value['chofer']['chofer_nom'];
+            $resultvehi['carNum']=$value['placa'];
             
             $tramas = $this->collection->db->tramas->find(array('vehiculo_id' => $value['_id'])//,'fecha_ubicacion' => array('$gt' => $fecha)
                 , array('estado'=>true,'alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
@@ -129,17 +145,22 @@ class VehiculoCollection {
           
                 foreach($tramas as $trama){
 //                     if(!empty($trama)){
-                    $auxtram['estado']=$trama['estado'];
+                    
                     $auxtram['alerta']=$trama['alerta'];
-                    $auxtram['hms']=$trama['hms'];
-                    $auxtram['fecha_ubicacion']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
+                    $auxtram['distance']=$trama['hms'];
+                    $auxtram['serverUtcDate']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
+                    $auxtram['deviceUtcDate']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
                     $auxtram['orientacion']=$trama['orientacion'];
-                    $auxtram['velocidad']=$trama['velocidad'];
-                    $auxtram['lat']=$trama['lat'];
-                    $auxtram['lng']=$trama['lng'];
+                    $auxtram['latitude']=$trama['lat'];
+                    $auxtram['longitude']=$trama['lng'];
+                    $auxtram['status']=$trama['estado'];
+                    
+                    $auxtram['speed:']=$trama['velocidad'];
+                    $auxtram['baiduLat']=$trama['lat'];
+                    $auxtram['baiduLng']=$trama['lng'];
                      $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
 //                     }
-                     
+                      
                 }                
 //            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
            

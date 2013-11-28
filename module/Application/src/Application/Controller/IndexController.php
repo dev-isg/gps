@@ -107,13 +107,40 @@ class IndexController extends AbstractActionController {
     }
     
     public function getvehiculosAction(){
-        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');
+        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');//
         $resultados = $this->getVehiculoMongoDb()->getVehiculobyIdEmpresa($idempresa);
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+
+        $auxresul="[";
+        foreach($resultados as $item){
+            foreach($item as $key=>$value){
+                    $auxresul.=$key.":"."\"$value\"".","; 
+            }
+            
+        }
+        $pos=strrpos($auxresul,",");
+        $cadena=substr($auxresul,0,$pos);
+        echo json_encode(array('d'=>'{devices:'.$cadena.']}'));
+        return $viewModel;
         
-        return new JsonModel(array(
-            'd' => array('devices'=>$resultados)
-        ));
+//        return new JsonModel(array(
+//            'd' => array('devices'=>$resultados)
+//        ));
     }
+    
+//    function json_encode_objs($item){   
+//        if(!is_array($item) && !is_object($item)){   
+//            return json_encode($item);   
+//        }else{   
+//            $pieces = array();   
+//            foreach($item as $k=>$v){   
+//                $pieces[] = "\"$k\":".json_encode_objs($v);   
+//            }   
+//            return '{'.implode(',',$pieces).'}';   
+//        }   
+//    }   
+    
 
     public function loginAction() {
         $viewModel = new ViewModel();

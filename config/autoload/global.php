@@ -13,6 +13,9 @@ return array(
             'ruta' => 'http://192.168.1.35:84',
             'version'=>1,
         ),
+    'variables'=>array(
+            'tiempo_parada'=>5     
+        ),
     
       'mail' => array(
         'transport' => array(
