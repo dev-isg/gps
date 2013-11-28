@@ -199,7 +199,7 @@ class IndexController extends AbstractActionController {
     }
      public function getempresatotalesAction() {
         $idusuario = $this->params()->fromPost('id',0);
-        $resultados = $this->getEmpresaMongoDb()->getEmpresabyAdmin($idusuario);
+       $resultados = $this->getEmpresaMongoDb()->getLista();
         return new JsonModel($resultados);
 
     }

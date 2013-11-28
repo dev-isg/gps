@@ -32,24 +32,7 @@ class EmpresaCollection {
         return $aux;
     }
 
-    public function getLista($consulta = null) {
-
-        if ($consulta == null) {
-            $listEmp = $this->collection->find();
-        } else {
-            $regex = new \MongoRegex("/$consulta/");
-            $listEmp = $this->collection->find(array('nombre' => $regex));
-        }
-        $resultvehi = array();
-        foreach ($listEmp as $value) {
-            $id = (String) $value['_id'];
-            $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
-            $dataname = array('cantidad' => $vehiculo->count());
-            $resultvehi[] = array_merge_recursive($value, $dataname);
-        }
-        return $resultvehi;
-    }
-
+  
     public function obtenerEmpresa($id) {
 
         $empresa = $this->collection->findOne(array('_id' => new \MongoId($id)));
@@ -118,25 +101,17 @@ class EmpresaCollection {
         return $resultvehi;
 
     }
-    
-      public function getEmpresabyAdmin($idadmin) {
-        
-        $empresa = $this->collection->findOne(array('_id' => new \MongoId($idempresa)));
-        $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $idempresa));
-       // $empresass = array('nombre_empresa' =>$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')');
-        $auxtram['id']= (String) $empresa['_id'];
-        $auxtram['nombre']= (String) $empresa['nombre'];
-        $auxtram['name']=$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
-                    $auxtram['descripcion']=$empresa['descripcion'];
-                    $auxtram['telefono']=$empresa['telefono'];
-        $resultvehi = array_merge_recursive($auxtram);
-        if (!$resultvehi) {
-            throw new \Exception("Could not find row $idempresa");
+      public function getLista($consulta = null) {
+        $listEmp = $this->collection->find();
+        $resultvehi = array();
+        foreach ($listEmp as $value) {
+            $id = (String) $value['_id'];
+            $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
+            $value['name']=$value['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
+            $resultvehi[] = array_merge_recursive($value);
         }
         return $resultvehi;
-
     }
-    
-    
+
     
 }
