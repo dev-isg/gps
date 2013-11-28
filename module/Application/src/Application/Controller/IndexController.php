@@ -109,12 +109,24 @@ class IndexController extends AbstractActionController {
     public function getvehiculosAction(){
         $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');
         $resultados = $this->getVehiculoMongoDb()->getVehiculobyIdEmpresa($idempresa);
-        
-        return new JsonModel(array(
-            'd' => array('devices'=>$resultados)
-        ));
+       
+                echo '{"d":"{"devices:'.json_encode($resultados).'}"}';
+          // echo "jsonpCallback(".json_encode($arrpl).")";
+                exit();
+//        return new JsonModel(array(
+//            'd' => array('devices'=>$resultados)
+//        ));
     }
-
+   
+     public function getempresaAction(){
+        $idempresa = $this->params()->fromPost('id', '528fb5c3bf8eb1d02100000b');
+        $resultados = $this->getEmpresaMongoDb()->getEmpresabyId($idempresa);
+        
+//        echo '"'.json_encode($resultados).'"';
+//          // echo "jsonpCallback(".json_encode($arrpl).")";
+//                exit();
+        return new JsonModel($resultados);
+    }
     public function loginAction() {
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
@@ -151,13 +163,28 @@ class IndexController extends AbstractActionController {
     public function mapAction() {
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
-         $viewModel->setVariables(array('ruta'=>$this->_options->host->ruta));
+         $viewModel->setVariables(array('hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=>$this->_options->host->ruta));
           return $viewModel;
     }
        public function iframemapAction() {
            $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
-       $viewModel->setVariables( array('ruta'=>$this->_options->host->ruta));
+       $viewModel->setVariables( array('hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=>$this->_options->host->ruta));
+        return $viewModel;
+    }
+    public function perfilAction() {
+           $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        $dato = $this->getUsuariosMongoDb()->read();
+          //$consulta = $this->params()->fromPost('texto');
+        $resultados = $this->getEmpresaMongoDb()->obtenerEmpresa($dato['_idrol']);
+        if ($this->getRequest()->isPost()) {
+            $resultados = $this->getEmpresaMongoDb()->obtenerEmpresa($dato['_idrol']);
+        }
+        $cantidad = count($resultados);
+        //echo json_encode($resultados);exit;
+     
+       $viewModel->setVariables( array('valores' => $resultados, 'cantidad' => $cantidad,'hidUserID'=>$_SESSION['_idrol'],'nombre'=>$_SESSION['nombre'],'ruta'=>$this->_options->host->ruta));
         return $viewModel;
     }
 

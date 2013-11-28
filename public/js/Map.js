@@ -209,8 +209,8 @@ function setInitLanguage() {
 
 
 function ajaxLoadingTree() {
-    var uid = $("#hidUserID").val();
-    
+
+    var uid = $("#hidUserID").val();    
     var setting = {
         data: {
             simpleData: {
@@ -219,7 +219,7 @@ function ajaxLoadingTree() {
         },
         async: {
             enable: true,
-            url: "http://localhost/car/json/UserTreeAjax.json",
+            url: "http://192.168.1.35:84/application/index/getempresa",
             autoParam: ["id"],
             otherParam: { "staticID": uid }
         },
@@ -231,11 +231,13 @@ function ajaxLoadingTree() {
     };
 
     zTreeMain = $.fn.zTree.init($("#uiTreeView"), setting);
+
 }
 
 function onAsyncSuccess1(event, treeId, treeNode, msg) {
     $("#divLoading").hide();
     var json = eval("(" + msg + ")");
+
     getAllChildrenNodes(json);
 }
 function getAllChildrenNodes(treeNode) {
@@ -243,6 +245,7 @@ function getAllChildrenNodes(treeNode) {
 
     if (treeNode.length == undefined) {
         users.name = treeNode.name;
+       // alert(users.name);
         users.id = treeNode.id;
         allUsers.push(users);
         var childrenNodes = treeNode.children;
@@ -348,7 +351,7 @@ function ajaxGetDevices() {
     var TimeZone = $("#hidTimeZone").val();
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/GetDevicesByUserID.json",
+        url: "http://192.168.1.35:84/json/prueba.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + ",isFirst:" + isFirst + ",TimeZones:'" + TimeZone + "'}",
         dataType: "json",
@@ -358,7 +361,7 @@ function ajaxGetDevices() {
         success: function (result) {
             //alert(result.d + "  " );
             if (result.d != "") {
-                //alert(result.d);
+                alert(result.d);
                 var json = eval("(" + result.d + ")");
                 if (allDevices) {
                     for (var i = 0; i < json.devices.length; i++) {
@@ -370,10 +373,10 @@ function ajaxGetDevices() {
                                 allDevices.devices[j].serverUtcDate = json.devices[i].serverUtcDate;
                                 allDevices.devices[j].deviceUtcDate = json.devices[i].deviceUtcDate;
                                 allDevices.devices[j].stopTimeMinute = json.devices[i].stopTimeMinute;
-                                allDevices.devices[j].latitude = json.devices[i].latitude;
-                                allDevices.devices[j].longitude = json.devices[i].longitude;
-                                allDevices.devices[j].baiduLat = json.devices[i].baiduLat;
-                                allDevices.devices[j].baiduLng = json.devices[i].baiduLng;
+                                allDevices.devices[j].latitude = json.devices[i].lat;
+                                allDevices.devices[j].longitude = json.devices[i].lng;
+                                allDevices.devices[j].baiduLat = json.devices[i].lat;
+                                allDevices.devices[j].baiduLng = json.devices[i].lng;
                                 allDevices.devices[j].oLat = json.devices[i].oLat;
                                 allDevices.devices[j].oLng = json.devices[i].oLng;
                                 allDevices.devices[j].speed = json.devices[i].speed;
@@ -525,9 +528,9 @@ function showDevicesTable(s) {
             }
             html.push('<img src="icons/' + iconImg + '" width="16" height="16" style="float:left;" />');
 
-            var deviceName = allDevices.devices[i].name;
+            var deviceName = allDevices.devices[i].nombre;
 
-            var nameLength = fucCheckLength(allDevices.devices[i].name);
+            var nameLength = fucCheckLength(allDevices.devices[i].nombre);
             if (nameLength > 8) {
                 var endShowName = "";
                 var nameSize = getHtmlSize(deviceName);
@@ -549,7 +552,7 @@ function showDevicesTable(s) {
             var id = "divTabDeviceMore" + allDevices.devices[i].id;
             showMoreDivDeviceArr.push(allDevices.devices[i].id);
             if (isShowMore) {
-                html.push('<div id="' + id + '" style="clear:left;color:' + color + '; margin-left:80px; display:' + display + ';">' + '<a href="javascript:void(0);" onclick="openPage(\'Tracking.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')" >' + allPage.tracking + '</a>  <a href="javascript:void(0);"  onclick="openPage(\'Playback.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')">' + allPage.playback + '</a>  <a href="javascript:void(0);" onclick="clkShowMoreMenu(' + loginUserID + ',' + allDevices.devices[i].id + ',' + allDevices.devices[i].model + ',\'' + allDevices.devices[i].name + '\',\'' + allDevices.devices[i].sn + '\');">' + allPage.more + '▼</a>' + '</div>');
+                html.push('<div id="' + id + '" style="clear:left;color:' + color + '; margin-left:80px; display:' + display + ';">' + '<a href="javascript:void(0);" onclick="openPage(\'Tracking.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')" >' + allPage.tracking + '</a>  <a href="javascript:void(0);"  onclick="openPage(\'Playback.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')">' + allPage.playback + '</a>  <a href="javascript:void(0);" onclick="clkShowMoreMenu(' + loginUserID + ',' + allDevices.devices[i].id + ',' + allDevices.devices[i].model + ',\'' + allDevices.devices[i].nombre + '\',\'' + allDevices.devices[i].sn + '\');">' + allPage.more + '▼</a>' + '</div>');
             }
             html.push('</div>');
 
@@ -1547,7 +1550,7 @@ function getGroup() {
 
     $.ajax({
         type: "post",
-        url: "http://localhost/car/json/GetAllGroupByUserID.json",
+        url: "http://192.168.1.35:84/json/GetAllGroupByUserID.json",
         contentType: "application/json",
         data: "{UserID:" + UserId + "}",
         dataType: "json",

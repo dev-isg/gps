@@ -71,6 +71,9 @@ class EmpresaCollection {
         }
         return $resultvehi;
     }
+    
+    
+    
 
     public function agregarEmpresa(Empresa $valor, $id, $editar = null) {
 
@@ -83,14 +86,14 @@ class EmpresaCollection {
         );
 
         if ($editar == null) {
-            $cantidad['usuario_id'] = $id;
+            $cantidad['usuario_id'] =new \MongoId($id);
             $empresa = $this->collection->insert($cantidad);
             if ($empresa == true) {
                 return $empresa;
             }
         } else {
 
-            $cantidad['usuario_id'] = $valor->usuario_id;
+            $cantidad['usuario_id'] = new \MongoId($valor->usuario_id);
             $empresa = $this->collection->update(array('_id' => new \MongoId($id)), $cantidad);
             if ($empresa == true) {
                 return $empresa;
@@ -98,4 +101,26 @@ class EmpresaCollection {
         }
     }
 
+     public function getEmpresabyId($idempresa=null) {
+        
+        $empresa = $this->collection->findOne(array('_id' => new \MongoId($idempresa)));
+        $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $idempresa));
+       // $empresass = array('nombre_empresa' =>$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')');
+        $auxtram['id']= (String) $empresa['_id'];
+        $auxtram['nombre']= (String) $empresa['nombre'];
+        $auxtram['name']=$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
+                    $auxtram['descripcion']=$empresa['descripcion'];
+                    $auxtram['telefono']=$empresa['telefono'];
+        $resultvehi = array_merge_recursive($auxtram);
+        if (!$resultvehi) {
+            throw new \Exception("Could not find row $idempresa");
+        }
+        return $resultvehi;
+
+    }
+    
+    
+    
+    
+    
 }

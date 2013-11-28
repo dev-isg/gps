@@ -1,0 +1,41 @@
+{
+	"d":"{
+		devices:[{
+			id:\"528e9378bf8eb1140e00004e\",
+			nombre:\"Kevin\",
+			placa:\"cq-5658\",
+			estado:\"moviendo\",
+			alerta:\"alerta2\",
+			hms:\"50\",
+			fecha_ubicacion:\"2013-11-22 18:47:43\",
+			orientacion:\"40\",
+			velocidad:\"200\",
+			lat:\"-9\",
+			lng:\"-13\"
+		},{
+			id:\"52962503e4d12d4ba949d315\",
+			nombre:\"Gorge\",
+			placa:\"cq-4489\",
+			estado:\"movimeinto\",
+			alerta:\"alerta parado\",
+			hms:\"10\",
+			fecha_ubicacion:\"1969-12-31 19:00:00\",
+			orientacion:\"40\",
+			velocidad:\"250\",
+			lat:\"-8.177998\",
+			lng:\"-79.012878\"
+		},{
+			id:\"52962580e4d12d4ba949d317\",
+			nombre:\"Elvis\",
+			placa:\"cq-4489\",
+			estado:\"movimeinto\",
+			alerta:\"alertaXxXx7\",
+			hms:\"10\",
+			fecha_ubicacion:\"1969-12-31 19:00:00\",
+			orientacion:\"10\",
+			velocidad:\"178\",
+			lat:\"-8.139237\",
+			lng:\"-79.046157\"
+		}]
+	}"
+}

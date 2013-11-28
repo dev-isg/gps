@@ -56,7 +56,7 @@ class AdministradorCollection {// extends MongoCollection
 
         $cantidad = array('nombre' => $valor->nombre
         );
-        $cantidad['usuario_id'] = $id;
+        $cantidad['usuario_id'] = new \MongoId($id);
         if ($editar == null) {
             $empresa = $this->collection->insert($cantidad);
             if ($empresa == true) {

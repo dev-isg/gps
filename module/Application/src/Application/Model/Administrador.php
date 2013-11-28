@@ -86,7 +86,7 @@ class Administrador
             )));
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'pass',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -96,7 +96,7 @@ class Administrador
                         'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 5,
+                            'min'      => 6,
                             'max'      => 100,
                         ),
                     ),
@@ -122,7 +122,7 @@ class Administrador
             )));
  $inputFilter->add($factory->createInput(array(
                 'name'     => 'pass2',
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -132,7 +132,7 @@ class Administrador
                         'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 5,
+                            'min'      => 6,
                             'max'      => 100,
                         ),
                     ),

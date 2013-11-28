@@ -71,7 +71,7 @@ class VehiculoCollection {
             'num_sim' => $vehiculo->num_sim,
             'color_ruta' => $vehiculo->color_ruta,
             'placa' => $vehiculo->placa,
-            'usuario_id' => $usuarioid,
+            'usuario_id' =>  new \MongoId($usuarioid),
             'chofer' => array(
                 'chofer_id' => new \MongoId(), //$chofer->id,
 //                        'descripcion'=>$chofer->descripcion,
@@ -129,6 +129,7 @@ class VehiculoCollection {
           
                 foreach($tramas as $trama){
 //                     if(!empty($trama)){
+                    $e ='';
                     $auxtram['estado']=$trama['estado'];
                     $auxtram['alerta']=$trama['alerta'];
                     $auxtram['hms']=$trama['hms'];
@@ -136,14 +137,15 @@ class VehiculoCollection {
                     $auxtram['orientacion']=$trama['orientacion'];
                     $auxtram['velocidad']=$trama['velocidad'];
                     $auxtram['lat']=$trama['lat'];
-                    $auxtram['lng']=$trama['lng'];
-                     $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+                    $auxtram['lng'] =$trama['lng'];
+                    $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
+                    // $key = '"'.$auxtram['lng'].'"'; 
 //                     }
-                     
                 }                
 //            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
            
         }
+        //var_dump($resultset);exit;
 //        var_dump($auxzz);exit;
         return $resultset;
     }

@@ -67,10 +67,11 @@ class UsuarioCollection {// extends MongoCollection
     }
 
     public function agregarUsuario($valor, $usuario_id = null, $accion = null) {
-        $cantidad = array('login' => $valor->login,
-            'pass' => $valor->pass,
+        $cantidad = array(
+            'login' => $valor->login,
             'rol' => $valor->rol);
         if ($accion == null) {
+            $cantidad['pass']= md5($valor->pass);
             $cantidad['_id'] = new \MongoId();
             $usarios = $this->collection->insert($cantidad);
             return $cantidad['_id'];
@@ -91,11 +92,12 @@ class UsuarioCollection {// extends MongoCollection
 
     public function obtenerUsuarioLogin($datos) {
         $cantidad = array('login' => $datos->login,
-            'pass' => $datos->pass);
+         // 'pass' => md5($datos->pass));
+                 'pass' => $datos->pass);
         $usarios = $this->collection->findOne($cantidad);
         $usuariorol = array();
         if ($usarios['rol'] == 'empresa') {
-            $id = (String) $usarios['_id'];
+            $id = new \MongoId($usarios['_id']);
             $datausuario = $this->collection->db->empresa->findOne(array('usuario_id' => $id));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
             $nombre=array('nombre' => $datausuario['nombre']);
@@ -105,7 +107,7 @@ class UsuarioCollection {// extends MongoCollection
             $nombre=array('nombre' => $datausuario['nombre']);
 
         } else {
-            $id = (String) $usarios['_id'];
+            $id = new \MongoId($usarios['_id']);
             $datausuario = $this->collection->db->vehiculo->findOne(array('usuario_id' => $id));
             $dataname = array('_idrol' => (String) $datausuario['_id']);
             $nombre=array('nombre' =>$datausuario['chofer']['chofer_nom']);
