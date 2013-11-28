@@ -4,12 +4,22 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Form\MovimientoForm;
 use Application\Form\ParadaForm;
+use Application\Model\UsuarioCollection;
 
 class ReporteController extends AbstractActionController{
     protected $tramaMongodb;
     protected $vehiculoMongodb;
-    
+      protected $usuarioMongodb;
+    public function __construct() {
+        $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
+    }
+
     public function movimientoAction(){
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
         $form=new MovimientoForm();
         $fechaini=$this->params()->fromPost('fechainicio');
         $fechafin=$this->params()->fromPost('fechafin');
@@ -17,11 +27,16 @@ class ReporteController extends AbstractActionController{
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-                $idempresa="528d3ab3bf8eb1780c000046";//
-                   $tramas=$this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin,$idempresa);         
+                $datoss = $this->getUsuariosMongoDb()->read();
+                  $idempresa=$datoss['_idrol'];//
+              //   var_dump($idempresa);exit;
+              //  $tramas=$this->getTramaMongoDb()->insertaTramas();
+               $tramas=$this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin,$idempresa);         
             }
         }
-        return array('form'=>$form,'tramas'=>$tramas);
+        $viewModel->setVariables(array('rol' => $_SESSION['rol'],'form'=>$form,'tramas'=>$tramas,'hidUserID' => $_SESSION['_idrol'],
+            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+         return $viewModel; 
     }
     
     public function kilometrajeAction(){
@@ -41,7 +56,7 @@ class ReporteController extends AbstractActionController{
             }
         }
         return array('form'=>$form,'tramas'=>$tramas);
-        
+       // return $viewModel;  
     }
     
     public function paradaAction(){
@@ -68,7 +83,13 @@ class ReporteController extends AbstractActionController{
         }
         return $this->tramaMongodb;
     }
-   
+    public function getUsuariosMongoDb() {
+        if (!$this->usuarioMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->usuarioMongodb = $sm->get('Application\Model\UsuarioCollection');
+        }
+        return $this->usuarioMongodb;
+    }
     public function getVehiculoMongoDb() {
         if (!$this->vehiculoMongodb) {
             $sm = $this->getServiceLocator();

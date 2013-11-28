@@ -14,6 +14,25 @@ class TramasCollection {
         $this->collection = $adapter;
     }
 
+    public function insertaTramas() {
+
+         $iniciof = new MongoDate(strtotime("26/11/2013 12:50:27"));
+        
+      $valorer= array('alerta'=>'jnj',
+          'dmy'=>'64',
+          'estado'=>'movimiento',
+          
+          'fecha_ubicacion'=>$iniciof,
+          'hms'=>'10',
+          'id'=>'10',
+          'lat'=>'5','lng'=>'41',
+          'orientacion'=>'30',
+          'vehiculo_id'=>new \MongoId("5297b51fbf8eb1c406000038"),
+          'velocidad'=>'30');
+        $trama = $this->collection->insert($valorer);
+        return $trama;exit;
+    }
+    
     public function getTramas($id) {
         $trama = $this->collection->find(array('_id' => new \MongoId($id)), array('lat' => true, 'lng' => true, 'fecha_ubicacion' => true));
         return $trama;
@@ -141,7 +160,6 @@ class TramasCollection {
                 $auxtramas[] = $tr2;
             }
         }
-
         return $auxtramas;
     }
 

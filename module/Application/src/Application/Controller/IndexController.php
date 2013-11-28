@@ -289,7 +289,7 @@ class IndexController extends AbstractActionController {
         }
         $cantidad = count($resultados);
 
-        $viewModel->setVariables(array('valores' => $resultados, 'cantidad' => $cantidad, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+        $viewModel->setVariables(array('rol' => $_SESSION['rol'],'valores' => $resultados, 'cantidad' => $cantidad, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
 
