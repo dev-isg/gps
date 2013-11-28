@@ -138,8 +138,8 @@ class UsuarioCollection {// extends MongoCollection
     public function read() {
         $query = array(
             'user_id' => $_SESSION['user_id'],
-            'timedout_at' => array('$gte' => time()),
-            'expired_at' => array('$gte' => time())
+//            'timedout_at' => array('$gte' => time()),
+//            'expired_at' => array('$gte' => time())
         );
 
         $result = $this->collection->db->session->findOne($query);

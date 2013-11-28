@@ -103,7 +103,7 @@ class IndexController extends AbstractActionController {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
 
-        $viewModel->setVariables(array('form' => $form, 'id' => $id, 'hidUserID' => $_SESSION['_idrol'],
+        $viewModel->setVariables(array('rol' => $_SESSION['rol'],'form' => $form, 'id' => $id, 'hidUserID' => $_SESSION['_idrol'],
             'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
