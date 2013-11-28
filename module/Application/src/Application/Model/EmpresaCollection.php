@@ -119,7 +119,23 @@ class EmpresaCollection {
 
     }
     
-    
+      public function getEmpresabyAdmin($idadmin) {
+        
+        $empresa = $this->collection->findOne(array('_id' => new \MongoId($idempresa)));
+        $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $idempresa));
+       // $empresass = array('nombre_empresa' =>$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')');
+        $auxtram['id']= (String) $empresa['_id'];
+        $auxtram['nombre']= (String) $empresa['nombre'];
+        $auxtram['name']=$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
+                    $auxtram['descripcion']=$empresa['descripcion'];
+                    $auxtram['telefono']=$empresa['telefono'];
+        $resultvehi = array_merge_recursive($auxtram);
+        if (!$resultvehi) {
+            throw new \Exception("Could not find row $idempresa");
+        }
+        return $resultvehi;
+
+    }
     
     
     
