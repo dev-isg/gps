@@ -168,13 +168,25 @@ class IndexController extends AbstractActionController {
         return $viewModel;
     }
 
-    public function getvehiculosAction() {
-        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');
+    
+    public function getvehiculosAction(){
+        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');//
         $resultados = $this->getVehiculoMongoDb()->getVehiculobyIdEmpresa($idempresa);
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
 
-        echo '{"d":"{"devices:' . json_encode($resultados) . '}"}';
-        // echo "jsonpCallback(".json_encode($arrpl).")";
-        exit();
+        $auxresul="[";
+        foreach($resultados as $item){
+            foreach($item as $key=>$value){
+                    $auxresul.=$key.":"."\"$value\"".","; 
+            }
+            
+        }
+        $pos=strrpos($auxresul,",");
+        $cadena=substr($auxresul,0,$pos);
+        echo json_encode(array('d'=>'{devices:'.$cadena.']}'));
+        return $viewModel;
+        
 //        return new JsonModel(array(
 //            'd' => array('devices'=>$resultados)
 //        ));
@@ -189,7 +201,21 @@ class IndexController extends AbstractActionController {
         $idusuario = $this->params()->fromPost('id',0);
         $resultados = $this->getEmpresaMongoDb()->getEmpresabyAdmin($idusuario);
         return new JsonModel($resultados);
+
     }
+    
+//    function json_encode_objs($item){   
+//        if(!is_array($item) && !is_object($item)){   
+//            return json_encode($item);   
+//        }else{   
+//            $pieces = array();   
+//            foreach($item as $k=>$v){   
+//                $pieces[] = "\"$k\":".json_encode_objs($v);   
+//            }   
+//            return '{'.implode(',',$pieces).'}';   
+//        }   
+//    }   
+    
 
     public function loginAction() {
         if ($this->getUsuariosMongoDb()->isLoggedIn()) {

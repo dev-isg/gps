@@ -55,7 +55,7 @@ class ReporteController extends AbstractActionController{
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-               $tramas=$this->getTramaMongoDb()->buscarMovimientoVehic($fechaini, $fechafin,$idvehiculo);         
+               $tramas=$this->getTramaMongoDb()->getParada($fechaini, $fechafin);         
             }
         }
         return array('form'=>$form);
