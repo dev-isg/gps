@@ -214,7 +214,7 @@ class TramasCollection {
      * @return Array
      */
 
-    public function getParada($inicio = null, $fin = null, $idvehiculo = null) {
+    public function getParada($inicio = null, $fin = null, $idvehiculo = null) {    
         $iniciof = new MongoDate(strtotime($inicio));
         $finf = new MongoDate(strtotime($fin));
         $tramas = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo),

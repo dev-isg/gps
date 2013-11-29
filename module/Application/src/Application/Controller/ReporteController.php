@@ -13,7 +13,7 @@ class ReporteController extends AbstractActionController{
       protected $usuarioMongodb;
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
-    }
+        }
 
     public function movimientoAction(){
         $viewModel = new ViewModel();
@@ -96,6 +96,15 @@ class ReporteController extends AbstractActionController{
     }
     
     public function paradaAction(){
+                
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
+            
+        }
+        
          $form=new ParadaForm();
          $conductores=$this->getVehiculoMongoDb()->getConductor($idempresa="528d3ab3bf8eb1780c000046");
           $form->get('usario_vehiculo')->setValueOptions($conductores);
@@ -109,7 +118,7 @@ class ReporteController extends AbstractActionController{
             $form->setData($request->getPost());
             if($form->isValid()){
                
-               $tramas=$this->getTramaMongoDb()->getParada($fechaini, $fechafin,$idvehiculo);         
+               $tramas=$this->getTramaMongoDb()->getParada($fechaini, $fechafin,$idvehiculo,$tparda);         
                $parada_session->parada=$tramas;
                
             }
@@ -118,6 +127,9 @@ class ReporteController extends AbstractActionController{
     }
     
     public function excelparadaAction(){
+//        $sm = $this->getServiceLocator();
+//        $config=$sm->get('Config');
+//        $tparda=$config['variables']['tiempo_parada'];
         $view =new ViewModel();
         $view->setTerminal(true);
          $parada_session = new Container('parada');
@@ -144,6 +156,7 @@ class ReporteController extends AbstractActionController{
         }
         return $this->usuarioMongodb;
     }
+    
     public function getVehiculoMongoDb() {
         if (!$this->vehiculoMongodb) {
             $sm = $this->getServiceLocator();
@@ -152,5 +165,5 @@ class ReporteController extends AbstractActionController{
         return $this->vehiculoMongodb;
     }
     
-    
+
 }
