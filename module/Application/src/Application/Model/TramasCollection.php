@@ -130,9 +130,9 @@ class TramasCollection {
         return $auxtime; //json_encode($auxtime);
     }
 
-    /*
+    /**
      * Retorna todos los vehiculos segun fecha y empreas
-     * params inicio , fin  idempresa
+     * @params inicio , fin  idempresa
      * @return json 
      */
 
@@ -146,23 +146,28 @@ class TramasCollection {
         );
 
         foreach ($vehiculo as $vehi) {
+           $tramas = $this->collection->db->execute(
+                new \MongoCode('estadisticaDispositivo(fechai,fechaf,idvehiculo)', array(
+                    'fechai' => $iniciof, 'fechaf' => $finf,'idvehiculo'=>$vehi['_id']
+                )));
+           $trama=$tramas['retval'];
            
-            $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],
-                 'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)
-                    )
-                    , array('alerta' => true, 'hms' => true, 'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
-                'lat' => true, 'lng' => true, 'vehiculo_id' => true)
-            );
-            if($trama->hasNext()){
+//            $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],
+//                 'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)
+//                    )
+//                    , array('alerta' => true, 'hms' => true, 'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
+//                'lat' => true, 'lng' => true, 'vehiculo_id' => true)
+//            );
+//            if($trama->hasNext()){
             foreach ($trama as $tr) {
                 
                 $auxve = array('chofer_nom' => $vehi['chofer']['chofer_nom'], 'placa' => $vehi ['placa']);
                 $tr2 = array_merge_recursive($tr, $auxve);
                 $auxtramas[] = $tr2;
             }
-            }
+//            }
         }
-
+        
         return $auxtramas;
     }
 
@@ -172,11 +177,12 @@ class TramasCollection {
      * @return json 
      */
     //
-    public function buscarMovimientoVehic($inicio = null, $fin = null, $idvehiculo = null) {
+    public function buscarMovimientoVehic($inicio = null, $fin = null, $vehiculo = null) {
+     
         $iniciof = new MongoDate(strtotime($inicio)); //date("c",strtotime($inicio)); //
         $finf = new MongoDate(strtotime($fin)); //date("c",strtotime($fin)); //
-
-        $vehiculo = $this->collection->db->vehiculo->find(array('_id' => new MongoId($idvehiculo))
+        $idvehiculo= new MongoId($vehiculo);
+        $vehiculo = $this->collection->db->vehiculo->find(array('_id' =>$idvehiculo)
                 , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true)
         );
         foreach ($vehiculo as $vehi) {
@@ -184,27 +190,28 @@ class TramasCollection {
             $dataempresa = $this->collection->db->empresa->findOne(array('_id' => $vehi['empresa_id']), array('nombre' => true));
             $vehi['nombre_empresa'] = $dataempresa['nombre'];
             $arrx = $vehi;
+
         }
 
         $total = $this->collection->db->execute(
-                new \MongoCode('estadisticaDispositivo(fechai,fechaf)', array(
-                    'fechai' => $iniciof, 'fechaf' => $finf
+                new \MongoCode('estadisticaDispositivo(fechai,fechaf,idvehiculo)', array(
+                    'fechai' => $iniciof, 'fechaf' => $finf,'idvehiculo'=>$idvehiculo
                 ))
         );
+ 
 //        Ejecutando directamente
 //        $salida=$this->collection->db->execute('db.tramas.aggregate( [ { $match: { fecha_ubicacion:{$gte:ISODate("'.$iniciof.'"), $lte:ISODate("'.$finf.'")},vehiculo_id:ObjectId("'.$idvehiculo.'") } },{ $group: { _id: {$dayOfYear:"$fecha_ubicacion"},totalkilom: { $sum: "$hms" } } } ] )');
 //        foreach($salida['retval']['result'] as $result){
 //            $total[]=  array_merge_recursive($arrx,array('total_km'=>$result['totalkilom']));          
 //        }
-        $auxtramas = array_merge_recursive($arrx, $total);
-        var_dump($auxtramas);
-        Exit;
+        $auxtramas = array_merge_recursive($arrx,array('tiempo'=>$total['retval']));
         return $auxtramas;
     }
 
-    /*
+    /**
      * Retorna paradas segun fecha
-     * @params inicio , fin ,idvehiculo, idempresa 
+     * @params inicio , fin ,idvehiculo 
+     * @return Array
      */
 
     public function getParada($inicio = null, $fin = null, $idvehiculo = null) {

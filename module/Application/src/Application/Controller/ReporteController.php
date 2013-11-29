@@ -51,17 +51,17 @@ class ReporteController extends AbstractActionController{
 
         $fechaini=$this->params()->fromPost('fechainicio');
         $fechafin=$this->params()->fromPost('fechafin');
-        $idvehiculo=$this->params()->fromPost('usario_vehiculo');
+        $idvehiculo=$this->params()->fromPost('usario_vehiculo',"528e9378bf8eb1140e00004e");
         $request=$this->getRequest();
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-               
+          
                $tramas=$this->getTramaMongoDb()->buscarMovimientoVehic($fechaini, $fechafin,$idvehiculo);         
             }
         }
-        return array('form'=>$form,'tramas'=>$tramas);
-       // return $viewModel;  
+        
+        return array('form'=>$form,'tramas'=>$tramas);  
     }
     
     public function paradaAction(){
@@ -82,6 +82,8 @@ class ReporteController extends AbstractActionController{
         }
         return array('form'=>$form,'tramas'=>$tramas);
     }
+    
+ 
     
    public function getTramaMongoDb() {
         if (!$this->tramaMongodb) {

@@ -24,8 +24,8 @@ $this->headTitle($title);
         <?php echo $this->formSubmit($form->get('submit')); ?>
     </div>
     <?php echo $this->form()->closeTag(); ?> 
-<!--    <button type="button" class="btn">Excel</button>
-    <button type="button" class="btn">Imprimir</button>-->
+    <!--<button type="button" class="btn">Excel</button>-->
+    <!--<button type="button" class="btn">Imprimir</button>-->
     <br><br>
     <table class="table table-bordered table-hover">
     <thead class="cf"> <tr>
@@ -33,10 +33,21 @@ $this->headTitle($title);
             <th>Nombre</th>
             <th>Tiempo</th>
             <th>Kilometraje</th>
-            <th>Exeso de velocidad</th>
             <th>Quedar</th>
             <th>Consume de combustible</th>
         </tr> </thead>
+    <?php foreach ($this->tramas['tiempo'] as $key=>$tiempo) {
+            ?>
+            <tr>
+                <td><?php echo $key + 1; ?></td>
+                <td><?php echo $this->tramas['chofer']; ?></td>
+                <td><?php echo $tiempo['fecha']; ?></td>
+                <td><?php echo $tiempo['total_km']?></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        <?php } ?>
 
 </table>
 </div>
