@@ -123,25 +123,27 @@ class TramasCollection {
         $finf = new MongoDate(strtotime($fin));
 
         $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => new MongoId($idempresa))
-                , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true)
+                , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true,'_id'=>true)
         );
 
         foreach ($vehiculo as $vehi) {
-            $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id']
-                , 'fecha_ubicacion' => array('$gt' => $iniciof
-                    , '$lte' => $finf)
+           
+            $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],
+                 'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)
                     )
                     , array('alerta' => true, 'hms' => true, 'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
                 'lat' => true, 'lng' => true, 'vehiculo_id' => true)
             );
-
+            if($trama->hasNext()){
             foreach ($trama as $tr) {
+                
                 $auxve = array('chofer_nom' => $vehi['chofer']['chofer_nom'], 'placa' => $vehi ['placa']);
                 $tr2 = array_merge_recursive($tr, $auxve);
                 $auxtramas[] = $tr2;
             }
+            }
         }
-
+       
         return $auxtramas;
     }
 
@@ -186,38 +188,49 @@ class TramasCollection {
      * @params inicio , fin ,idvehiculo, idempresa 
      */
 
-    public function getParada($inicio = null, $fin = null, $idvehiculo = null, $idempresa = null) {
+    public function getParada($inicio = null, $fin = null, $idvehiculo = null) {
         $iniciof = new MongoDate(strtotime($inicio));
         $finf = new MongoDate(strtotime($fin));
-
-        $tramas = $this->collection->find(array('fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)), array('estado' => true, 'fecha_ubicacion' => true))->sort(array('fecha_ubicacion' => true));
-        $fparada = array();
-        $fant = null;
-        $idfechant = null;
+        $tramas = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo),
+            'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)), 
+                array('estado' => true, 'fecha_ubicacion' => true,'lat'=>true,'lng'=>true));//->sort(array('fecha_ubicacion' => true));
         
-        foreach($tramas as $trama){
-           $fact = $trama['fecha_ubicacion'];
-            if ($trama['estado'] == 'parar') {
-                $fparada['idfechaini'] = (String) $trama['_id'];
-                $fparada['fecha_inicio'] = date("Y-m-d H:i:s", $fact->sec);
-                $sig=$tramas->getNext();
-                if($sig['estado']=='moviendo'){
-                       $resta = ($fact->sec) - ($fant->sec);
-//                        echo(date("Y-m-d H:i:s", $fact->sec) . ' - > ' . date("Y-m-d H:i:s", $fant->sec) . '</br>');
-//                        if ($resta > 0) {
-//                            $fparada['idfechafin'] = $idfechant; 
-//                            $fparada['fecha_fin'] = date("Y-m-d H:i:s", $fant->sec);
-//                            $fparada['tiempo'] = $resta;
-//                        }
-//                    var_dump($sig['estado']);
+        $act=null;
+        $ant=null;
+        $find=0;
+        $findf=0;
+
+        foreach ($tramas as $key => $trama) {
+          
+            $act = $trama;
+            if ($find == 0) {
+                if ($trama['estado'] == 'parar') {
+                    $fparada['id'] = $key;
+                    $fparada['fecha_inicio'] = date("Y-m-d H:i:s", $act['fecha_ubicacion']->sec);
+                    $fparada['latitude']=$trama['lat'];
+                    $fparada['longitude']=$trama['lng'];
+                    $find = 1;
+                    $findf = 0;
                 }
-                
-                $resultset[] = $fparada;
+            } else {
+                if ($findf == 0) {
+                    if ($trama['estado'] == 'movimiento') {
+                        $fparada['idf'] = $key;
+                        $fparada['fecha_fin'] = date("Y-m-d H:i:s", $act['fecha_ubicacion']->sec);
+                        $resto=date_diff(date_create($fparada['fecha_inicio']),date_create($fparada['fecha_fin']));
+                        $fparada['tiempo']=$resto->format('%Y-%m-%d %h:%i:%s');
+                        //formato:$fparada['tiempo']->format('%Y-%m-%d %h:%i:%s');
+                        $findf = 1;
+                        $resultset[]=$fparada;
+                        $find = 0;
+                    }
+                }
             }
-//            $fant = $fact;
+            $ant = $act;
+            
         }
-        var_dump($resultset);
-        exit;
+//      var_dump($resultset);Exit;
+        return $resultset; 
     }
 
 }

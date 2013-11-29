@@ -17,7 +17,7 @@ class ReporteController extends AbstractActionController{
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-                $idempresa="528d3ab3bf8eb1780c000046";//
+                $idempresa="52976e5fbf8eb1c406000010";//"528d3ab3bf8eb1780c000046";//
                    $tramas=$this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin,$idempresa);         
             }
         }
@@ -51,14 +51,16 @@ class ReporteController extends AbstractActionController{
                 $fechaini=$this->params()->fromPost('fechainicio');
         $fechafin=$this->params()->fromPost('fechafin');
         $idvehiculo=$this->params()->fromPost('usario_vehiculo');
+        
         $request=$this->getRequest();
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-               $tramas=$this->getTramaMongoDb()->getParada($fechaini, $fechafin);         
+               
+               $tramas=$this->getTramaMongoDb()->getParada($fechaini, $fechafin,$idvehiculo);         
             }
         }
-        return array('form'=>$form);
+        return array('form'=>$form,'tramas'=>$tramas);
     }
     
    public function getTramaMongoDb() {

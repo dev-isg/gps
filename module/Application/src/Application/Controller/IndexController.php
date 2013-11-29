@@ -185,9 +185,6 @@ class IndexController extends AbstractActionController {
             $cadena=substr($auxresul,0,$pos);
             $auxresul2.="{".$cadena."}";
             $auxresul="";
-
-//            $subarr[]=$cadena;
-            
         }
        
         echo json_encode(array('d'=>'{devices:['.$auxresul2.']}'));

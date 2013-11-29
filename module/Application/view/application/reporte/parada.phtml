@@ -37,7 +37,19 @@ $this->headTitle($title);
                     <th>Dirección</th>
                     <th>Tiempo</th>
                 </tr> </thead>
+           <?php foreach($this->tramas as $key=>$trama){ ?>
+            <tr>
+            <td><?php echo $key+1; ?></td>
+            <td><?php echo $trama['fecha_inicio']; ?></td>
+            <td><?php echo $trama['fecha_fin']; ?></td>
+            <td><?php echo $trama['latitude'].'/'.$trama['longitude']; ?></td>
+            <td></td>
+             <td><?php echo $trama['tiempo']; ?></td>
+
+            </tr>
+        <?php }?>
 
         </table>
+
     </div>
 </div>
