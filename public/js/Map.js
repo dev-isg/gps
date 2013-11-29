@@ -219,7 +219,7 @@ function ajaxLoadingTree() {
         },
         async: {
             enable: true,
-            url: "http://192.168.1.35:84/application/index/getempresa",
+            url: "http://192.168.1.35:84/application/index/getempresatotales",
             autoParam: ["id"],
             otherParam: { "staticID": uid }
         },
@@ -350,7 +350,7 @@ function ajaxGetDevices() {
     var TimeZone = $("#hidTimeZone").val();
     $.ajax({
         type: "post",
-        url: "http://192.168.1.35:84/json/prueba.json",
+        url: "http://192.168.1.35:84/application/index/getvehiculos",
         contentType: "application/json",
         data: "{UserID:" + UserId + ",isFirst:" + isFirst + ",TimeZones:'" + TimeZone + "'}",
         dataType: "json",
@@ -552,7 +552,7 @@ function showDevicesTable(s) {
             var id = "divTabDeviceMore" + allDevices.devices[i].id;
             showMoreDivDeviceArr.push(allDevices.devices[i].id);
             if (isShowMore) {
-                html.push('<div id="' + id + '" style="clear:left;color:' + color + '; margin-left:80px; display:' + display + ';">' + '<a href="javascript:void(0);" onclick="openPage(\'Tracking.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')" >' + allPage.tracking + '</a>  <a href="javascript:void(0);"  onclick="openPage(\'Playback.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')">' + allPage.playback + '</a>  <a href="javascript:void(0);" onclick="clkShowMoreMenu(' + loginUserID + ',' + allDevices.devices[i].id + ',' + allDevices.devices[i].model + ',\'' + allDevices.devices[i].name + '\',\'' + allDevices.devices[i].sn + '\');">' + allPage.more + '▼</a>' + '</div>');
+                html.push('<div id="' + id + '" style="clear:left;color:' + color + '; margin-left:80px; display:' + display + ';">' + '<a href="javascript:void(0);" onclick="openPage(\'Tracking.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')" >' + allPage.tracking + '</a>  <a href="javascript:void(0);"  onclick="openPage(\'Playback.aspx\',' + loginUserID + ',' + allDevices.devices[i].id + ')">' + allPage.playback + '</a>  <a href="javascript:void(0);" onclick="clkShowMoreMenu(\'' + loginUserID + '\',\'' + allDevices.devices[i].id + '\',' + allDevices.devices[i].model + ',\'' + allDevices.devices[i].name + '\',\'' + allDevices.devices[i].sn + '\');">' + allPage.more + '▼</a>' + '</div>');
             }
             html.push('</div>');
 

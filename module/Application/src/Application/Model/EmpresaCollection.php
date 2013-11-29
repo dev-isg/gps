@@ -103,8 +103,16 @@ class EmpresaCollection {
         foreach ($listEmp as $value) {
             $id = (String) $value['_id'];
             $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
-            $value['name'] = $value['nombre'] . '(' . $vehiculo->count() . '/' . $vehiculo->count() . ')';
-            $resultvehi[] = array_merge_recursive($value);
+             $valuea['id']=(String) $value['_id'];
+             $valuea['name'] = $value['nombre'] . '(' . $vehiculo->count() . '/' . $vehiculo->count() . ')';
+             $valuea['nombre']=$value['nombre'];
+             $valuea['ruc']=$value['ruc'];
+             $valuea['email']=$value['email'];               
+             $valuea['descripcion']=$value['descripcion'];
+             $valuea['direccion']= $value['direccion'];
+             $valuea['telefono']=$value['telefono'];
+             $valuea['usuario_id']=(String) $value['usuario_id'];
+             $resultvehi[] = array_merge_recursive($valuea);
         }
         $usuario = array('id_usuario' => $_SESSION['_idrol'], 'rol' => $_SESSION['rol'], 'nombre' => $_SESSION['nombre']
             , 'children' => $resultvehi);

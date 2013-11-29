@@ -46,7 +46,7 @@ class ReporteController extends AbstractActionController{
     
     public function kilometrajeAction(){
         $form=new MovimientoForm();
-        $conductores=$this->getVehiculoMongoDb()->getConductor($idempresa="528d3ab3bf8eb1780c000046");
+        $conductores=$this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']);
         $form->get('usario_vehiculo')->setValueOptions($conductores);
 
         $fechaini=$this->params()->fromPost('fechainicio');
@@ -66,6 +66,9 @@ class ReporteController extends AbstractActionController{
     
     public function paradaAction(){
          $form=new ParadaForm();
+         // $datoss = $this->getUsuariosMongoDb()->read();
+          //$idempresa=$datoss['_idrol'];
+          //="528d3ab3bf8eb1780c000046"
          $conductores=$this->getVehiculoMongoDb()->getConductor($idempresa="528d3ab3bf8eb1780c000046");
           $form->get('usario_vehiculo')->setValueOptions($conductores);
                 $fechaini=$this->params()->fromPost('fechainicio');
