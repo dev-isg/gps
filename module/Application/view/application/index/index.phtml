@@ -123,11 +123,12 @@
                   </ul>
                </li>
                <?php  }?>
+               <?php //if($this->rol=='administrador' or $this->rol=='empresa'){?>
                <li class="dropdown" id="header_notification_bar">
                <a href="/application/reporte/movimiento" class="dropdown-toggle"  data-hover="dropdown"
                      data-close-others="true">
                <span >Estadísticas</span>
-                  </a></li>
+                  </a></li> <?php //} ?>
                <!-- END NOTIFICATION DROPDOWN -->
                <!-- BEGIN INBOX DROPDOWN -->
                <li class="dropdown" id="header_inbox_bar">

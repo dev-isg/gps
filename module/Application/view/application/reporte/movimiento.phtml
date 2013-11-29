@@ -382,7 +382,7 @@ $this->headTitle($title);
     ?>
     <legend><?php echo $this->escapeHtml($title); ?></legend>
     <div class="control-group">
-        <div class="form-group"><?php echo $this->formRow($form->get('usario_vehiculo')); ?></div>
+       <?php  if($this->rol =='administrador') {?> <div class="form-group"><?php echo $this->formRow($form->get('usario_vehiculo')); ?></div><?php  } ?>
         <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
         <div class="form-group"><?php echo $this->formRow($form->get('fechafin')); ?></div>
         <?php echo $this->formSubmit($form->get('submit')); ?>
