@@ -33,85 +33,47 @@ class EmpresaController extends AbstractActionController {
     }
 
     public function indexAction() {
-
-        $consulta = $this->params()->fromPost('texto');
-        $resultados = $this->getEmpresaMongoDb()->getListaCombo();
-        if ($this->getRequest()->isPost()) {
-            $resultados = $this->getEmpresaMongoDb()->getListaCombo($consulta);
-        }
-        $cantidad = count($resultados);
-        //echo json_encode($resultados);exit;
-        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
-    }
-
-    public function agregarempresaAction() {
-        $form = new EmpresaForm("form");
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $datos = $this->request->getPost();
-            $pass1 = $datos['pass'];
-            $pass2 = $datos['pass2'];
-            if ($pass1 == $pass2) {
-                $empresa = new Empresa();
-                $form->setInputFilter($empresa->getInputFilter());
-                $form->setData($request->getPost());
-                if ($form->isValid()) {
-                    $empresa->exchangeArray($form->getData());
-                    $id_usuario = $this->getUsuariosMongoDb()->agregarUsuario($empresa);
-                    $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $id_usuario);
-                    if ($datos['enviar'] == 'si') {
-                        $this->correo($empresa);
-                    }
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
-                } else {
-                    foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                        print_r($error->getMessages());
-                        print_r($error->getName());
-                    }
-                }
-            } else {
-                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/agregarempresa?m=1');
-            }
-        }
-        return new ViewModel(array('form' => $form));
-    }
-
-    public function editarpassempresaAction() {
-
         if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
-        $id = $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
+            $consulta = $this->params()->fromPost('texto');
+            $resultados = $this->getEmpresaMongoDb()->getListaCombo();
+            if ($this->getRequest()->isPost()) {
+                $resultados = $this->getEmpresaMongoDb()->getListaCombo($consulta);
+            }
+            $cantidad = count($resultados);
+            return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
-        try {
-            $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
-            $empresa_usuario = $this->getUsuariosMongoDb()->obtenerUsuario($empresa['usuario_id']);
-        } catch (\Exception $ex) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+    }
+
+    public function agregarempresaAction() {
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
-        $form = new EmpresaForm();
-        $form->get('usuario_id')->setValue($empresa['usuario_id']);
-        $form->get('_id')->setValue((String) $empresa['_id']);
-        $form->get('submit')->setValue('Editar');
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $datos = $this->request->getPost();
-            $passanti = md5($datos['passantiguo']);
-            if ($passanti == $empresa_usuario['pass']) {
-                if ($datos['pass'] == $datos['pass2']) {
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
+            $form = new EmpresaForm("form");
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $datos = $this->request->getPost();
+                $pass1 = $datos['pass'];
+                $pass2 = $datos['pass2'];
+                if ($pass1 == $pass2) {
                     $empresa = new Empresa();
                     $form->setInputFilter($empresa->getInputFilter());
                     $form->setData($request->getPost());
                     if ($form->isValid()) {
                         $empresa->exchangeArray($form->getData());
-                        $this->getUsuariosMongoDb()->editarPassUsuario($empresa, $datos['usuario_id']);
-                        if ($_SESSION['rol'] == 'administrador') {
-                            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
-                        } else {
-                            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/perfil');
+                        $id_usuario = $this->getUsuariosMongoDb()->agregarUsuario($empresa);
+                        $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $id_usuario);
+                        if ($datos['enviar'] == 'si') {
+                            $this->correo($empresa);
                         }
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
                     } else {
                         foreach ($form->getInputFilter()->getInvalidInput() as $error) {
                             print_r($error->getMessages());
@@ -119,15 +81,72 @@ class EmpresaController extends AbstractActionController {
                         }
                     }
                 } else {
-                    $mensaje = 'las Contraseñas no coinciden';
+                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/agregarempresa?m=1');
+                }
+            }
+            return new ViewModel(array('form' => $form));
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
+    }
+
+    public function editarpassempresaAction() {
+
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        }
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador' or $dato['rol'] == 'empresa') {
+            $id = $this->params()->fromRoute('id', 0);
+            if (!$id) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+            }
+            try {
+                $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
+                $empresa_usuario = $this->getUsuariosMongoDb()->obtenerUsuario($empresa['usuario_id']);
+            } catch (\Exception $ex) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+            }
+            $form = new EmpresaForm();
+            $form->get('usuario_id')->setValue($empresa['usuario_id']);
+            $form->get('_id')->setValue((String) $empresa['_id']);
+            $form->get('submit')->setValue('Editar');
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $datos = $this->request->getPost();
+                $passanti = md5($datos['passantiguo']);
+                if ($passanti == $empresa_usuario['pass']) {
+                    if ($datos['pass'] == $datos['pass2']) {
+                        $empresa = new Empresa();
+                        $form->setInputFilter($empresa->getInputFilter());
+                        $form->setData($request->getPost());
+                        if ($form->isValid()) {
+                            $empresa->exchangeArray($form->getData());
+                            $this->getUsuariosMongoDb()->editarPassUsuario($empresa, $datos['usuario_id']);
+                            if ($_SESSION['rol'] == 'administrador') {
+                                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+                            } else {
+                                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/perfil');
+                            }
+                        } else {
+                            foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                                print_r($error->getMessages());
+                                print_r($error->getName());
+                            }
+                        }
+                    } else {
+                        $mensaje = 'las Contraseñas no coinciden';
+                        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass'], 'mensaje' => $mensaje));
+                    }
+                } else {
+                    $mensaje = 'pass antiguo no es verdadero';
                     return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass'], 'mensaje' => $mensaje));
                 }
-            } else {
-                $mensaje = 'pass antiguo no es verdadero';
-                return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass'], 'mensaje' => $mensaje));
             }
+            return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass']));
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
-        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass']));
     }
 
     public function editarempresaAction() {
@@ -135,51 +154,56 @@ class EmpresaController extends AbstractActionController {
         if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
-        $id = $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
-        }
-        try {
-            $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
-            $empresa_usuario = $this->getUsuariosMongoDb()->obtenerUsuario($empresa['usuario_id']);
-        } catch (\Exception $ex) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
-        }
-        $form = new EmpresaForm();
-        $form->get('descripcion')->setValue($empresa['descripcion']);
-        $form->get('nombre')->setValue($empresa['nombre']);
-        $form->get('ruc')->setValue($empresa['ruc']);
-        $form->get('direccion')->setValue($empresa['direccion']);
-        $form->get('usuario_id')->setValue($empresa['usuario_id']);
-        $form->get('email')->setValue($empresa['email']);
-        $form->get('telefono')->setValue($empresa['telefono']);
-        $form->get('_id')->setValue((String) $empresa['_id']);
-        $form->get('login')->setValue($empresa_usuario['login']);
-        $form->get('submit')->setValue('Editar');
-        // $form->bind($empresa);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $datos = $this->request->getPost();
-            $empresa = new Empresa();
-            $form->setInputFilter($empresa->getInputFilter());
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-                $empresa->exchangeArray($form->getData());
-                $this->getUsuariosMongoDb()->agregarUsuario($empresa, $datos['usuario_id'], 'editar');
-                $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $datos['_id'], 'editar');
-                if ($_SESSION['rol'] == 'administrador') {
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+        $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador' or $dato['rol'] == 'empresa') {
+            $id = $this->params()->fromRoute('id', 0);
+            if (!$id) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+            }
+            try {
+                $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
+                $empresa_usuario = $this->getUsuariosMongoDb()->obtenerUsuario($empresa['usuario_id']);
+            } catch (\Exception $ex) {
+                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+            }
+            $form = new EmpresaForm();
+            $form->get('descripcion')->setValue($empresa['descripcion']);
+            $form->get('nombre')->setValue($empresa['nombre']);
+            $form->get('ruc')->setValue($empresa['ruc']);
+            $form->get('direccion')->setValue($empresa['direccion']);
+            $form->get('usuario_id')->setValue($empresa['usuario_id']);
+            $form->get('email')->setValue($empresa['email']);
+            $form->get('telefono')->setValue($empresa['telefono']);
+            $form->get('_id')->setValue((String) $empresa['_id']);
+            $form->get('login')->setValue($empresa_usuario['login']);
+            $form->get('submit')->setValue('Editar');
+            // $form->bind($empresa);
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $datos = $this->request->getPost();
+                $empresa = new Empresa();
+                $form->setInputFilter($empresa->getInputFilter());
+                $form->setData($request->getPost());
+                if ($form->isValid()) {
+                    $empresa->exchangeArray($form->getData());
+                    $this->getUsuariosMongoDb()->agregarUsuario($empresa, $datos['usuario_id'], 'editar');
+                    $this->getEmpresaMongoDb()->agregarEmpresa($empresa, $datos['_id'], 'editar');
+                    if ($_SESSION['rol'] == 'administrador') {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/empresa/index');
+                    } else {
+                        return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/perfil');
+                    }
                 } else {
-                    return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/index/perfil');
-                }
-            } else {
-                foreach ($form->getInputFilter()->getInvalidInput() as $error) {
-                    print_r($error->getMessages());
-                    print_r($error->getName());
+                    foreach ($form->getInputFilter()->getInvalidInput() as $error) {
+                        print_r($error->getMessages());
+                        print_r($error->getName());
+                    }
                 }
             }
+            return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass']));
+        } else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
-        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $empresa_usuario['pass']));
     }
 
     public function correo($empresa) {

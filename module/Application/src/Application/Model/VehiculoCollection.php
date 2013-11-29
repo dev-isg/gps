@@ -61,11 +61,12 @@ class VehiculoCollection {
     }
 
     public function guardarVehiculo($vehiculo, $usuarioid, $empresa, $id = null) {
+        
         $data = array(
 //                    'id' => $vehiculo->id,
             'estado' => true,
             'nombre_corto' => $vehiculo->nombre_corto,
-            'empresa_id' => $empresa,
+            'empresa_id' => new \MongoId($empresa),
 //                    'tipo_equipo' => $vehiculo->tipo_equipo,
             'num_imei' => $vehiculo->num_imei,
             'num_sim' => $vehiculo->num_sim,
@@ -89,7 +90,7 @@ class VehiculoCollection {
     }
 
     public function getVehiculos($idempresa = null) {
-        $vehiculos = $this->collection->find(array('empresa_id' => "$idempresa"));
+        $vehiculos = $this->collection->find(array('empresa_id' => new \MongoId("$idempresa")));
         $resultvehi = array();
         foreach ($vehiculos as $value) {
             $idempresas = $value['empresa_id'];
