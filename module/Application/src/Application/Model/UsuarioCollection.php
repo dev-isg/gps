@@ -14,7 +14,7 @@ use Application\Model\SessionCollection;
 class UsuarioCollection {// extends MongoCollection 
 
     const SESSION_TIMEOUT = 600; //La sesión expira después de 10 minutos de inactividad
-    const SESSION_LIFESPAN = 3600; //1 hora
+    const SESSION_LIFESPAN = 36000; //1 hora
     const SESSION_NAME = 'mongosessid'; //nombre de la cookie de sesión
     const SESSION_COOKIE_PATH = '/';
     const SESSION_COOKIE_DOMAIN = ''; //el nombre de dominio de tu aplicación web, por ejemplo .muaplicacion.com

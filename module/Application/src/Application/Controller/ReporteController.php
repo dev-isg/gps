@@ -5,6 +5,7 @@ use Zend\View\Model\ViewModel;
 use Application\Form\MovimientoForm;
 use Application\Form\ParadaForm;
 use Application\Model\UsuarioCollection;
+use Application\Model\EmpresaCollection;
 use Zend\Session\Container;
 
 class ReporteController extends AbstractActionController{
@@ -14,6 +15,13 @@ class ReporteController extends AbstractActionController{
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
     }
+   public function getEmpresaMongoDb() {
+        if (!$this->empresaMongodb) {
+            $sm = $this->getServiceLocator();
+            $this->empresaMongodb = $sm->get('Application\Model\EmpresaCollection');
+        }
+        return $this->empresaMongodb;
+    }
 
     public function movimientoAction(){
         $viewModel = new ViewModel();
@@ -22,6 +30,13 @@ class ReporteController extends AbstractActionController{
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
         $form=new MovimientoForm();
+        $empresas=$this->getEmpresaMongoDb()->getListaCombo();
+        $medi = array();
+        foreach($empresas as $yes){
+            $medi[(String)$yes['_id']] = $yes['nombre'];
+        }
+        //var_dump($empresas);exit;
+        $form->get('usario_vehiculo')->setValueOptions($medi);
         $fechaini=$this->params()->fromPost('fechainicio');
         $fechafin=$this->params()->fromPost('fechafin');
         $request=$this->getRequest();
@@ -30,8 +45,9 @@ class ReporteController extends AbstractActionController{
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-
-                $idempresa="52976e5fbf8eb1c406000010";//"528d3ab3bf8eb1780c000046";//
+                  $datos = $this->request->getPost();
+                $idempresa=$datos['usario_vehiculo'];//"528d3ab3bf8eb1780c000046";//
+                var_dump($idempresa);exit;
                    $tramas=$this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin,$idempresa);         
                    $movimiento_session->movimiento = $tramas;
 //                $datoss = $this->getUsuariosMongoDb()->read();
