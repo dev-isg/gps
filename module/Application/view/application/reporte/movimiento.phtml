@@ -364,10 +364,12 @@
 
    <?php
 $title = 'Movimiento Global';
+
 $this->headTitle($title);
 ?>
 <div class="row-fluid">
 <div class="span12" id="flip-scroll">
+
     <?php
     $form = $this->form;
     $form->setAttributes(array(
@@ -381,6 +383,9 @@ $this->headTitle($title);
     echo $this->form()->openTag($form);
     ?>
     <legend><?php echo $this->escapeHtml($title); ?></legend>
+    <h3><a href="/application/reporte/movimiento">movimiento</a></h3>
+   <h3><a href="/application/reporte/parada">parada</a></h3>
+   <h3><a href="/application/reporte/kilometraje">kilometrage</a></h3>
     <div class="control-group">
        <?php  if($this->rol =='administrador') {?> <div class="form-group"><?php echo $this->formRow($form->get('usario_vehiculo')); ?></div><?php  } ?>
         <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
@@ -428,13 +433,12 @@ $this->headTitle($title);
 
         </tr>
     <?php }; ?> -->
-   </table>
-   </div>
+         </table>
+
     </div>
+</div>
 </body>
 </html>
-
-
 
 
 
