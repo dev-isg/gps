@@ -103,7 +103,7 @@ class IndexController extends AbstractActionController {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
 
-        $viewModel->setVariables(array('rol' => $_SESSION['rol'],'form' => $form, 'id' => $id, 'hidUserID' => $_SESSION['_idrol'],
+        $viewModel->setVariables(array('rol' => $_SESSION['rol'], 'form' => $form, 'id' => $id, 'hidUserID' => $_SESSION['_idrol'],
             'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
@@ -168,31 +168,29 @@ class IndexController extends AbstractActionController {
         return $viewModel;
     }
 
-    
-    public function getvehiculosAction(){
-        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046');//
+    public function getvehiculosAction() {
+        $idempresa = $this->params()->fromPost('id', '528d3ab3bf8eb1780c000046'); //
         $resultados = $this->getVehiculoMongoDb()->getVehiculobyIdEmpresa($idempresa);
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
 
-        $auxresul="";
-        $auxresul2="";
-        foreach($resultados as $item){
-            foreach($item as $key=>$value){
-                    $auxresul.=$key.":"."\"$value\"".","; 
+        $auxresul = "";
+        $auxresul2 = "";
+        foreach ($resultados as $item) {
+            foreach ($item as $key => $value) {
+                $auxresul.=$key . ":" . "\"$value\"" . ",";
             }
-            $pos=strrpos($auxresul,",");
-            $cadena=substr($auxresul,0,$pos);
-            $auxresul2.="{".$cadena."}";
-            $auxresul="";
+            $pos = strrpos($auxresul, ",");
+            $cadena = substr($auxresul, 0, $pos);
+            $auxresul2.="{" . $cadena . "}";
+            $auxresul = "";
 
 //            $subarr[]=$cadena;
-            
         }
-       
-        echo json_encode(array('d'=>'{devices:['.$auxresul2.']}'));
+
+        echo json_encode(array('d' => '{devices:[' . $auxresul2 . ']}'));
         return $viewModel;
-        
+
 //        return new JsonModel(array(
 //            'd' => array('devices'=>$resultados)
 //        ));
@@ -203,13 +201,17 @@ class IndexController extends AbstractActionController {
         $resultados = $this->getEmpresaMongoDb()->getEmpresabyId($idempresa);
         return new JsonModel($resultados);
     }
-     public function getempresatotalesAction() {
-        $idusuario = $this->params()->fromPost('id',0);
-       $resultados = $this->getEmpresaMongoDb()->getLista();
-        return new JsonModel($resultados);
 
+    public function getempresatotalesAction() {
+        $idusuario = $this->params()->fromPost('id', 0);
+//        if ($idusuario == $_SESSION['_idrol']) {
+            $resultados = $this->getEmpresaMongoDb()->getLista($idusuario);
+            return new JsonModel($resultados);
+//        } else {
+//            $resultados = array('mensaje' => 'no has iniciado session'); return new JsonModel($resultados);
+//        }
     }
-    
+
 //    function json_encode_objs($item){   
 //        if(!is_array($item) && !is_object($item)){   
 //            return json_encode($item);   
@@ -221,7 +223,7 @@ class IndexController extends AbstractActionController {
 //            return '{'.implode(',',$pieces).'}';   
 //        }   
 //    }   
-    
+
 
     public function loginAction() {
         if ($this->getUsuariosMongoDb()->isLoggedIn()) {
@@ -289,7 +291,7 @@ class IndexController extends AbstractActionController {
         }
         $cantidad = count($resultados);
 
-        $viewModel->setVariables(array('rol' => $_SESSION['rol'],'valores' => $resultados, 'cantidad' => $cantidad, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
+        $viewModel->setVariables(array('rol' => $_SESSION['rol'], 'valores' => $resultados, 'cantidad' => $cantidad, 'hidUserID' => $_SESSION['_idrol'], 'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
 

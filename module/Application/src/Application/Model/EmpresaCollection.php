@@ -32,7 +32,6 @@ class EmpresaCollection {
         return $aux;
     }
 
-  
     public function obtenerEmpresa($id) {
 
         $empresa = $this->collection->findOne(array('_id' => new \MongoId($id)));
@@ -54,9 +53,6 @@ class EmpresaCollection {
         }
         return $resultvehi;
     }
-    
-    
-    
 
     public function agregarEmpresa(Empresa $valor, $id, $editar = null) {
 
@@ -69,7 +65,7 @@ class EmpresaCollection {
         );
 
         if ($editar == null) {
-            $cantidad['usuario_id'] =new \MongoId($id);
+            $cantidad['usuario_id'] = new \MongoId($id);
             $empresa = $this->collection->insert($cantidad);
             if ($empresa == true) {
                 return $empresa;
@@ -84,34 +80,35 @@ class EmpresaCollection {
         }
     }
 
-     public function getEmpresabyId($idempresa=null) {
-        
+    public function getEmpresabyId($idempresa = null) {
+
         $empresa = $this->collection->findOne(array('_id' => new \MongoId($idempresa)));
         $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $idempresa));
-       // $empresass = array('nombre_empresa' =>$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')');
-        $auxtram['id']= (String) $empresa['_id'];
-        $auxtram['nombre']= (String) $empresa['nombre'];
-        $auxtram['name']=$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
-                    $auxtram['descripcion']=$empresa['descripcion'];
-                    $auxtram['telefono']=$empresa['telefono'];
+        // $empresass = array('nombre_empresa' =>$empresa['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')');
+        $auxtram['id'] = (String) $empresa['_id'];
+        $auxtram['nombre'] = (String) $empresa['nombre'];
+        $auxtram['name'] = $empresa['nombre'] . '(' . $vehiculo->count() . '/' . $vehiculo->count() . ')';
+        $auxtram['descripcion'] = $empresa['descripcion'];
+        $auxtram['telefono'] = $empresa['telefono'];
         $resultvehi = array_merge_recursive($auxtram);
         if (!$resultvehi) {
             throw new \Exception("Could not find row $idempresa");
         }
         return $resultvehi;
-
     }
-      public function getLista($consulta = null) {
+
+    public function getLista() {
         $listEmp = $this->collection->find();
         $resultvehi = array();
         foreach ($listEmp as $value) {
             $id = (String) $value['_id'];
             $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => $id));
-            $value['name']=$value['nombre'].'('.$vehiculo->count().'/'.$vehiculo->count().')';
+            $value['name'] = $value['nombre'] . '(' . $vehiculo->count() . '/' . $vehiculo->count() . ')';
             $resultvehi[] = array_merge_recursive($value);
         }
-        return $resultvehi;
+        $usuario = array('id_usuario' => $_SESSION['_idrol'], 'rol' => $_SESSION['rol'], 'nombre' => $_SESSION['nombre']
+            , 'children' => $resultvehi);
+        return $usuario;
     }
 
-    
 }

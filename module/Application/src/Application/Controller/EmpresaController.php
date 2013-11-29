@@ -33,22 +33,22 @@ class EmpresaController extends AbstractActionController {
     }
 
     public function indexAction() {
-    if ($this->getUsuariosMongoDb()->isLoggedIn()) {
-                return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
-            }
-            $consulta = $this->params()->fromPost('texto');
-            $resultados = $this->getEmpresaMongoDb()->getListaCombo();
-            if ($this->getRequest()->isPost()) {
-                $resultados = $this->getEmpresaMongoDb()->getListaCombo($consulta);
-            }
-            $cantidad = count($resultados);
-            //echo json_encode($resultados);exit;
-            return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
+        $consulta = $this->params()->fromPost('texto');
+        $resultados = $this->getEmpresaMongoDb()->getListaCombo();
+        if ($this->getRequest()->isPost()) {
+            $resultados = $this->getEmpresaMongoDb()->getListaCombo($consulta);
+        }
+        $cantidad = count($resultados);
+        //echo json_encode($resultados);exit;
+        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+    }
 
     public function agregarempresaAction() {
-        if ($this->getUsuariosMongoDb()->isLoggedIn()) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
         $form = new EmpresaForm("form");
         $request = $this->getRequest();
@@ -82,9 +82,6 @@ class EmpresaController extends AbstractActionController {
     }
 
     public function editarpassempresaAction() {
-        if ($this->getUsuariosMongoDb()->isLoggedIn()) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
-        }
 
         if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
@@ -139,9 +136,7 @@ class EmpresaController extends AbstractActionController {
     }
 
     public function editarempresaAction() {
-if ($this->getUsuariosMongoDb()->isLoggedIn()) {
-            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
-        }
+
         if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
         }
