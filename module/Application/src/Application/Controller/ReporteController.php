@@ -30,8 +30,8 @@ class ReporteController extends AbstractActionController {
 
     public function movimientoAction() {
 
-        $seguimiento=$this->getTramaMongoDb()->insertaTramas("528d3ab3bf8eb1780c000046");
-        var_dump($seguimiento);Exit;
+//        $seguimiento=$this->getTramaMongoDb()->insertaTramas("528d3ab3bf8eb1780c000046");
+//        var_dump($seguimiento);Exit;
 
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
@@ -63,11 +63,6 @@ class ReporteController extends AbstractActionController {
                else{$idempresa = $dato['_idrol'];}
                 $tramas = $this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin, $idempresa);
                 $movimiento_session->movimiento = $tramas;
-//                $datoss = $this->getUsuariosMongoDb()->read();
-//                  $idempresa=$datoss['_idrol'];//
-//              //   var_dump($idempresa);exit;
-//              //  $tramas=$this->getTramaMongoDb()->insertaTramas();
-//               $tramas=$this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin,$idempresa);         
             }
         }
         $viewModel->setVariables(array('rol' => $_SESSION['rol'], 'form' => $form, 'tramas' => $tramas, 'hidUserID' => $_SESSION['_idrol'],

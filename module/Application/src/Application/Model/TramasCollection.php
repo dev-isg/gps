@@ -22,11 +22,11 @@ class TramasCollection {
             'dmy' => '64',
             'estado' => 'movimiento',
             'fecha_ubicacion' => $iniciof,
-            'hms' => '10',
+            'hms' => 10,
             'id' => '10',
             'lat' => '5', 'lng' => '41',
             'orientacion' => '30',
-            'vehiculo_id' => new \MongoId("5297c15bbf8eb1202200000d"),
+            'vehiculo_id' => new \MongoId("5297c183bf8eb19420000007"),
             'velocidad' => '30');
         $trama = $this->collection->insert($valorer);
         return $trama;

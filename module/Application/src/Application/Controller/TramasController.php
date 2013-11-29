@@ -16,6 +16,7 @@ class TramasController extends AbstractActionController{
     public function homeAction(){
         
          $seguimiento=$this->getTramaMongoDb()->getSeguimientoVehiculos("528d3ab3bf8eb1780c000046");
+         
         return array();
     }
     public function seguimientoAction(){
