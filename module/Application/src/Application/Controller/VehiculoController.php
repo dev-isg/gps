@@ -19,13 +19,23 @@ class VehiculoController extends AbstractActionController {
     protected $empresaMongodb;
 
     public function indexAction() {
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        } $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
         $resultados = $this->getVehiculoMongoDb()->vehiculosParticulares();
         $cantidad = count($resultados);
-        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));
+        return new ViewModel(array('valores' => $resultados, 'cantidad' => $cantidad));}
+        else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
     }
 
     public function agregarvehiculoAction() {
-
+ if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        } $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
         $id = $this->params()->fromQuery('id');
         if ($id) {
             $empresa = $this->getEmpresaMongoDb()->obtenerEmpresa($id);
@@ -63,10 +73,17 @@ class VehiculoController extends AbstractActionController {
                 return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/agregarvehiculo?id=' . $datos['empresa_id'] . '&m=1');
             }
         }
-        return new ViewModel(array('form' => $form, 'empresa' => $empresa['nombre']));
+        return new ViewModel(array('form' => $form, 'empresa' => $empresa['nombre']));}
+        else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
     }
 
     public function editarpassvehiculoAction() {
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        } $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
         $id = $this->params()->fromRoute('id_vehiculo', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
         if (!$id) {
@@ -122,10 +139,17 @@ class VehiculoController extends AbstractActionController {
                 return new ViewModel(array('form' => $form, 'id' => $id, 'mensaje' => $mensaje, 'idempresa' => $idempresa, 'idvehiculo' => $id));
             }
         }
-        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));
+        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));}
+        else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
     }
 
     public function editarvehiculoAction() {
+        if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        } $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
         $id = $this->params()->fromRoute('id_vehiculo', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
         if (!$id) {
@@ -185,10 +209,17 @@ class VehiculoController extends AbstractActionController {
                 }
             }
         }
-        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));
+        return new ViewModel(array('form' => $form, 'id' => $id, 'pass' => $vehiculo[0]['pass'], 'idempresa' => $idempresa, 'idvehiculo' => $id));}
+        else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
+        }
     }
 
     public function eliminarvehiculoAction() {
+         if (!$this->getUsuariosMongoDb()->isLoggedIn()) {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/login');
+        } $dato = $this->getUsuariosMongoDb()->read();
+        if ($dato['rol'] == 'administrador') {
         $id = $this->params()->fromRoute('id_vehiculo', 0);
         $idusuario = $this->params()->fromRoute('id_usuario', 0);
         $idempresa = $this->params()->fromRoute('id_empresa', 0);
@@ -197,6 +228,8 @@ class VehiculoController extends AbstractActionController {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/application/vehiculo/index');
         } else {
             return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/listar-vehiculo/' . $idempresa);
+        }} else {
+            return $this->redirect()->toUrl($this->getRequest()->getBaseUrl() . '/');
         }
     }
 
