@@ -22,19 +22,21 @@ $this->headTitle($title);
         <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
         <div class="form-group"><?php echo $this->formRow($form->get('fechafin')); ?></div> 
         <?php echo $this->formSubmit($form->get('submit')); ?>
+        
     </div>
     <?php echo $this->form()->closeTag(); ?> 
-    <!--<button type="button" class="btn">Excel</button>-->
+    <div class="form-group"><a href="/application/reporte/excelkilometraje">Excel</a></div>
+<!--    <button type="button" class="btn">Excel</button>-->
     <!--<button type="button" class="btn">Imprimir</button>-->
     <br><br>
     <table class="table table-bordered table-hover">
     <thead class="cf"> <tr>
-            <th>idMongo</th>
+            <th>Id</th>
             <th>Nombre</th>
             <th>Tiempo</th>
             <th>Kilometraje</th>
             <th>Quedar</th>
-            <th>Consume de combustible</th>
+            <th>Consumo de combustible</th>
         </tr> </thead>
     <?php foreach ($this->tramas['tiempo'] as $key=>$tiempo) {
             ?>

@@ -1,0 +1,43 @@
+<style type="text/css">
+table,tr,td,th
+{  
+border: 1px solid #000; 
+border-collapse: collapse;
+text-align: center;
+}
+     </style>
+     <br>
+     <br>
+
+<?php  
+header("Pragma: public");
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: pre-check=0, post-check=0, max-age=0");
+header("Pragma: no-cache");
+header("Expires: 0");
+header("Content-Transfer-Encoding: none");
+header("Content-Type: application/vnd.ms-excel;");
+header("Content-type: application/x-msexcel");
+header("Content-Disposition: attachment; filename=Moderacion_".date('Ymd').".xls");
+    echo("<table>");
+    echo("<tr style='font-weight: bold;'>");
+    echo("<td>Id</td>");
+    echo("<td>Nombre</td>");
+    echo("<td>Tiempo</td>");
+    echo("<td>Kilometraje</td>");
+    echo("<td>Quedar</td>");
+    echo("<td>Exeso de velocidad</td>");
+    echo("<td>Work time</td>");
+ foreach($this->tramas as $key=>$trama){ ?>
+            <tr>
+            <td><?php echo $key+1; ?></td>
+            <td><?php echo $trama['chofer_nom']; ?></td>
+            <td><?php echo $trama['fecha'];?></td>
+            <td><?php echo $trama['total_km']; ?></td
+            <td></td>
+             <td></td>
+              <td></td>
+               <td></td>
+            </tr>
+        <?php }?>
+</table>
