@@ -18,6 +18,7 @@ class ReporteController extends AbstractActionController {
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
+
     }
 
     public function getEmpresaMongoDb() {
@@ -28,10 +29,12 @@ class ReporteController extends AbstractActionController {
         return $this->empresaMongodb;
     }
 
+
     public function movimientoAction() {
 
 //        $seguimiento=$this->getTramaMongoDb()->insertaTramas("528d3ab3bf8eb1780c000046");
 //        var_dump($seguimiento);Exit;
+
 
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
@@ -81,6 +84,7 @@ class ReporteController extends AbstractActionController {
         return $view;
     }
 
+
     public function kilometrajeAction() {
         $form = new MovimientoForm();
         $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']);
@@ -114,6 +118,7 @@ class ReporteController extends AbstractActionController {
         return $view;
     }
 
+
     public function paradaAction() {
         $form = new ParadaForm();
         // $datoss = $this->getUsuariosMongoDb()->read();
@@ -126,22 +131,25 @@ class ReporteController extends AbstractActionController {
         $idvehiculo = $this->params()->fromPost('usario_vehiculo');
 
         $request = $this->getRequest();
+        
         $parada_session = new Container('parada');
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-
                 $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
                 $parada_session->parada = $tramas;
+                
             }
         }
         return array('form' => $form, 'tramas' => $tramas);
     }
 
+
     public function excelparadaAction() {
+         $parada_session = new Container('parada');
         $view = new ViewModel();
         $view->setTerminal(true);
-        $parada_session = new Container('parada');
+       
         if ($parada_session->parada) {
             $trama = $parada_session->parada;
         }
@@ -172,5 +180,6 @@ class ReporteController extends AbstractActionController {
         }
         return $this->vehiculoMongodb;
     }
+
 
 }

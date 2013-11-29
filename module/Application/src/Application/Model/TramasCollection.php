@@ -28,6 +28,7 @@ class TramasCollection {
             'orientacion' => '30',
             'vehiculo_id' => new \MongoId("5297c183bf8eb19420000007"),
             'velocidad' => '30');
+
         $trama = $this->collection->insert($valorer);
         return $trama;
         exit;
@@ -210,7 +211,9 @@ class TramasCollection {
      * @params inicio , fin ,idvehiculo 
      * @return Array
      */
+
     public function getParada($inicio = null, $fin = null, $idvehiculo = null) {
+
         $iniciof = new MongoDate(strtotime($inicio));
         $finf = new MongoDate(strtotime($fin));
         $tramas = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo),

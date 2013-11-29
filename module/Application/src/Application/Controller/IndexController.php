@@ -169,9 +169,12 @@ class IndexController extends AbstractActionController {
 
             $pos=strrpos($auxresul,",");
             $cadena=substr($auxresul,0,$pos);
-            $auxresul2.="{".$cadena."}";
+            $auxresul2.="{".$cadena."},";
             $auxresul="";
         }
+             $posfin=strrpos($auxresul2,",");
+            $auxresul2=substr($auxresul2,0,$posfin);
+            
 
         echo json_encode(array('d' => '{devices:[' . $auxresul2 . ']}'));
         return $viewModel;

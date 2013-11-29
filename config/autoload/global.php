@@ -14,7 +14,7 @@ return array(
             'version'=>1,
         ),
     'variables'=>array(
-            'tiempo_parada'=>5     
+            'tiempo_parada'=>10    
         ),
     
       'mail' => array(
