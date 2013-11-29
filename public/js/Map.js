@@ -219,7 +219,7 @@ function ajaxLoadingTree() {
         },
         async: {
             enable: true,
-            url: "http://192.168.1.35:84/application/index/getempresatotales",
+            url: "http://192.168.1.35:84/json/empresa.json",
             autoParam: ["id"],
             otherParam: { "staticID": uid }
         },

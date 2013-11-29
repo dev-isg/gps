@@ -16,23 +16,23 @@ class TramasCollection {
 
     public function insertaTramas() {
 
-         $iniciof = new MongoDate(strtotime("26/11/2013 12:50:27"));
-        
-      $valorer= array('alerta'=>'jnj',
-          'dmy'=>'64',
-          'estado'=>'movimiento',
-          
-          'fecha_ubicacion'=>$iniciof,
-          'hms'=>'10',
-          'id'=>'10',
-          'lat'=>'5','lng'=>'41',
-          'orientacion'=>'30',
-          'vehiculo_id'=>new \MongoId("5297b51fbf8eb1c406000038"),
-          'velocidad'=>'30');
+        $iniciof = new MongoDate(strtotime("26/11/2013 12:50:27"));
+
+        $valorer = array('alerta' => 'jnj',
+            'dmy' => '64',
+            'estado' => 'movimiento',
+            'fecha_ubicacion' => $iniciof,
+            'hms' => '10',
+            'id' => '10',
+            'lat' => '5', 'lng' => '41',
+            'orientacion' => '30',
+            'vehiculo_id' => new \MongoId("5297c15bbf8eb1202200000d"),
+            'velocidad' => '30');
         $trama = $this->collection->insert($valorer);
-        return $trama;exit;
+        return $trama;
+        exit;
     }
-    
+
     public function getTramas($id) {
         $trama = $this->collection->find(array('_id' => new \MongoId($id)), array('lat' => true, 'lng' => true, 'fecha_ubicacion' => true));
         return $trama;
@@ -135,39 +135,37 @@ class TramasCollection {
      * @params inicio , fin  idempresa
      * @return json 
      */
-
     //
     public function buscarMovimiento($inicio = null, $fin = null, $idempresa) {
         $iniciof = new MongoDate(strtotime($inicio)); //new MongoDate(strtotime("2013-11-21T20:30:51.656Z"));//new MongoDate(date("c",$timeI));//
         $finf = new MongoDate(strtotime($fin));
 
-        $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => new MongoId($idempresa))
-                , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true,'_id'=>true)
-        );
+        if ($_SESSION['rol'] == 'vehiculo') {
+            $vehiculo = $this->collection->db->vehiculo->find(array('_id' => new MongoId($idempresa))
+                    , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true, '_id' => true)
+            );
+        } else {
+            $vehiculo = $this->collection->db->vehiculo->find(array('empresa_id' => new MongoId($idempresa))
+                    , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true, '_id' => true)
+            );
+        }
+
 
         foreach ($vehiculo as $vehi) {
-           $tramas = $this->collection->db->execute(
-                new \MongoCode('estadisticaDispositivo(fechai,fechaf,idvehiculo)', array(
-                    'fechai' => $iniciof, 'fechaf' => $finf,'idvehiculo'=>$vehi['_id']
-                )));
-           $trama=$tramas['retval'];
-           
-//            $trama = $this->collection->find(array('vehiculo_id' => $vehi['_id'],
-//                 'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)
-//                    )
-//                    , array('alerta' => true, 'hms' => true, 'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
-//                'lat' => true, 'lng' => true, 'vehiculo_id' => true)
-//            );
-//            if($trama->hasNext()){
+            $tramas = $this->collection->db->execute(
+                    new \MongoCode('estadisticaDispositivo(fechai,fechaf,idvehiculo)', array(
+                        'fechai' => $iniciof, 'fechaf' => $finf, 'idvehiculo' => $vehi['_id']
+                    )));
+            $trama = $tramas['retval'];
             foreach ($trama as $tr) {
-                
+
                 $auxve = array('chofer_nom' => $vehi['chofer']['chofer_nom'], 'placa' => $vehi ['placa']);
                 $tr2 = array_merge_recursive($tr, $auxve);
                 $auxtramas[] = $tr2;
             }
 //            }
         }
-        
+
         return $auxtramas;
     }
 
@@ -178,11 +176,11 @@ class TramasCollection {
      */
     //
     public function buscarMovimientoVehic($inicio = null, $fin = null, $vehiculo = null) {
-     
+
         $iniciof = new MongoDate(strtotime($inicio)); //date("c",strtotime($inicio)); //
         $finf = new MongoDate(strtotime($fin)); //date("c",strtotime($fin)); //
-        $idvehiculo= new MongoId($vehiculo);
-        $vehiculo = $this->collection->db->vehiculo->find(array('_id' =>$idvehiculo)
+        $idvehiculo = new MongoId($vehiculo);
+        $vehiculo = $this->collection->db->vehiculo->find(array('_id' => $idvehiculo)
                 , array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true)
         );
         foreach ($vehiculo as $vehi) {
@@ -190,21 +188,20 @@ class TramasCollection {
             $dataempresa = $this->collection->db->empresa->findOne(array('_id' => $vehi['empresa_id']), array('nombre' => true));
             $vehi['nombre_empresa'] = $dataempresa['nombre'];
             $arrx = $vehi;
-
         }
 
         $total = $this->collection->db->execute(
                 new \MongoCode('estadisticaDispositivo(fechai,fechaf,idvehiculo)', array(
-                    'fechai' => $iniciof, 'fechaf' => $finf,'idvehiculo'=>$idvehiculo
+                    'fechai' => $iniciof, 'fechaf' => $finf, 'idvehiculo' => $idvehiculo
                 ))
         );
- 
+
 //        Ejecutando directamente
 //        $salida=$this->collection->db->execute('db.tramas.aggregate( [ { $match: { fecha_ubicacion:{$gte:ISODate("'.$iniciof.'"), $lte:ISODate("'.$finf.'")},vehiculo_id:ObjectId("'.$idvehiculo.'") } },{ $group: { _id: {$dayOfYear:"$fecha_ubicacion"},totalkilom: { $sum: "$hms" } } } ] )');
 //        foreach($salida['retval']['result'] as $result){
 //            $total[]=  array_merge_recursive($arrx,array('total_km'=>$result['totalkilom']));          
 //        }
-        $auxtramas = array_merge_recursive($arrx,array('tiempo'=>$total['retval']));
+        $auxtramas = array_merge_recursive($arrx, array('tiempo' => $total['retval']));
         return $auxtramas;
     }
 
@@ -213,28 +210,26 @@ class TramasCollection {
      * @params inicio , fin ,idvehiculo 
      * @return Array
      */
-
     public function getParada($inicio = null, $fin = null, $idvehiculo = null) {
         $iniciof = new MongoDate(strtotime($inicio));
         $finf = new MongoDate(strtotime($fin));
         $tramas = $this->collection->find(array('vehiculo_id' => new MongoId($idvehiculo),
-            'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)), 
-                array('estado' => true, 'fecha_ubicacion' => true,'lat'=>true,'lng'=>true));//->sort(array('fecha_ubicacion' => true));
-        
-        $act=null;
-        $ant=null;
-        $find=0;
-        $findf=0;
+            'fecha_ubicacion' => array('$gt' => $iniciof, '$lte' => $finf)), array('estado' => true, 'fecha_ubicacion' => true, 'lat' => true, 'lng' => true)); //->sort(array('fecha_ubicacion' => true));
+
+        $act = null;
+        $ant = null;
+        $find = 0;
+        $findf = 0;
 
         foreach ($tramas as $key => $trama) {
-          
+
             $act = $trama;
             if ($find == 0) {
                 if ($trama['estado'] == 'parar') {
                     $fparada['id'] = $key;
                     $fparada['fecha_inicio'] = date("Y-m-d H:i:s", $act['fecha_ubicacion']->sec);
-                    $fparada['latitude']=$trama['lat'];
-                    $fparada['longitude']=$trama['lng'];
+                    $fparada['latitude'] = $trama['lat'];
+                    $fparada['longitude'] = $trama['lng'];
                     $find = 1;
                     $findf = 0;
                 }
@@ -243,20 +238,19 @@ class TramasCollection {
                     if ($trama['estado'] == 'movimiento') {
                         $fparada['idf'] = $key;
                         $fparada['fecha_fin'] = date("Y-m-d H:i:s", $act['fecha_ubicacion']->sec);
-                        $resto=date_diff(date_create($fparada['fecha_inicio']),date_create($fparada['fecha_fin']));
-                        $fparada['tiempo']=$resto->format('%Y-%m-%d %h:%i:%s');
+                        $resto = date_diff(date_create($fparada['fecha_inicio']), date_create($fparada['fecha_fin']));
+                        $fparada['tiempo'] = $resto->format('%Y-%m-%d %h:%i:%s');
                         //formato:$fparada['tiempo']->format('%Y-%m-%d %h:%i:%s');
                         $findf = 1;
-                        $resultset[]=$fparada;
+                        $resultset[] = $fparada;
                         $find = 0;
                     }
                 }
             }
             $ant = $act;
-            
         }
 //      var_dump($resultset);Exit;
-        return $resultset; 
+        return $resultset;
     }
 
 }
