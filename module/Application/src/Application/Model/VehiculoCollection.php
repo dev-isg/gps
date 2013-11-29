@@ -26,17 +26,18 @@ class VehiculoCollection {
         $vehiculos = $this->collection->find(array('empresa_id' => ''));
 
         foreach ($vehiculos as $value) {
-            $idempresa = $value['empresa_id'];
-            $dataempre = $this->collection->db->empresa->findOne(array('_id' => $idempresa), array('nombre' => true));
-            $dataname = array('nombre_empresa' => $dataempre['nombre']);
+//            $idempresa = $value['empresa_id'];
+//            $dataempre = $this->collection->db->empresa->findOne(array('_id' =>new \MongoId($idempresa) ), array('nombre' => true));
+//            $dataname = array('nombre_empresa' => $dataempre['nombre']);
 //            array_push($value,$dataempre['nombre']);
-            $resultvehi[] = array_merge_recursive($value, $dataname);
+            $resultvehi[] = $value;
         }
+        //  var_dump($resultvehi);exit;
         return $resultvehi;
     }
 
     public function getVehiculo($idvehiculo) {
-              //var_dump($idvehiculo);exit;
+        //var_dump($idvehiculo);exit;
         $vehiculo = $this->collection->findOne(array('_id' => new \MongoId($idvehiculo)));
 //          foreach ($vehiculo as $value) {
 //             $dd[]= $value;
@@ -60,19 +61,17 @@ class VehiculoCollection {
         }
     }
 
-    public function guardarVehiculo($vehiculo, $usuarioid, $empresa, $id = null) {
-        
+    public function guardarVehiculo($vehiculo, $usuarioid, $empresa = null, $id = null) {
         $data = array(
 //                    'id' => $vehiculo->id,
             'estado' => true,
             'nombre_corto' => $vehiculo->nombre_corto,
-            'empresa_id' => new \MongoId($empresa),
 //                    'tipo_equipo' => $vehiculo->tipo_equipo,
             'num_imei' => $vehiculo->num_imei,
             'num_sim' => $vehiculo->num_sim,
             'color_ruta' => $vehiculo->color_ruta,
             'placa' => $vehiculo->placa,
-            'usuario_id' =>  new \MongoId($usuarioid),
+            'usuario_id' => new \MongoId($usuarioid),
             'chofer' => array(
                 'chofer_id' => new \MongoId(), //$chofer->id,
 //                        'descripcion'=>$chofer->descripcion,
@@ -82,6 +81,11 @@ class VehiculoCollection {
                 'email' => $vehiculo->email
             )
         );
+        if ($empresa == null) {
+             $data['empresa_id'] = '';
+        } else {
+           $data['empresa_id'] = new \MongoId($empresa);  
+        }
         if ($id == null) {
             $this->collection->insert($data);
         } else {
@@ -100,106 +104,93 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
-    
+
     public function getVehiculobyIdEmpresa($idempresa = null) {
-        
-        $vehiculos = $this->collection->find(array('empresa_id' => new \MongoId($idempresa)),
-                                        array('chofer.chofer_nom'=>true,'placa'=>true,'empresa_id'=>true));
+
+        $vehiculos = $this->collection->find(array('empresa_id' => new \MongoId($idempresa)), array('chofer.chofer_nom' => true, 'placa' => true, 'empresa_id' => true));
         $resultvehi = array();
-        $resultset=array();
-        $auxtram=array(
-            'alerta'=>'',
-            'distance'=>'',
-            'serverUtcDate'=>'',
-            'deviceUtcDate'=>'',
-            'orientacion'=>'',
-            'latitude'=>'',
-            'longitude'=>'',
-            'status'=>'',
-            
-                'model'=>'26',
-                'sn'=>'862304020076520',
-                'modelName'=>'GT06N',
-                'groupID'=>'-1', 
-                'speedLimit-'=>'0', 
-            
-            'speed:'=>'',
-            'baiduLat'=>'',
-            'baiduLng'=>'',
-            
-                'course'=>'0',
-                'dataContext'=>'1',
-                'dataType'=>'1', 
-                'isStop'=>'1',
-                'icon'=>'2'
+        $resultset = array();
+        $auxtram = array(
+            'alerta' => '',
+            'distance' => '',
+            'serverUtcDate' => '',
+            'deviceUtcDate' => '',
+            'orientacion' => '',
+            'latitude' => '',
+            'longitude' => '',
+            'status' => '',
+            'model' => '26',
+            'sn' => '862304020076520',
+            'modelName' => 'GT06N',
+            'groupID' => '-1',
+            'speedLimit-' => '0',
+            'speed:' => '',
+            'baiduLat' => '',
+            'baiduLng' => '',
+            'course' => '0',
+            'dataContext' => '1',
+            'dataType' => '1',
+            'isStop' => '1',
+            'icon' => '2'
         );
         foreach ($vehiculos as $value) {
-            $resultvehi['id']=(String)$value['_id'];
-            $resultvehi['name']=$value['chofer']['chofer_nom'];
-            $resultvehi['carNum']=$value['placa'];
-            
-            $tramas = $this->collection->db->tramas->find(array('vehiculo_id' => $value['_id'])//,'fecha_ubicacion' => array('$gt' => $fecha)
-                , array('estado'=>true,'alerta'=>true,'hms'=>true,'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
-                'lat' => true, 'lng' => true,'vehiculo_id'=>true)
-                )->sort(array('_id'=>-1))->limit(1);
-           
-          
-                foreach($tramas as $trama){
-//                     if(!empty($trama)){      
-                    $auxtram['alerta']=$trama['alerta'];
-                    $auxtram['distance']=$trama['hms'];
-                    $auxtram['serverUtcDate']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
-                    $auxtram['deviceUtcDate']=date("Y-m-d H:i:s",$trama['fecha_ubicacion']->sec);
-                    $auxtram['orientacion']=$trama['orientacion'];
-                    
-                    $auxtram['latitude']=$trama['lat'];
-                    $auxtram['longitude']=$trama['lng'];
-                    $auxtram['status']=$trama['estado'];
-                    
-                    $auxtram['speed:']=$trama['velocidad'];
-                    $auxtram['baiduLat']=$trama['lat'];
-                    $auxtram['baiduLng']=$trama['lng'];
-                     $resultset[]=  array_merge_recursive($resultvehi,$auxtram);
-//                     }
-                      
+            $resultvehi['id'] = (String) $value['_id'];
+            $resultvehi['name'] = $value['chofer']['chofer_nom'];
+            $resultvehi['carNum'] = $value['placa'];
 
-                }                
+            $tramas = $this->collection->db->tramas->find(array('vehiculo_id' => $value['_id'])//,'fecha_ubicacion' => array('$gt' => $fecha)
+                            , array('estado' => true, 'alerta' => true, 'hms' => true, 'fecha_ubicacion' => true, 'orientacion' => true, 'velocidad' => true,
+                        'lat' => true, 'lng' => true, 'vehiculo_id' => true)
+                    )->sort(array('_id' => -1))->limit(1);
+
+
+            foreach ($tramas as $trama) {
+//                     if(!empty($trama)){      
+                $auxtram['alerta'] = $trama['alerta'];
+                $auxtram['distance'] = $trama['hms'];
+                $auxtram['serverUtcDate'] = date("Y-m-d H:i:s", $trama['fecha_ubicacion']->sec);
+                $auxtram['deviceUtcDate'] = date("Y-m-d H:i:s", $trama['fecha_ubicacion']->sec);
+                $auxtram['orientacion'] = $trama['orientacion'];
+
+                $auxtram['latitude'] = $trama['lat'];
+                $auxtram['longitude'] = $trama['lng'];
+                $auxtram['status'] = $trama['estado'];
+
+                $auxtram['speed:'] = $trama['velocidad'];
+                $auxtram['baiduLat'] = $trama['lat'];
+                $auxtram['baiduLng'] = $trama['lng'];
+                $resultset[] = array_merge_recursive($resultvehi, $auxtram);
+//                     }
+            }
 //            $auxzz[(String)$value['_id']]=iterator_to_array($tramas);
-           
         }
         //var_dump($resultset);exit;
 //        var_dump($auxzz);exit;
         return $resultset;
     }
 
-    
-     /*
+    /*
      * obtiene listado de conductores segun id de empresa
      * @return array
      */
-    
-    public function getConductor($idempresa){
-        $conductores=$this->collection->find(array('empresa_id'=>new MongoId($idempresa)),
-                    array('chofer.chofer_nom'=>true,'chofer.chofer_id'=>true));
-        $listconduc=array();
-        foreach($conductores as $conductor){
-            $listconduc[(String)$conductor['_id']]=$conductor['chofer']['chofer_nom'];
-             //(String)$conductor['chofer']['chofer_id']
-            
+
+    public function getConductor($idempresa) {
+        $conductores = $this->collection->find(array('empresa_id' => new MongoId($idempresa)), array('chofer.chofer_nom' => true, 'chofer.chofer_id' => true));
+        $listconduc = array();
+        foreach ($conductores as $conductor) {
+            $listconduc[(String) $conductor['_id']] = $conductor['chofer']['chofer_nom'];
+            //(String)$conductor['chofer']['chofer_id']
         }
-      
+
         return $listconduc;
-        
     }
 
-
-
-
-    public function buscarVehiculos($consulta,$idempresa) {
+    public function buscarVehiculos($consulta, $idempresa) {
         $regex = new \MongoRegex("/$consulta/");
-        $vehiculos = $this->collection->find(array('empresa_id' =>$idempresa,'nombre_corto' => $regex));
-        if($vehiculos->count()==0)
-        { $vehiculos = $this->collection->find(array('empresa_id' =>$idempresa,'placa' => $regex));}
+        $vehiculos = $this->collection->find(array('empresa_id' => $idempresa, 'nombre_corto' => $regex));
+        if ($vehiculos->count() == 0) {
+            $vehiculos = $this->collection->find(array('empresa_id' => $idempresa, 'placa' => $regex));
+        }
         $resultvehi = array();
         foreach ($vehiculos as $value) {
             $idempresas = $value['empresa_id'];
@@ -212,9 +203,9 @@ class VehiculoCollection {
 
     //obtener vehiculos por empresa y por estado
     //estado=1 : todos los vehiculos
-     //estado=2 :  vehiculos  on line
-     //estado=3 : todos los vehiculos of line
-    
+    //estado=2 :  vehiculos  on line
+    //estado=3 : todos los vehiculos of line
+
     public function getVehiculosEstado($idempresa, $estado) {
         if ($estado == 1) {
             $vehiculos = $this->collection->find(array('empresa_id' => "$idempresa"));
@@ -233,30 +224,30 @@ class VehiculoCollection {
         }
         return $resultvehi;
     }
-    
+
     //obtener vehiculos por empresa y por estado
-  public function getVehiculoDetalle($idvehiculo,$fechaactual) {
+    public function getVehiculoDetalle($idvehiculo, $fechaactual) {
         $vehiculo = $this->collection->findOne(array('_id' => new \MongoId($idvehiculo)));
         $resultvehi = array();
-        $fechaactual= str_replace("/","-", $fechaactual);
+        $fechaactual = str_replace("/", "-", $fechaactual);
         //$fecha=new \MongoDate(strtotime($fechaactual));
         //$fecha=new \MongoDate(strtotime($fechaactual));
-       // var_dump($fechaactual);exit;
-         // var_dump($resultvehi);exit;
-        $trama = $this->collection->db->tramas->findOne(array('vehiculo_id' =>"$idvehiculo",'fecha_ubicacion' => array('$gt' => $fechaactual)) );
-        
-       // $re=$trama->sort(array('fecha_ubicacion' => -1));
+        // var_dump($fechaactual);exit;
+        // var_dump($resultvehi);exit;
+        $trama = $this->collection->db->tramas->findOne(array('vehiculo_id' => "$idvehiculo", 'fecha_ubicacion' => array('$gt' => $fechaactual)));
+
+        // $re=$trama->sort(array('fecha_ubicacion' => -1));
         $resultvehis = array();
         foreach ($trama as $tramas) {
             $resultvehis[] = $tramas;
         }
-      //  var_dump($resultvehis);exit;
+        //  var_dump($resultvehis);exit;
         $latitud = array('lat' => $trama['lat']);
-        $longitud= array('lng' => $trama['lng']);
+        $longitud = array('lng' => $trama['lng']);
         $resultvehi[] = array_merge_recursive($vehiculo, $latitud, $longitud);
-        
-       // var_dump($resultvehi);exit;
-       return json_encode($resultvehi);
+
+        // var_dump($resultvehi);exit;
+        return json_encode($resultvehi);
     }
 
 }

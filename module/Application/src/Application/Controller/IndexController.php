@@ -1,15 +1,5 @@
 <?php
-
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-
 namespace Application\Controller;
-
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Form\Registrousuario;
@@ -28,7 +18,6 @@ use Zend\Session\SessionManager;
 use Zend\Session\ManagerInterface;
 use Zend\Session\Storage\ArrayStorage;
 use Zend\Session\Storage\SessionStorage;
-use Application\Model\SessionCollection;
 use Application\Model\EmpresaCollection;
 use Application\Model\VehiculoCollection;
 use Application\Model\TramasCollection;
@@ -40,7 +29,6 @@ use Zend\View\Model\JsonModel;
 class IndexController extends AbstractActionController {
 
     protected $usuarioMongodb;
-    protected $sessionMongodb;
     protected $empresaMongodb;
     protected $vehiculoMongodb;
 
@@ -147,8 +135,6 @@ class IndexController extends AbstractActionController {
 
                     $fechaActual = date("Y-m-d H:i:s");
                     $resultadosVehiculo = $this->getVehiculoMongoDb()->getVehiculoDetalle($detalle, $fechaActual);
-                    //$view= new ViewModel();
-                    //$view->setTerminal(true);
                     echo $resultadosVehiculo;
                     exit;
                 } else {
@@ -183,9 +169,12 @@ class IndexController extends AbstractActionController {
 
             $pos=strrpos($auxresul,",");
             $cadena=substr($auxresul,0,$pos);
-            $auxresul2.="{".$cadena."}";
+            $auxresul2.="{".$cadena."},";
             $auxresul="";
         }
+             $posfin=strrpos($auxresul2,",");
+            $auxresul2=substr($auxresul2,0,$posfin);
+            
 
         echo json_encode(array('d' => '{devices:[' . $auxresul2 . ']}'));
         return $viewModel;
@@ -366,14 +355,6 @@ class IndexController extends AbstractActionController {
             $this->usuarioMongodb = $sm->get('Application\Model\UsuarioCollection');
         }
         return $this->usuarioMongodb;
-    }
-
-    public function getSessionMongoDb() {
-        if (!$this->sessionMongodb) {
-            $sm = $this->getServiceLocator();
-            $this->sessionMongodb = $sm->get('Application\Model\SessionCollection');
-        }
-        return $this->sessionMongodb;
     }
 
     public function getVehiculoMongoDb() {

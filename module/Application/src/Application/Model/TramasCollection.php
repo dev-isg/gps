@@ -16,14 +16,14 @@ class TramasCollection {
 
     public function insertaTramas() {
 
-         $iniciof = new MongoDate(strtotime("26/11/2013 12:50:27"));
+         $iniciof = new MongoDate(strtotime('26/11/2013 12:50:27'));
         
       $valorer= array('alerta'=>'jnj',
           'dmy'=>'64',
           'estado'=>'movimiento',
           
           'fecha_ubicacion'=>$iniciof,
-          'hms'=>'10',
+          'hms'=>10,
           'id'=>'10',
           'lat'=>'5','lng'=>'41',
           'orientacion'=>'30',

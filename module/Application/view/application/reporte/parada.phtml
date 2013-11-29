@@ -2,8 +2,14 @@
 $title = 'Detalle de parada';
 $this->headTitle($title);
 ?>
+
 <div class="row-fluid">
     <div class="span12" id="flip-scroll">
+                   <div class="control-group"><a href="/application/reporte/movimiento">Movimiento</a>
+    <a href="/application/reporte/kilometraje">Kilometraje</a>
+    <a href="/application/reporte/parada">Parada</a>
+    </div>
+
         <?php
         $form = $this->form;
         $form->setAttributes(array(
