@@ -44,10 +44,19 @@ class MovimientoForm extends Form{
             'options' => array(
                 'value_options'=>array(
                 ),
-                'empty_option'  => '--- chofer ---',
+                'empty_option'  => '--- vehiculo ---',
             )
         ));
-      
+       $this->add(array(
+            'name' => 'usario_empresa',
+            'type' => 'Select',
+            'attributes'=>array('class'=>'form-control'),
+            'options' => array(
+                'value_options'=>array(
+                ),
+                'empty_option'  => '--- empresa ---',
+            )
+        ));
    
         $this->add(array(
             'name' => 'submit',
@@ -87,7 +96,12 @@ class MovimientoForm extends Form{
 
         ));
          
-    
+         $inputFilter->add(array(
+            'name' => 'usario_empresa',
+            'required' => false,
+
+        ));
+         
         return $inputFilter;
     }
     

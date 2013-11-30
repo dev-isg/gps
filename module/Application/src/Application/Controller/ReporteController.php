@@ -73,7 +73,7 @@ class ReporteController extends AbstractActionController {
             foreach ($empresas as $yes) {
                 $medi[(String) $yes['_id']] = $yes['nombre'];
             }
-            $form->get('usario_vehiculo')->setValueOptions($medi);
+            $form->get('usario_empresa')->setValueOptions($medi);
         }
         $fechaini = $this->params()->fromPost('fechainicio');
         $fechafin = $this->params()->fromPost('fechafin');
@@ -84,7 +84,7 @@ class ReporteController extends AbstractActionController {
             if ($form->isValid()) {
                 $datos = $this->request->getPost();
                 if ($dato['rol'] == 'administrador') {
-                    $idempresa = $datos['usario_vehiculo'];
+                    $idempresa = $datos['usario_empresa'];
                 } elseif ($dato['rol'] == 'empresa') {
                     $idempresa = $dato['_idrol'];
                 } else {
@@ -146,24 +146,40 @@ class ReporteController extends AbstractActionController {
 
     public function kilometrajeAction() {
         $form = new MovimientoForm();
+         $dato = $this->getUsuariosMongoDb()->read();
+         if ($dato['rol'] == 'administrador') {
+            $empresas = $this->getEmpresaMongoDb()->getListaCombo();
+            $medi = array();
+            foreach ($empresas as $yes) {
+                $medi[(String) $yes['_id']] = $yes['nombre'];
+            }
+            $form->get('usario_empresa')->setValueOptions($medi);
+        }
         $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']);
+       
+        if ($dato['rol'] == 'administrador' or $dato['rol'] == 'empresa') {
         $form->get('usario_vehiculo')->setValueOptions($conductores);
+          $idvehiculo = $this->params()->fromPost('usario_vehiculo');
+        }
         $fechaini = $this->params()->fromPost('fechainicio');
         $fechafin = $this->params()->fromPost('fechafin');
-        $idvehiculo = $this->params()->fromPost('usario_vehiculo', "528e9378bf8eb1140e00004e");
+      
         $request = $this->getRequest();
         $kilometraje_session = new Container('kilometraje');
 
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-
+            if ($dato['rol'] == 'vehiculo') {
+                              $idvehiculo = $dato['_idrol'];
+                }
                 $tramas = $this->getTramaMongoDb()->buscarMovimientoVehic($fechaini, $fechafin, $idvehiculo);
                 $kilometraje_session->kilometraje = $tramas;
             }
         }
 
-        return array('form' => $form, 'tramas' => $tramas);
+        return array('form' => $form, 'tramas' => $tramas,'hidUserID' => $_SESSION['_idrol'],
+            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta, 'rol' => $_SESSION['rol']);
     }
 
     public function excelkilometrajeAction() {

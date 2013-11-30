@@ -387,7 +387,7 @@ $this->headTitle($title);
    <h3><a href="/application/reporte/parada">parada</a></h3>
    <h3><a href="/application/reporte/kilometraje">kilometrage</a></h3>
     <div class="control-group">
-       <?php  if($this->rol =='administrador') {?> <div class="form-group"><?php echo $this->formRow($form->get('usario_vehiculo')); ?></div><?php  } ?>
+       <?php  if($this->rol =='administrador') {?> <div class="form-group"><?php echo $this->formRow($form->get('usario_empresa')); ?></div><?php  } ?>
         <div class="form-group"><?php echo $this->formRow($form->get('fechainicio')); ?></div>
         <div class="form-group"><?php echo $this->formRow($form->get('fechafin')); ?></div>
         <?php echo $this->formSubmit($form->get('submit')); ?>
