@@ -115,7 +115,11 @@ class ParadaForm extends Form{
             'required' => false,
 
         ));
-         
+          $inputFilter->add(array(
+            'name' => 'usario_empresa',
+            'required' => false,
+
+        )); 
     
         return $inputFilter;
     }

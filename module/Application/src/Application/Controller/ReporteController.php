@@ -93,12 +93,12 @@ class ReporteController extends AbstractActionController {
         $idvehiculo = $this->params()->fromPost('usario_vehiculo');
         $request = $this->getRequest();
         $parada_session = new Container('parada');
-        if ($request->isPost()) {
+        if ($request->isPost()){
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
-                $parada_session->parada = $tramas;
                 
+                $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
+                $parada_session->parada = $tramas;               
             }
         }
         return array('form' => $form, 'tramas' => $tramas,'hidUserID' => $_SESSION['_idrol'],
