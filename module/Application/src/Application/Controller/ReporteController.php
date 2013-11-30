@@ -42,7 +42,9 @@ class ReporteController extends AbstractActionController {
         //id empresas:
         //528d3ab3bf8eb1780c000046
         //$_SESSION['_idrol'] es el id del rol, ejmp: si esta como empresa carga id empresa
-        $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']); //"528d3ab3bf8eb1780c000046"
+        $idemp=$this->params()->fromQuery('idempresa');
+        $idempresa=$_SESSION['_idrol']?$_SESSION['_idrol']:$idemp;
+        $conductores = $this->getVehiculoMongoDb()->getConductor($idempresa); //"528d3ab3bf8eb1780c000046" 
         return new \Zend\View\Model\JsonModel($conductores);
     }
 
