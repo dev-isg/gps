@@ -106,7 +106,7 @@ class ParadaForm extends Form{
         
         $inputFilter->add(array(
             'name' => 'usario_vehiculo',
-            'required' => true,
+            'required' => false,
 
         ));
         

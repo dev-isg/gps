@@ -18,34 +18,34 @@ class ReporteController extends AbstractActionController {
 
     public function __construct() {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
+    }
 
-    }
-/**
- * JSON EMPRESA
- * @return json
- */
-    public function jsonempresaAction(){
-           $empresas = $this->getEmpresaMongoDb()->getListaCombo();
-            $medi = array();
-            foreach ($empresas as $yes) {
-                $medi[(String) $yes['_id']] = $yes['nombre'];
-            }
-            
-            return new \Zend\View\Model\JsonModel($medi);
-    }
-    
     /**
- * JSON VEHICULO
- * @return json
- */
-    public function jsonvehiculoAction(){
-            //id empresas:
-            //528d3ab3bf8eb1780c000046
-            //$_SESSION['_idrol'] es el id del rol, ejmp: si esta como empresa carga id empresa
-           $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']);//"528d3ab3bf8eb1780c000046"
-            return new \Zend\View\Model\JsonModel($conductores);
+     * JSON EMPRESA
+     * @return json
+     */
+    public function jsonempresaAction() {
+        $empresas = $this->getEmpresaMongoDb()->getListaCombo();
+        $medi = array();
+        foreach ($empresas as $yes) {
+            $medi[(String) $yes['_id']] = $yes['nombre'];
+        }
+
+        return new \Zend\View\Model\JsonModel($medi);
     }
-    
+
+    /**
+     * JSON VEHICULO
+     * @return json
+     */
+    public function jsonvehiculoAction() {
+        //id empresas:
+        //528d3ab3bf8eb1780c000046
+        //$_SESSION['_idrol'] es el id del rol, ejmp: si esta como empresa carga id empresa
+        $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']); //"528d3ab3bf8eb1780c000046"
+        return new \Zend\View\Model\JsonModel($conductores);
+    }
+
     public function getEmpresaMongoDb() {
         if (!$this->empresaMongodb) {
             $sm = $this->getServiceLocator();
@@ -53,7 +53,6 @@ class ReporteController extends AbstractActionController {
         }
         return $this->empresaMongodb;
     }
-
 
     public function movimientoAction() {
 
@@ -86,9 +85,11 @@ class ReporteController extends AbstractActionController {
                 $datos = $this->request->getPost();
                 if ($dato['rol'] == 'administrador') {
                     $idempresa = $datos['usario_vehiculo'];
-                }elseif($dato['rol'] == 'empresa')
-                { $idempresa = $dato['_idrol'];}
-               else{$idempresa = $dato['_idrol'];}
+                } elseif ($dato['rol'] == 'empresa') {
+                    $idempresa = $dato['_idrol'];
+                } else {
+                    $idempresa = $dato['_idrol'];
+                }
                 $tramas = $this->getTramaMongoDb()->buscarMovimiento($fechaini, $fechafin, $idempresa);
                 $movimiento_session->movimiento = $tramas;
             }
@@ -97,10 +98,11 @@ class ReporteController extends AbstractActionController {
             'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
+    
     public function paradaAction() {
         $form = new ParadaForm();
         $datos = $this->getUsuariosMongoDb()->read();
-                if ($datos['rol'] == 'administrador') {
+        if ($datos['rol'] == 'administrador') {
             $empresas = $this->getEmpresaMongoDb()->getListaCombo();
             $medi = array();
             foreach ($empresas as $yes) {
@@ -108,26 +110,27 @@ class ReporteController extends AbstractActionController {
             }
             $form->get('usario_empresa')->setValueOptions($medi);
         }
-        //$idempresa=$datoss['_idrol'];
-        //="528d3ab3bf8eb1780c000046"
         $conductores = $this->getVehiculoMongoDb()->getConductor($datos['_idrol']);
-      if ($datos['rol'] == 'administrador' or $datos['rol'] == 'empresa') {
-        $form->get('usario_vehiculo')->setValueOptions($conductores);}
+        if ($datos['rol'] == 'administrador' or $datos['rol'] == 'empresa') {
+            $form->get('usario_vehiculo')->setValueOptions($conductores);
+            $idvehiculo = $this->params()->fromPost('usario_vehiculo');
+        }
         $fechaini = $this->params()->fromPost('fechainicio');
         $fechafin = $this->params()->fromPost('fechafin');
-        $idvehiculo = $this->params()->fromPost('usario_vehiculo');
         $request = $this->getRequest();
         $parada_session = new Container('parada');
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                
+                if ($datos['rol'] == 'vehiculo') {
+                    $idvehiculo = $datos['_idrol'];
+                }
                 $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
-                $parada_session->parada = $tramas;               
+                $parada_session->parada = $tramas;
             }
         }
-        return array('form' => $form, 'tramas' => $tramas,'hidUserID' => $_SESSION['_idrol'],
-            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta,'rol' => $_SESSION['rol']);
+        return array('form' => $form, 'tramas' => $tramas, 'hidUserID' => $_SESSION['_idrol'],
+            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta, 'rol' => $_SESSION['rol']);
     }
 
     public function excelmovimientoAction() {
@@ -140,7 +143,6 @@ class ReporteController extends AbstractActionController {
         $view->setVariables(array('tramas' => $trama));
         return $view;
     }
-
 
     public function kilometrajeAction() {
         $form = new MovimientoForm();
@@ -175,14 +177,11 @@ class ReporteController extends AbstractActionController {
         return $view;
     }
 
-
-    
-
     public function excelparadaAction() {
-         $parada_session = new Container('parada');
+        $parada_session = new Container('parada');
         $view = new ViewModel();
         $view->setTerminal(true);
-       
+
         if ($parada_session->parada) {
             $trama = $parada_session->parada;
         }
@@ -213,6 +212,5 @@ class ReporteController extends AbstractActionController {
         }
         return $this->vehiculoMongodb;
     }
-
 
 }
