@@ -20,7 +20,32 @@ class ReporteController extends AbstractActionController {
         $this->_options = new \Zend\Config\Config(include APPLICATION_PATH . '/config/autoload/global.php');
 
     }
-
+/**
+ * JSON EMPRESA
+ * @return json
+ */
+    public function jsonempresaAction(){
+           $empresas = $this->getEmpresaMongoDb()->getListaCombo();
+            $medi = array();
+            foreach ($empresas as $yes) {
+                $medi[(String) $yes['_id']] = $yes['nombre'];
+            }
+            
+            return new \Zend\View\Model\JsonModel($medi);
+    }
+    
+    /**
+ * JSON VEHICULO
+ * @return json
+ */
+    public function jsonvehiculoAction(){
+            //id empresas:
+            //528d3ab3bf8eb1780c000046
+            //$_SESSION['_idrol'] es el id del rol, ejmp: si esta como empresa carga id empresa
+           $conductores = $this->getVehiculoMongoDb()->getConductor($_SESSION['_idrol']);//"528d3ab3bf8eb1780c000046"
+            return new \Zend\View\Model\JsonModel($conductores);
+    }
+    
     public function getEmpresaMongoDb() {
         if (!$this->empresaMongodb) {
             $sm = $this->getServiceLocator();
