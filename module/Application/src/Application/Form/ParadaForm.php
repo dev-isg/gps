@@ -47,6 +47,16 @@ class ParadaForm extends Form{
                 'empty_option'  => '--- chofer ---',
             )
         ));
+           $this->add(array(
+            'name' => 'usario_empresa',
+            'type' => 'Select',
+            'attributes'=>array('class'=>'form-control'),
+            'options' => array(
+                'value_options'=>array(
+                ),
+                'empty_option'  => '--- empresa ---',
+            )
+        ));
            
            $this->add(array(
             'name' => 'empresa',

@@ -72,6 +72,38 @@ class ReporteController extends AbstractActionController {
             'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta));
         return $viewModel;
     }
+    public function paradaAction() {
+        $form = new ParadaForm();
+        $datos = $this->getUsuariosMongoDb()->read();
+                if ($datos['rol'] == 'administrador') {
+            $empresas = $this->getEmpresaMongoDb()->getListaCombo();
+            $medi = array();
+            foreach ($empresas as $yes) {
+                $medi[(String) $yes['_id']] = $yes['nombre'];
+            }
+            $form->get('usario_empresa')->setValueOptions($medi);
+        }
+        //$idempresa=$datoss['_idrol'];
+        //="528d3ab3bf8eb1780c000046"
+        $conductores = $this->getVehiculoMongoDb()->getConductor($datos['_idrol']);
+      if ($datos['rol'] == 'administrador' or $datos['rol'] == 'empresa') {
+        $form->get('usario_vehiculo')->setValueOptions($conductores);}
+        $fechaini = $this->params()->fromPost('fechainicio');
+        $fechafin = $this->params()->fromPost('fechafin');
+        $idvehiculo = $this->params()->fromPost('usario_vehiculo');
+        $request = $this->getRequest();
+        $parada_session = new Container('parada');
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
+                $parada_session->parada = $tramas;
+                
+            }
+        }
+        return array('form' => $form, 'tramas' => $tramas,'hidUserID' => $_SESSION['_idrol'],
+            'nombre' => $_SESSION['nombre'], 'ruta' => $this->_options->host->ruta,'rol' => $_SESSION['rol']);
+    }
 
     public function excelmovimientoAction() {
         $view = new ViewModel();
@@ -119,31 +151,7 @@ class ReporteController extends AbstractActionController {
     }
 
 
-    public function paradaAction() {
-        $form = new ParadaForm();
-        // $datoss = $this->getUsuariosMongoDb()->read();
-        //$idempresa=$datoss['_idrol'];
-        //="528d3ab3bf8eb1780c000046"
-        $conductores = $this->getVehiculoMongoDb()->getConductor($idempresa = "528d3ab3bf8eb1780c000046");
-        $form->get('usario_vehiculo')->setValueOptions($conductores);
-        $fechaini = $this->params()->fromPost('fechainicio');
-        $fechafin = $this->params()->fromPost('fechafin');
-        $idvehiculo = $this->params()->fromPost('usario_vehiculo');
-
-        $request = $this->getRequest();
-        
-        $parada_session = new Container('parada');
-        if ($request->isPost()) {
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-                $tramas = $this->getTramaMongoDb()->getParada($fechaini, $fechafin, $idvehiculo);
-                $parada_session->parada = $tramas;
-                
-            }
-        }
-        return array('form' => $form, 'tramas' => $tramas);
-    }
-
+    
 
     public function excelparadaAction() {
          $parada_session = new Container('parada');
